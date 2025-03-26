@@ -63,8 +63,8 @@ class MyApp extends StatelessWidget {
           '/c/add/pet': (context) => const AddNewPet(),
 
           '/book/boarding': (context) => const BookBoarding(),
-          '/book/transit': (context) => const BookTransit(),
-          '/book/grooming': (context) => const BookGrooming(),
+          '/book/transit': (context) => const HomeServiceScreen(),
+          '/book/grooming': (context) => const BookGroomingScreen(),
         },
       ),
     );

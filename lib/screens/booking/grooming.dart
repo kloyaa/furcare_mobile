@@ -1,5 +1,5 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:furcare_app/apis/booking_api.dart';
 import 'package:furcare_app/apis/client_api.dart';
 import 'package:furcare_app/models/booking_payload.dart';
@@ -7,114 +7,127 @@ import 'package:furcare_app/models/login_response.dart';
 import 'package:furcare_app/providers/authentication.dart';
 import 'package:furcare_app/providers/user.dart';
 import 'package:furcare_app/screens/payment/preview.dart';
-import 'package:furcare_app/utils/common.util.dart';
 import 'package:furcare_app/utils/const/colors.dart';
+import 'package:furcare_app/widgets/card_schedule.dart';
+import 'package:furcare_app/widgets/dialog_confirm.dart';
+import 'package:furcare_app/widgets/dropdown_pets.dart';
+import 'package:furcare_app/widgets/snackbar_animated.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:furcare_app/widgets/snackbar.dart';
+import 'package:dio/dio.dart';
 
-class BookGrooming extends StatefulWidget {
-  const BookGrooming({super.key});
+class BookGroomingScreen extends StatefulWidget {
+  const BookGroomingScreen({super.key});
 
   @override
-  State<BookGrooming> createState() => _BookGroomingState();
+  State<BookGroomingScreen> createState() => _BookGroomingScreenState();
 }
 
-class _BookGroomingState extends State<BookGrooming> {
-  // State
-  String _accessToken = "";
-  String _selectedScheduleId = "";
-  String _selectedPet = "";
-  String _selectedPetId = "";
-  List _pets = [];
+class _BookGroomingScreenState extends State<BookGroomingScreen>
+    with SingleTickerProviderStateMixin {
+  // State Management
+  final ValueNotifier<String> _selectedScheduleNotifier = ValueNotifier<String>(
+    '',
+  );
+  final ValueNotifier<String> _selectedPetNotifier = ValueNotifier<String>('');
 
-  Future<void> handleSubmit() async {
-    BookingApi booking = BookingApi(_accessToken);
-
-    if (_selectedScheduleId.isEmpty) {
-      return showSafeSnackBar(
-        "Please select a schedule",
-        color: AppColors.danger,
-      );
-    }
-
-    if (_selectedPetId.isEmpty) {
-      return showSafeSnackBar("Please select a pet", color: AppColors.danger);
-    }
-
-    try {
-      Response<dynamic> response = await booking.groomingBooking(
-        GroomingPayload(pet: _selectedPetId, schedule: _selectedScheduleId),
-      );
-
-      if (context.mounted) {
-        showSafeSnackBar("Booked successfully!", color: Colors.green);
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder:
-                (context) => PaymentPreview(
-                  serviceName: "grooming",
-                  date: response.data['date'],
-                  referenceNo: response.data['referenceNo'],
-                ),
-          ),
-        );
-      }
-    } on DioException catch (e) {
-      ErrorResponse errorResponse = ErrorResponse.fromJson(e.response?.data);
-      if (context.mounted) {
-        showSnackBar(
-          context,
-          errorResponse.message,
-          color: AppColors.danger,
-          fontSize: 10.0,
-        );
-      }
-    }
-  }
-
-  Future<List<dynamic>> handleGetSchedules() async {
-    ClientApi clientApi = ClientApi(_accessToken);
-
-    Response<dynamic> response = await clientApi.getSchedules();
-
-    return response.data;
-  }
-
-  List<DropdownMenuItem<dynamic>> getPets() {
-    List<DropdownMenuItem<dynamic>> items = [];
-    for (var i = 0; i < _pets.length; i++) {
-      DropdownMenuItem item = DropdownMenuItem(
-        value: _pets[i]['_id'], // Assuming _id is the unique identifier
-        child: Text(
-          _pets[i]['name'],
-          style: GoogleFonts.urbanist(
-            fontSize: 12.0,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      );
-
-      items.add(item);
-    }
-    return items;
-  }
+  late AnimationController _animationController;
+  late List<dynamic> _availableSchedules = [];
+  late List<dynamic> _pets = [];
+  String _accessToken = '';
 
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeProviders();
+      _fetchSchedules();
+    });
+  }
+
+  void _initializeProviders() {
     final accessTokenProvider = Provider.of<AuthTokenProvider>(
       context,
       listen: false,
     );
     final clientProvider = Provider.of<ClientProvider>(context, listen: false);
 
-    _accessToken = accessTokenProvider.authToken?.accessToken ?? '';
-    _pets = clientProvider.pets ?? [];
+    setState(() {
+      _accessToken = accessTokenProvider.authToken?.accessToken ?? '';
+      _pets = clientProvider.pets ?? [];
+    });
+  }
 
-    handleGetSchedules();
+  Future<void> _fetchSchedules() async {
+    try {
+      final ClientApi clientApi = ClientApi(_accessToken);
+      final Response<dynamic> response = await clientApi.getSchedules();
+
+      setState(() {
+        _availableSchedules = response.data;
+      });
+    } catch (e) {
+      _showErrorSnackbar('Failed to fetch schedules');
+    }
+  }
+
+  Future<void> _handleBookGrooming() async {
+    final scheduleId = _selectedScheduleNotifier.value;
+    final petId = _selectedPetNotifier.value;
+
+    if (scheduleId.isEmpty || petId.isEmpty) {
+      _showErrorSnackbar('Please select both schedule and pet');
+      return;
+    }
+
+    try {
+      final BookingApi bookingApi = BookingApi(_accessToken);
+      final Response<dynamic> response = await bookingApi.groomingBooking(
+        GroomingPayload(pet: petId, schedule: scheduleId),
+      );
+
+      if (context.mounted) {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder:
+                (context, animation, secondaryAnimation) => PaymentPreview(
+                  serviceName: "grooming",
+                  date: response.data['date'],
+                  referenceNo: response.data['referenceNo'],
+                ),
+            transitionsBuilder: (
+              context,
+              animation,
+              secondaryAnimation,
+              child,
+            ) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(1.0, 0.0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              );
+            },
+          ),
+        );
+      }
+    } on DioException catch (e) {
+      final ErrorResponse errorResponse = ErrorResponse.fromJson(
+        e.response?.data,
+      );
+      _showErrorSnackbar(errorResponse.message);
+    }
+  }
+
+  void _showErrorSnackbar(String message) {
+    AnimatedSnackBar.show(context, message: message, type: SnackBarType.error);
   }
 
   @override
@@ -124,132 +137,121 @@ class _BookGroomingState extends State<BookGrooming> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
-          "Grooming",
+          "Pet Grooming",
           style: GoogleFonts.urbanist(
             color: AppColors.primary,
-            fontSize: 12.0,
+            fontSize: 16.0,
             fontWeight: FontWeight.bold,
           ),
         ),
       ),
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Select Schedule  ',
-              style: GoogleFonts.urbanist(
-                color: AppColors.primary.withOpacity(0.5),
-                fontWeight: FontWeight.w400,
-                fontSize: 8.0,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildSectionTitle('Select Schedule'),
+              const SizedBox(height: 10),
+              _buildScheduleList(),
+              const SizedBox(height: 20),
+              _buildSectionTitle('Select Pet'),
+              const SizedBox(height: 10),
+              PetDropdown(
+                pets: _pets,
+                onPetSelected: (petId) {
+                  _selectedPetNotifier.value = petId;
+                },
               ),
-            ),
-            const SizedBox(height: 10.0),
-            FutureBuilder(
-              future: handleGetSchedules(),
-              builder: (context, snapshot) {
-                return ListView.builder(
-                  itemCount: snapshot.data?.length ?? 0,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        color:
-                            _selectedScheduleId == snapshot.data?[index]['_id']
-                                ? Colors.purple
-                                : Colors.white,
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      margin: const EdgeInsets.only(bottom: 5.0),
-                      child: ListTile(
-                        onTap: () {
-                          setState(() {
-                            _selectedScheduleId = snapshot.data?[index]['_id'];
-                          });
-                        },
-                        title: Text(
-                          snapshot.data?[index]['title'],
-                          style: GoogleFonts.urbanist(
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.bold,
-                            color:
-                                _selectedScheduleId ==
-                                        snapshot.data?[index]['_id']
-                                    ? Colors.white
-                                    : AppColors.primary,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-            const SizedBox(height: 20.0),
-            Text(
-              'Select Pet',
-              style: GoogleFonts.urbanist(
-                color: AppColors.primary.withOpacity(0.5),
-                fontWeight: FontWeight.w400,
-                fontSize: 8.0,
-              ),
-            ),
-            const SizedBox(height: 10.0),
-            Container(
-              padding: const EdgeInsets.all(5.0),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: Center(
-                child: DropdownButton<dynamic>(
-                  value: _selectedPet.isNotEmpty ? _selectedPet : null,
-                  underline: const SizedBox(),
-                  onChanged: (dynamic newValue) {
-                    setState(() {
-                      _selectedPet = newValue!;
-                      _selectedPetId = newValue;
-                    });
-                  },
-                  items: getPets(),
+              const Spacer(),
+              _buildSubmitButton(),
+            ],
+          ),
+        ),
+      ),
+    ).animate().fadeIn(duration: 300.ms);
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Text(
+      title,
+      style: GoogleFonts.urbanist(
+        color: AppColors.primary.withOpacity(0.7),
+        fontWeight: FontWeight.w600,
+        fontSize: 14.0,
+      ),
+    );
+  }
+
+  Widget _buildScheduleList() {
+    return Expanded(
+      flex: 2,
+      child: ListView.builder(
+        itemCount: _availableSchedules.length,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          final schedule = _availableSchedules[index];
+          return ValueListenableBuilder<String>(
+            valueListenable: _selectedScheduleNotifier,
+            builder: (context, selectedSchedule, child) {
+              return ScheduleCard(
+                schedule: schedule,
+                isSelected: selectedSchedule == schedule['_id'],
+                onTap: () {
+                  _selectedScheduleNotifier.value = schedule['_id'];
+                },
+              ).animate().slideX(
+                begin: 0.5,
+                duration: 300.ms,
+                curve: Curves.easeOut,
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
+          backgroundColor: AppColors.primary,
+          padding: const EdgeInsets.symmetric(vertical: 15),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+        ),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder:
+                (context) => ConfirmationDialog(
+                  title: 'Confirm Booking',
+                  message: 'Proceed with pet grooming appointment?',
+                  onConfirm: _handleBookGrooming,
                 ),
-              ),
-            ),
-            const Spacer(),
-            ElevatedButton(
-              onPressed: () async {
-                execOnConfirm(
-                  message: "Proceed with pet grooming appointment",
-                  method: () => handleSubmit(),
-                  context,
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: AppColors.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-              ),
-              child: SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: Center(
-                  child: Text(
-                    'Submit',
-                    style: GoogleFonts.urbanist(
-                      color: AppColors.secondary,
-                      fontSize: 12.0,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+          );
+        },
+        child: Text(
+          'Book Grooming',
+          style: GoogleFonts.urbanist(
+            color: Colors.white,
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _selectedScheduleNotifier.dispose();
+    _selectedPetNotifier.dispose();
+    super.dispose();
   }
 }

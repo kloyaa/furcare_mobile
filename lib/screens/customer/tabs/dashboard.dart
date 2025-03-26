@@ -71,7 +71,7 @@ class _CustomerTabDashboardState extends State<CustomerTabDashboard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'By signing below, I consent to the services provided by Furcare Vet Clinic. I understand that grooming involves handling my pet, and I authorize the staff to proceed with the requested services.',
+                      'By tapping "Accept" below, I consent to the services provided by Furcare Vet Clinic. I understand that grooming involves handling my pet, and I authorize the staff to proceed with the requested services.',
                       style: GoogleFonts.roboto(),
                     ),
                     const SizedBox(height: 10),
@@ -181,14 +181,16 @@ class _CustomerTabDashboardState extends State<CustomerTabDashboard> {
     return GestureDetector(
       onTap: () async {
         // Show consent dialog before proceeding
-        bool consent = await _showConsentDialog(context);
 
+        if (service['title'] == "Location") {
+          return service['action']();
+        }
+
+        bool consent = await _showConsentDialog(context);
         if (consent) {
           // Proceed with route or action
           if (service['route'] != null) {
             Navigator.pushNamed(context, service['route']);
-          } else if (service['action'] != null) {
-            service['action']();
           }
         }
       },

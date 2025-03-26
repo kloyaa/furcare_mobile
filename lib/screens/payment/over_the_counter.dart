@@ -1,56 +1,158 @@
 import 'package:flutter/material.dart';
-import 'package:furcare_app/utils/const/colors.dart';
+import 'package:animate_do/animate_do.dart';
+import 'package:flutter/services.dart';
+import 'package:furcare_app/screens/customer/customer_main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
+import 'package:furcare_app/utils/const/colors.dart';
 
-class OverTheCounter extends StatelessWidget {
+class OverTheCounter extends StatefulWidget {
   const OverTheCounter({super.key});
+
+  @override
+  _OverTheCounterState createState() => _OverTheCounterState();
+}
+
+class _OverTheCounterState extends State<OverTheCounter>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.secondary,
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 50, vertical: 10.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: SafeArea(
+        child: Stack(
           children: [
-            const SizedBox(height: 250.0),
-            Text(
-              'Please proceed to FurCare Veterinary Clinic',
-              style: GoogleFonts.urbanist(
-                color: AppColors.primary,
-                fontSize: 22.0,
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const Spacer(),
-            ElevatedButton(
-              onPressed: () async {
-                Navigator.pushReplacementNamed(context, "/c/main");
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: AppColors.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
+            // Background Decoration
+            Positioned.fill(
+              child: Opacity(
+                opacity: 0.2,
+                child: Image.asset(
+                  'assets/veterinary_pattern.jpg',
+                  repeat: ImageRepeat.repeat,
                 ),
               ),
-              child: SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: Center(
-                  child: Text(
-                    'Finish',
-                    style: GoogleFonts.urbanist(
-                      color: AppColors.secondary,
-                      fontSize: 12.0,
+            ),
+
+            // Main Content
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Animated Lottie Illustration
+                  FadeInUp(
+                    child: Lottie.asset(
+                      'assets/lady_walking_with_dog.json',
+                      width: 250,
+                      height: 250,
+                      fit: BoxFit.contain,
                     ),
                   ),
-                ),
+                  // Animated Text
+                  FadeInDown(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 1.0),
+                      child: Text(
+                        'Please proceed \nto the counter for \nyour payment \n\nThank you!',
+                        style: GoogleFonts.lilitaOne(
+                          color: AppColors.primary,
+                          fontSize: 34.0,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 10.0,
+                              color: Colors.black.withAlpha(50),
+                              offset: const Offset(5, 5),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 30),
+
+                  // Animated Button with Hover Effect
+                  ScaleTransition(
+                    scale: Tween<double>(begin: 1.0, end: 1.05).animate(
+                      CurvedAnimation(
+                        parent: _animationController,
+                        curve: Curves.easeInOut,
+                      ),
+                    ),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        // Add a brief haptic feedback
+                        HapticFeedback.lightImpact();
+
+                        // Navigate with a fade transition
+                        Navigator.of(context).pushReplacement(
+                          PageRouteBuilder(
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    const CustomerMain(),
+                            transitionsBuilder: (
+                              context,
+                              animation,
+                              secondaryAnimation,
+                              child,
+                            ) {
+                              return FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: AppColors.primary,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 50,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                          side: BorderSide(
+                            color: AppColors.primary.withOpacity(0.5),
+                            width: 2,
+                          ),
+                        ),
+                        elevation: 10,
+                        shadowColor: AppColors.primary.withOpacity(0.4),
+                      ),
+                      child: Text(
+                        'Finish',
+                        style: GoogleFonts.urbanist(
+                          color: AppColors.secondary,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 30.0),
           ],
         ),
       ),
