@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:furcare_app/apis/branch_api.dart';
 import 'package:furcare_app/models/branch_info.dart';
 import 'package:furcare_app/providers/authentication.dart';
+import 'package:furcare_app/providers/branch.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -195,21 +196,27 @@ class BranchDetailsSheet extends StatelessWidget {
               opacity: branch.isActive ? 1 : 0.2,
               child: SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                child: IgnorePointer(
+                  ignoring: !branch.isActive,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Provider.of<BranchProvider>(
+                        context,
+                        listen: false,
+                      ).setBranch(branch);
+                      Navigator.pushReplacementNamed(context, '/c/main');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 12,
+                      ),
                     ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30,
-                      vertical: 12,
-                    ),
-                  ),
-                  child: TapRegion(
-                    enabled: branch.isActive,
                     child: Text(
                       branch.isActive
                           ? 'Select Branch'

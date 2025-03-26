@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/providers/authentication.dart';
+import 'package:furcare_app/providers/branch.dart';
 import 'package:furcare_app/providers/fees.dart';
 import 'package:furcare_app/providers/user.dart';
 import 'package:furcare_app/screens/auth/registration/customer_registration.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthTokenProvider()),
         ChangeNotifierProvider(create: (_) => RegistrationProvider()),
         ChangeNotifierProvider(create: (_) => FeesProvider()),
+        ChangeNotifierProvider(create: (_) => BranchProvider()),
         ChangeNotifierProvider(create: (_) => ClientProvider()),
       ],
       child: MaterialApp(

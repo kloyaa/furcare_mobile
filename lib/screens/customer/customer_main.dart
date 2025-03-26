@@ -5,6 +5,7 @@ import 'package:furcare_app/apis/fees_api.dart';
 import 'package:furcare_app/models/login_response.dart';
 import 'package:furcare_app/models/user_info.dart';
 import 'package:furcare_app/providers/authentication.dart';
+import 'package:furcare_app/providers/branch.dart';
 import 'package:furcare_app/providers/fees.dart';
 import 'package:furcare_app/providers/user.dart';
 import 'package:furcare_app/screens/customer/tabs/bookings.dart';
@@ -112,7 +113,35 @@ class _CustomerMainState extends State<CustomerMain> {
 
   @override
   Widget build(BuildContext context) {
+    final branch = Provider.of<BranchProvider>(context, listen: false);
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        leadingWidth: 0,
+        leading: SizedBox(),
+        title: Center(
+          child: Column(
+            children: [
+              Text(
+                branch.branch?.name ?? '',
+                style: GoogleFonts.roboto(
+                  fontSize: 14,
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Text(
+                branch.branch?.address ?? '',
+                style: GoogleFonts.roboto(
+                  fontSize: 12,
+                  color: AppColors.primary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       backgroundColor: AppColors.secondary,
       bottomNavigationBar: SalomonBottomBar(
         backgroundColor: Colors.white,
