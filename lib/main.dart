@@ -9,6 +9,7 @@ import 'package:furcare_app/screens/customer/create_profile/create_new_pet.dart'
 import 'package:furcare_app/screens/customer/create_profile/create_pet_profile.dart';
 import 'package:furcare_app/screens/customer/create_profile/create_profile_1.dart';
 import 'package:furcare_app/screens/customer/create_profile/create_profile_2.dart';
+import 'package:furcare_app/screens/customer/customer_activity_log.dart';
 import 'package:furcare_app/screens/customer/customer_main.dart';
 import 'package:furcare_app/screens/customer/edit/edit_owner_profile.dart';
 import 'package:furcare_app/screens/customer/edit/edit_profile_step_1.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
           '/': (context) => const CustomerLogin(),
           // '/': (context) => const StaffLogin(),
           '/branches': (context) => const BranchesList(),
+          '/c/activity': (context) => const CustomerActivityLog(),
           '/c/main': (context) => const CustomerMain(),
           '/c/register': (context) => const CustomerRegister(),
           '/c/edit/profile/1': (context) => const EditProfileStep1(),
