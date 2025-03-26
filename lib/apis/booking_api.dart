@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:furcare_app/core/config/base_url_config.dart';
 import 'package:furcare_app/models/booking_payload.dart';
-import 'package:furcare_app/utils/const/api.dart';
 
 class BookingApi {
   Dio dio = Dio();
   BookingApi(String accessToken) {
-    dio.options.baseUrl = baseUrl;
+    dio.options.baseUrl = AppConfig.baseUrl;
     dio.options.headers = {
       'Authorization': 'Bearer $accessToken',
       'nodex-user-origin': 'web',

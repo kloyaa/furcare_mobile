@@ -1,0 +1,24 @@
+{
+  "name": "root_furcare_app",
+  "version": "1.0.0",
+  "description": "A new Flutter project.",
+  "homepage": "https://github.com/kloyaa/furcare_mobile#readme",
+  "bugs": {
+    "url": "https://github.com/kloyaa/furcare_mobile/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kloyaa/furcare_mobile.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "generate:base_url": "node __scripts__/generate_base_url.js"
+  }
+}

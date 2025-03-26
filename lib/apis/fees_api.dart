@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:furcare_app/utils/const/api.dart';
+import 'package:furcare_app/core/config/base_url_config.dart';
 
 class FeesApi {
   Dio dio = Dio();
   FeesApi(String accessToken) {
-    dio.options.baseUrl = baseUrl;
+    dio.options.baseUrl = AppConfig.baseUrl;
     dio.options.headers = {
       'Authorization': 'Bearer $accessToken',
       'nodex-user-origin': 'web',

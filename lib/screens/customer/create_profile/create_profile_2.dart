@@ -4,7 +4,6 @@ import 'package:furcare_app/apis/client_api.dart';
 import 'package:furcare_app/models/login_response.dart';
 import 'package:furcare_app/models/user_info.dart';
 import 'package:furcare_app/providers/authentication.dart';
-import 'package:furcare_app/screens/others/setup.dart';
 import 'package:furcare_app/screens/others/success.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:furcare_app/widgets/snackbar.dart';

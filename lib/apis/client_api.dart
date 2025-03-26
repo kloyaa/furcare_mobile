@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:furcare_app/core/config/base_url_config.dart';
 import 'package:furcare_app/models/owner_info.dart';
 import 'package:furcare_app/models/pet_info.dart';
-import 'package:furcare_app/utils/const/api.dart';
 
 class ClientApi {
   Dio dio = Dio();
   ClientApi(String accessToken) {
-    dio.options.baseUrl = baseUrl;
+    dio.options.baseUrl = AppConfig.baseUrl;
     dio.options.headers = {
       'Authorization': 'Bearer $accessToken',
       'nodex-user-origin': 'web',

@@ -20,8 +20,8 @@ class _CreateProfileStep1State extends State<CreateProfileStep1> {
   late final FocusNode _fullNameFocus;
 
   // State
-  String _selectedGender = "male";
-  String _selectedBirthdate = "1999-01-01";
+  final String _selectedGender = "male";
+  final String _selectedBirthdate = "1999-01-01";
 
   Future handleSaveBasicInfo() async {
     final fullName = _fullNameController.text.trim();
@@ -68,107 +68,49 @@ class _CreateProfileStep1State extends State<CreateProfileStep1> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 50.0),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: TextFormField(
-                        controller: _fullNameController,
-                        focusNode: _fullNameFocus,
-                        decoration: InputDecoration(
-                          fillColor: AppColors.primary,
-                          labelText: "Full name",
-                          labelStyle: GoogleFonts.urbanist(
-                            color: AppColors.primary.withOpacity(0.5),
-                            fontSize: 10.0,
-                          ),
-                          prefixIcon: Icon(
-                            Ionicons.person_outline,
-                            size: 18.0,
-                            color: AppColors.primary.withOpacity(0.5),
-                          ),
-                          prefixIconColor: AppColors.primary,
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          floatingLabelAlignment: FloatingLabelAlignment.start,
-                        ),
-                        style: TextStyle(
-                          color: AppColors.primary.withOpacity(0.5),
-                          fontSize: 12.0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10.0),
-              Container(
-                padding: const EdgeInsets.all(20.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Gender',
-                      style: GoogleFonts.urbanist(
-                        color: AppColors.primary.withOpacity(0.5),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 8.0,
-                      ),
-                    ),
-                    const SizedBox(height: 10.0),
-                    GenderSelectionWidget(
-                      onGenderSelected: (gender) {
-                        setState(() {
-                          _selectedGender = gender!;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10.0),
+              SizedBox(height: 50.0),
               Text(
-                'Birthday',
-                style: GoogleFonts.urbanist(
-                  color: AppColors.primary.withOpacity(0.5),
-                  fontWeight: FontWeight.w400,
-                  fontSize: 8.0,
+                "Hello, Welcome to Furcare! What's your name?",
+                style: GoogleFonts.lilitaOne(
+                  fontSize: 42.0,
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 10.0),
+              SizedBox(height: 10.0),
               Container(
-                padding: const EdgeInsets.all(5.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15.0),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CalendarDatePicker2(
-                      config: CalendarDatePicker2Config(
-                        calendarType: CalendarDatePicker2Type.single,
-                      ),
-                      value: const [],
-                      onValueChanged: (dates) {
-                        final String date = dates[0].toIso8601String();
-                        _selectedBirthdate = date.substring(0, 10);
-                      },
+                child: TextFormField(
+                  controller: _fullNameController,
+                  focusNode: _fullNameFocus,
+                  decoration: InputDecoration(
+                    fillColor: AppColors.primary,
+                    labelText: "Write here",
+                    labelStyle: GoogleFonts.urbanist(
+                      color: AppColors.primary.withOpacity(0.5),
+                      fontSize: 10.0,
                     ),
-                  ],
+                    prefixIcon: Icon(
+                      Ionicons.person_outline,
+                      size: 18.0,
+                      color: AppColors.primary.withOpacity(0.5),
+                    ),
+                    prefixIconColor: AppColors.primary,
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    floatingLabelAlignment: FloatingLabelAlignment.start,
+                  ),
+                  style: TextStyle(
+                    color: AppColors.primary.withOpacity(0.5),
+                    fontSize: 12.0,
+                  ),
                 ),
               ),
-              const Spacer(),
+              const Spacer(flex: 5),
               ElevatedButton(
                 onPressed: () async {
                   if (context.mounted) {

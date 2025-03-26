@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:furcare_app/utils/const/api.dart';
+import 'package:furcare_app/core/config/base_url_config.dart';
 
 class AuthenticationApi {
   Dio dio = Dio();
   AuthenticationApi(String origin) {
-    dio.options.baseUrl = baseUrl;
+    dio.options.baseUrl = AppConfig.baseUrl;
     dio.options.headers = {
       'nodex-user-origin': origin,
       'nodex-access-key': 'v7pb6wylg4m0xf0kx5zzoved',
@@ -48,7 +48,7 @@ class AuthenticationApi {
 class EnrollmentApi {
   Dio dio = Dio();
   EnrollmentApi(String accessToken) {
-    dio.options.baseUrl = baseUrl;
+    dio.options.baseUrl = AppConfig.baseUrl;
     dio.options.headers = {
       'Authorization': 'Bearer $accessToken',
       'nodex-user-origin': 'web',

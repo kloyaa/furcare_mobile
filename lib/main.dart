@@ -3,14 +3,12 @@ import 'package:furcare_app/providers/authentication.dart';
 import 'package:furcare_app/providers/fees.dart';
 import 'package:furcare_app/providers/user.dart';
 import 'package:furcare_app/screens/auth/registration/customer_registration.dart';
-import 'package:furcare_app/screens/customer/create_profile/create_owner_profile.dart';
 import 'package:furcare_app/screens/customer/create_profile/create_pet_profile.dart';
 import 'package:furcare_app/screens/customer/create_profile/create_profile_1.dart';
 import 'package:furcare_app/screens/customer/create_profile/create_profile_2.dart';
 import 'package:furcare_app/screens/customer/customer_main.dart';
 import 'package:furcare_app/screens/customer/edit/edit_owner_profile.dart';
 import 'package:furcare_app/screens/customer/edit/edit_profile_step_1.dart';
-import 'package:furcare_app/screens/others/success.dart';
 import 'package:provider/provider.dart';
 import 'package:furcare_app/screens/auth/customer_login.dart';
 
@@ -41,6 +39,7 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/',
         routes: {
+          // '/': (context) => ProfileSetupAnimation(redirectPath: '/'),
           // '/': (context) => SuccessScreen(redirectPath: '/'),
           '/': (context) => const CustomerLogin(),
           // '/': (context) => const StaffLogin(),

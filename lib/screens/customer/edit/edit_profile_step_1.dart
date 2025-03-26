@@ -22,7 +22,7 @@ class _EditProfileStep1State extends State<EditProfileStep1> {
 
   // State
   String _selectedGender = "male";
-  String _selectedBirthdate = "1999-01-01";
+  final String _selectedBirthdate = "1999-01-01";
   String _accessToken = "";
   String _birthDate = "";
 

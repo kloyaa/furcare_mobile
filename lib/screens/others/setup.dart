@@ -78,7 +78,7 @@ class _ProfileSetupAnimationState extends State<ProfileSetupAnimation>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.secondary,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -95,13 +95,13 @@ class _ProfileSetupAnimationState extends State<ProfileSetupAnimation>
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: LinearGradient(
-                        colors: [Colors.black87, Colors.black12],
+                        colors: [AppColors.primary, AppColors.secondary50],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black87,
+                          color: AppColors.secondary50,
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -166,7 +166,7 @@ class _ProfileSetupAnimationState extends State<ProfileSetupAnimation>
                     width: 300,
                     height: 10,
                     decoration: BoxDecoration(
-                      color: Colors.black12,
+                      color: AppColors.secondary50,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: FractionallySizedBox(
@@ -174,7 +174,11 @@ class _ProfileSetupAnimationState extends State<ProfileSetupAnimation>
                       child: Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [Colors.black, Colors.black12],
+                            colors: [
+                              AppColors.primary,
+                              AppColors.secondary50,
+                              AppColors.primary,
+                            ],
                           ),
                           borderRadius: BorderRadius.circular(10),
                         ),
