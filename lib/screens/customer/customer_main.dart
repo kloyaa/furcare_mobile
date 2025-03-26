@@ -93,6 +93,27 @@ class _CustomerMainState extends State<CustomerMain> {
     }
   }
 
+  void _onTabTapped(int index) {
+    // Show SnackBar only when the Bookings tab (index 2) is tapped
+    if (index == 1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Pull down to refresh Pets',
+            style: GoogleFonts.roboto(color: Colors.white),
+          ),
+          duration: Duration(seconds: 2),
+          showCloseIcon: true,
+          backgroundColor: AppColors.contentColorBlack,
+        ),
+      );
+    }
+
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -147,7 +168,7 @@ class _CustomerMainState extends State<CustomerMain> {
         backgroundColor: Colors.white,
         margin: const EdgeInsets.symmetric(horizontal: 70, vertical: 10.0),
         currentIndex: _currentIndex,
-        onTap: (i) => setState(() => _currentIndex = i),
+        onTap: (i) => _onTabTapped(i),
         items: [
           SalomonBottomBarItem(
             icon: const Icon(Ionicons.home_outline, size: 15.0),

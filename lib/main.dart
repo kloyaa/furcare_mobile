@@ -5,6 +5,7 @@ import 'package:furcare_app/providers/fees.dart';
 import 'package:furcare_app/providers/user.dart';
 import 'package:furcare_app/screens/auth/registration/customer_registration.dart';
 import 'package:furcare_app/screens/branch/branch.dart';
+import 'package:furcare_app/screens/customer/create_profile/create_new_pet.dart';
 import 'package:furcare_app/screens/customer/create_profile/create_pet_profile.dart';
 import 'package:furcare_app/screens/customer/create_profile/create_profile_1.dart';
 import 'package:furcare_app/screens/customer/create_profile/create_profile_2.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
           '/c/create/profile/2': (context) => const CreateProfileStep2(),
           '/c/edit/profile/owner': (context) => const EditOwner(),
           '/c/create/profile/pet': (context) => const CreatePet(),
+          '/c/add/pet': (context) => const AddNewPet(),
         },
       ),
     );

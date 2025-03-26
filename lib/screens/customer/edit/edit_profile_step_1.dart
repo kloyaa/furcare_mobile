@@ -1,4 +1,3 @@
-import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:furcare_app/models/user_info.dart';
 import 'package:furcare_app/providers/authentication.dart';

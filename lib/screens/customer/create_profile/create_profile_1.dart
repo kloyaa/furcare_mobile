@@ -1,9 +1,7 @@
-import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:furcare_app/models/user_info.dart';
 import 'package:furcare_app/providers/authentication.dart';
 import 'package:furcare_app/utils/const/colors.dart';
-import 'package:furcare_app/widgets/select_gender.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';

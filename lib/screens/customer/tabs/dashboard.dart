@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:flutter/material.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
