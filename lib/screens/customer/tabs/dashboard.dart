@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -120,6 +122,7 @@ class _CustomerTabDashboardState extends State<CustomerTabDashboard> {
                 MapsLauncher.launchCoordinates(
                   8.475595321127928,
                   124.66306220357012,
+                  'Furcare',
                 );
               },
               child: Card(
