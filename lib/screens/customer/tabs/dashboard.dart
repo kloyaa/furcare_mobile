@@ -53,6 +53,91 @@ class _CustomerTabDashboardState extends State<CustomerTabDashboard> {
     },
   ];
 
+  // Consent dialog method
+  Future<bool> _showConsentDialog(BuildContext context) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                'Service Consent',
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
+                ),
+              ),
+              content: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'By signing below, I consent to the services provided by Furcare Vet Clinic. I understand that grooming involves handling my pet, and I authorize the staff to proceed with the requested services.',
+                      style: GoogleFonts.roboto(),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Emergency Consent:',
+                      style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'In case of an emergency, I consent to necessary veterinary care, at my expense.',
+                      style: GoogleFonts.roboto(),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Pet Care Acknowledgment:',
+                      style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'At Furcare Vet Clinic, we prioritize your pet\'s well-being. While we take great care to ensure a pleasant grooming experience, I acknowledge that the staff will address any underlying health issues or worsen existing conditions if needed.',
+                      style: GoogleFonts.roboto(),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Promotional Use:',
+                      style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'I give permission for Furcare Vet Clinic to use photos of my pet for promotional purposes.',
+                      style: GoogleFonts.roboto(),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Vaccination Confirmation:',
+                      style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'I confirm that my pet is up to date on Rabies, Distemper, and any required vaccinations.',
+                      style: GoogleFonts.roboto(),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(
+                    'Decline',
+                    style: GoogleFonts.roboto(color: Colors.red),
+                  ),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                  ),
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text(
+                    'Accept',
+                    style: GoogleFonts.roboto(color: Colors.white),
+                  ),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,6 +147,7 @@ class _CustomerTabDashboardState extends State<CustomerTabDashboard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 20.0),
+            // Services List
             Expanded(
               child: AnimationLimiter(
                 child: ListView.builder(
@@ -93,12 +179,17 @@ class _CustomerTabDashboardState extends State<CustomerTabDashboard> {
 
   Widget _buildServiceCard(BuildContext context, Map<String, dynamic> service) {
     return GestureDetector(
-      onTap: () {
-        // Check if there's a specific route or action
-        if (service['route'] != null) {
-          Navigator.pushNamed(context, service['route']);
-        } else if (service['action'] != null) {
-          service['action']();
+      onTap: () async {
+        // Show consent dialog before proceeding
+        bool consent = await _showConsentDialog(context);
+
+        if (consent) {
+          // Proceed with route or action
+          if (service['route'] != null) {
+            Navigator.pushNamed(context, service['route']);
+          } else if (service['action'] != null) {
+            service['action']();
+          }
         }
       },
       child: Container(

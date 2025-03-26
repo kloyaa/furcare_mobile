@@ -4,6 +4,9 @@ import 'package:furcare_app/providers/branch.dart';
 import 'package:furcare_app/providers/fees.dart';
 import 'package:furcare_app/providers/user.dart';
 import 'package:furcare_app/screens/auth/registration/customer_registration.dart';
+import 'package:furcare_app/screens/booking/board.dart';
+import 'package:furcare_app/screens/booking/grooming.dart';
+import 'package:furcare_app/screens/booking/transit.dart';
 import 'package:furcare_app/screens/branch/branch.dart';
 import 'package:furcare_app/screens/customer/create_profile/create_new_pet.dart';
 import 'package:furcare_app/screens/customer/create_profile/create_pet_profile.dart';
@@ -58,6 +61,10 @@ class MyApp extends StatelessWidget {
           '/c/edit/profile/owner': (context) => const EditOwner(),
           '/c/create/profile/pet': (context) => const CreatePet(),
           '/c/add/pet': (context) => const AddNewPet(),
+
+          '/book/boarding': (context) => const BookBoarding(),
+          '/book/transit': (context) => const BookTransit(),
+          '/book/grooming': (context) => const BookGrooming(),
         },
       ),
     );
