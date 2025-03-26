@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:furcare_app/apis/auth_api.dart';
@@ -7,6 +8,7 @@ import 'package:furcare_app/services/location_permission.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class CustomerLogin extends StatefulWidget {
@@ -172,9 +174,17 @@ class _CustomerLoginState extends State<CustomerLogin>
                 child: SizedBox(
                   width: 300.0,
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      FadeInDown(
+                        child: Lottie.asset(
+                          'assets/lady_with_dog.json',
+                          width: 250,
+                          height: 250,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                       Text(
                         "Login to your account",
                         style: GoogleFonts.urbanist(
