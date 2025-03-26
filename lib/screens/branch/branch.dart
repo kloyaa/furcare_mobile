@@ -60,6 +60,7 @@ class _BranchesListState extends State<BranchesList> {
   }
 
   void _showBranchDetails(Branch branch) {
+    print(branch.name);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -136,7 +137,7 @@ class BranchListItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Text(
-            branch.isActive ? 'Active' : 'Inactive',
+            branch.isActive ? 'Open' : 'Closed',
             style: GoogleFonts.poppins(
               color: branch.isActive ? Colors.green : Colors.red,
               fontWeight: FontWeight.w500,
@@ -181,7 +182,7 @@ class BranchDetailsSheet extends StatelessWidget {
           _buildDetailRow(icon: Icons.phone_outlined, text: branch.mobileNo),
           _buildDetailRow(
             icon: Icons.verified_outlined,
-            text: branch.isActive ? 'Active' : 'Inactive',
+            text: branch.isActive ? 'Active' : 'Closed',
             color: branch.isActive ? Colors.green : Colors.red,
           ),
           _buildDetailRow(
@@ -190,22 +191,33 @@ class BranchDetailsSheet extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           Center(
-            child: ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue.shade50,
-                foregroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
+            child: Opacity(
+              opacity: branch.isActive ? 1 : 0.2,
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 30,
+                      vertical: 12,
+                    ),
+                  ),
+                  child: TapRegion(
+                    enabled: branch.isActive,
+                    child: Text(
+                      branch.isActive
+                          ? 'Select Branch'
+                          : 'Closed, Please Come back next time',
+                      style: GoogleFonts.roboto(fontWeight: FontWeight.w600),
+                    ),
+                  ),
                 ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                  vertical: 12,
-                ),
-              ),
-              child: Text(
-                'Close',
-                style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
               ),
             ),
           ),
