@@ -87,7 +87,7 @@ class _CustomerLoginState extends State<CustomerLogin>
           print('loginResponse.accessToken${loginResponse.accessToken}');
 
           accessTokenProvider.setAuthToken(loginResponse.accessToken);
-          Navigator.pushReplacementNamed(context, '/c/main');
+          Navigator.pushReplacementNamed(context, '/branches');
         }
       }
     } on DioException catch (e) {

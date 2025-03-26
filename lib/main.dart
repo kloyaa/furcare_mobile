@@ -3,6 +3,7 @@ import 'package:furcare_app/providers/authentication.dart';
 import 'package:furcare_app/providers/fees.dart';
 import 'package:furcare_app/providers/user.dart';
 import 'package:furcare_app/screens/auth/registration/customer_registration.dart';
+import 'package:furcare_app/screens/branch/branch.dart';
 import 'package:furcare_app/screens/customer/create_profile/create_pet_profile.dart';
 import 'package:furcare_app/screens/customer/create_profile/create_profile_1.dart';
 import 'package:furcare_app/screens/customer/create_profile/create_profile_2.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
           // '/': (context) => SuccessScreen(redirectPath: '/'),
           '/': (context) => const CustomerLogin(),
           // '/': (context) => const StaffLogin(),
+          '/branches': (context) => const BranchesList(),
           '/c/main': (context) => const CustomerMain(),
           '/c/register': (context) => const CustomerRegister(),
           '/c/edit/profile/1': (context) => const EditProfileStep1(),
