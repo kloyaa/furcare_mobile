@@ -126,13 +126,16 @@ class _CustomerTabPetsState extends State<CustomerTabPets> {
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                       final pet = _pets[index];
-                      return PetListItem(
-                            pet: pet,
-                            onTap: () => _showPetDetails(pet),
-                          )
-                          .animate()
-                          .fadeIn(duration: 300.ms, delay: (index * 100).ms)
-                          .slideX(begin: 0.1, end: 0);
+                      return Container(
+                        margin: EdgeInsets.only(bottom: 10),
+                        child: PetListItem(
+                              pet: pet,
+                              onTap: () => _showPetDetails(pet),
+                            )
+                            .animate()
+                            .fadeIn(duration: 300.ms, delay: (index * 100).ms)
+                            .slideX(begin: 0.1, end: 0),
+                      );
                     }, childCount: _pets.length),
                   ),
                 ),
@@ -149,62 +152,15 @@ class PetListItem extends StatelessWidget {
 
   const PetListItem({super.key, required this.pet, required this.onTap});
 
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      elevation: 0,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(15.0),
-        leading: CircleAvatar(
-          backgroundColor:
-              pet['gender'] == "male"
-                  ? Colors.blueGrey.shade100
-                  : Colors.pink.shade100,
-          child: Icon(
-            Ionicons.paw,
-            color: pet['gender'] == "male" ? Colors.blueGrey : Colors.pink,
-          ),
-        ),
-        title: Text(
-          "${pet['name']}",
-          style: GoogleFonts.urbanist(
-            fontSize: 16.0,
-            fontWeight: FontWeight.w600,
-            color: AppColors.primary,
-          ),
-        ),
-        subtitle: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Row(
-            children: [
-              _buildDetailChip(
-                icon: pet['gender'] == "male" ? Ionicons.male : Ionicons.female,
-                text: pet['gender'],
-              ),
-              const SizedBox(width: 10),
-              _buildDetailChip(
-                icon: Ionicons.calendar_number_outline,
-                text: pet['age'].toString(),
-              ),
-            ],
-          ),
-        ),
-        onTap: onTap,
-      ),
-    );
-  }
-
   Widget _buildDetailChip({required IconData icon, required String text}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color: AppColors.primary.withOpacity(0.1),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 12, color: AppColors.primary),
           const SizedBox(width: 4),
@@ -212,11 +168,93 @@ class PetListItem extends StatelessWidget {
             text,
             style: GoogleFonts.urbanist(
               fontSize: 10.0,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w500,
               color: AppColors.primary,
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(15),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor:
+                      pet['gender'] == "male"
+                          ? Colors.blueGrey.shade100
+                          : Colors.pink.shade100,
+                  child: Icon(
+                    Ionicons.paw,
+                    color:
+                        pet['gender'] == "male" ? Colors.blueGrey : Colors.pink,
+                  ),
+                ),
+                const SizedBox(width: 15),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${pet['name']}",
+                        style: GoogleFonts.urbanist(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.primary,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: [
+                          _buildDetailChip(
+                            icon:
+                                pet['gender'] == "male"
+                                    ? Ionicons.male
+                                    : Ionicons.female,
+                            text: pet['gender'],
+                          ),
+                          const SizedBox(width: 10),
+                          _buildDetailChip(
+                            icon: Ionicons.calendar_number_outline,
+                            text: pet['age'].toString(),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Ionicons.chevron_forward,
+                  color: AppColors.primary.withOpacity(0.5),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -227,13 +265,59 @@ class PetDetailsSheet extends StatelessWidget {
 
   const PetDetailsSheet({super.key, required this.pet});
 
+  Widget _buildDetailRow({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: AppColors.primary, size: 24),
+          ),
+          const SizedBox(width: 15),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: GoogleFonts.urbanist(
+                    color: Colors.grey[600],
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  value.capitalize(),
+                  style: GoogleFonts.urbanist(
+                    color: AppColors.primary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,6 +345,7 @@ class PetDetailsSheet extends StatelessWidget {
                 fontSize: 24,
                 fontWeight: FontWeight.w700,
                 color: AppColors.primary,
+                letterSpacing: 0.5,
               ),
             ),
           ),
@@ -284,6 +369,7 @@ class PetDetailsSheet extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
+                  elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -294,7 +380,10 @@ class PetDetailsSheet extends StatelessWidget {
                 ),
                 child: Text(
                   'Close',
-                  style: GoogleFonts.roboto(fontWeight: FontWeight.w600),
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ),
@@ -303,37 +392,11 @@ class PetDetailsSheet extends StatelessWidget {
       ),
     ).animate().fadeIn().slideY(begin: 0.5, end: 0);
   }
+}
 
-  Widget _buildDetailRow({
-    required IconData icon,
-    required String label,
-    required String value,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          Icon(icon, color: AppColors.primary, size: 24),
-          const SizedBox(width: 15),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: GoogleFonts.urbanist(color: Colors.grey, fontSize: 12),
-              ),
-              Text(
-                value,
-                style: GoogleFonts.urbanist(
-                  color: AppColors.primary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+// Extension to capitalize first letter
+extension StringExtension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
 }
