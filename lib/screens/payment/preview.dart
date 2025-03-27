@@ -156,12 +156,6 @@ class _PaymentPreviewState extends State<PaymentPreview>
                         value: widget.serviceName.toUpperCase(),
                       ),
 
-                      // Financial Details
-                      _buildFinancialSection(
-                        title: "DOWNPAYMENT",
-                        value: "P${_serviceFee ~/ 2}.00",
-                      ),
-
                       _buildFinancialSection(
                         title: "SERVICE FEE",
                         value: "P$_serviceFee.00",
@@ -182,7 +176,7 @@ class _PaymentPreviewState extends State<PaymentPreview>
                         ),
                       ),
                       Text(
-                        "P${_serviceFee ~/ 2}.00",
+                        "P$_serviceFee.00",
                         style: GoogleFonts.rajdhani(
                           fontSize: 48.0,
                           color: AppColors.primary,

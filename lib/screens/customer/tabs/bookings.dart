@@ -305,87 +305,116 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
             duration: 300.ms,
           ),
         ],
-        child: Card(
-          color: Colors.white,
-          elevation: 0,
+        child: Container(
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20.0),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.primary.withOpacity(0.1),
+                spreadRadius: 2,
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
           ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(15.0),
-            child: Stack(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Gradient background
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Chip(
-                            label: Text(
-                              booking['applicationType']
-                                  .toString()
-                                  .toUpperCase(),
-                              style: GoogleFonts.urbanist(
-                                fontSize: 10.0,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                            backgroundColor: AppColors.primary.withOpacity(0.1),
-                          ),
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: _getStatusColor(_status).withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              _status.capitalize(),
-                              style: GoogleFonts.urbanist(
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.bold,
-                                color: _getStatusColor(_status),
-                              ),
-                            ),
-                          ),
-                        ],
+                // Header Row with Chip and Status
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
                       ),
-                      const SizedBox(height: 12.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        booking['applicationType'].toString().toUpperCase(),
+                        style: GoogleFonts.urbanist(
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: _getStatusColor(_status).withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        _status.capitalize(),
+                        style: GoogleFonts.urbanist(
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.bold,
+                          color: _getStatusColor(_status),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16.0),
+
+                // Pet Name and Price Row
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: Text(
-                              booking['pet']["name"].toString().toUpperCase(),
-                              style: GoogleFonts.urbanist(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primary,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
                           Text(
-                            "P${booking['payable']}.00",
-                            style: GoogleFonts.rajdhani(
-                              fontSize: 16.0,
+                            booking['pet']["name"].toString().toUpperCase(),
+                            style: GoogleFonts.urbanist(
+                              fontSize: 20.0,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.danger,
+                              color: AppColors.primary,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Booking Details',
+                            style: GoogleFonts.urbanist(
+                              fontSize: 14.0,
+                              color: Colors.grey[600],
                             ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.danger.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(
+                        "P${booking['payable']}.00",
+                        style: GoogleFonts.rajdhani(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.danger,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
