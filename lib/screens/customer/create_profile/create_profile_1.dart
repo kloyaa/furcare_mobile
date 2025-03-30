@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furcare_app/models/user_info.dart';
 import 'package:furcare_app/providers/authentication.dart';
+import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
@@ -79,7 +80,9 @@ class _CreateProfileStep1State extends State<CreateProfileStep1> {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
+                  borderRadius: BorderRadius.circular(
+                    AppConstants.defaultBorderRadius,
+                  ),
                 ),
                 child: TextFormField(
                   controller: _fullNameController,
@@ -119,7 +122,9 @@ class _CreateProfileStep1State extends State<CreateProfileStep1> {
                   foregroundColor: Colors.white,
                   backgroundColor: AppColors.primary,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
+                    borderRadius: BorderRadius.circular(
+                      AppConstants.defaultBorderRadius,
+                    ),
                   ),
                 ),
                 child: SizedBox(

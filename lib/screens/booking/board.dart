@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:dio/dio.dart';
+import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/widgets/dialog_confirm.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -202,7 +203,9 @@ class _BookBoardingState extends State<BookBoarding>
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(15.0),
+                    borderRadius: BorderRadius.circular(
+                      AppConstants.defaultBorderRadius,
+                    ),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.2),
@@ -388,7 +391,9 @@ class _BookBoardingState extends State<BookBoarding>
                               _selectedCageId == cage['_id']
                                   ? AppColors.primary
                                   : Colors.white,
-                          borderRadius: BorderRadius.circular(15.0),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.defaultBorderRadius,
+                          ),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.2),
@@ -453,7 +458,9 @@ class _BookBoardingState extends State<BookBoarding>
                     backgroundColor: AppColors.primary,
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(
+                        AppConstants.defaultBorderRadius,
+                      ),
                     ),
                   ),
                   child: Center(
@@ -496,7 +503,7 @@ class _BookBoardingState extends State<BookBoarding>
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15.0),
+        borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.2),

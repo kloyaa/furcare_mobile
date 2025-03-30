@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/const/colors.dart';
 
@@ -23,7 +24,7 @@ class PaymentMethodCard extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.2),

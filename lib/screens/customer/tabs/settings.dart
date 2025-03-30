@@ -26,6 +26,13 @@ class _CustomerTabSettingsState extends State<CustomerTabSettings> {
               onTap: () {
                 Navigator.pushNamed(context, '/c/edit/profile/1');
               },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+                side: BorderSide(
+                  color: AppColors.primary.withAlpha(0),
+                  width: 1,
+                ),
+              ),
               leading: const Icon(
                 Ionicons.person_outline,
                 color: AppColors.primary,
@@ -54,6 +61,13 @@ class _CustomerTabSettingsState extends State<CustomerTabSettings> {
               onTap: () {
                 Navigator.pushNamed(context, '/c/activity');
               },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+                side: BorderSide(
+                  color: AppColors.primary.withAlpha(0),
+                  width: 1,
+                ),
+              ),
               leading: const Icon(
                 Ionicons.list_outline,
                 color: AppColors.primary,
@@ -79,6 +93,13 @@ class _CustomerTabSettingsState extends State<CustomerTabSettings> {
             ),
             const SizedBox(height: 150.0),
             ListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+                side: BorderSide(
+                  color: AppColors.primary.withAlpha(0),
+                  width: 1,
+                ),
+              ),
               leading: const Icon(
                 Ionicons.call_outline,
                 color: AppColors.primary,
@@ -109,6 +130,13 @@ class _CustomerTabSettingsState extends State<CustomerTabSettings> {
             ),
             const SizedBox(height: 10.0),
             ListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+                side: BorderSide(
+                  color: AppColors.primary.withAlpha(0),
+                  width: 1,
+                ),
+              ),
               leading: const Icon(
                 Ionicons.log_out_outline,
                 color: AppColors.primary,

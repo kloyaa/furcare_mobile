@@ -5,6 +5,7 @@ import 'package:furcare_app/models/login_response.dart';
 import 'package:furcare_app/models/user_info.dart';
 import 'package:furcare_app/providers/authentication.dart';
 import 'package:furcare_app/screens/others/success.dart';
+import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:furcare_app/widgets/snackbar.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -156,7 +157,9 @@ class _CreateProfileStep2State extends State<CreateProfileStep2> {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
+                  borderRadius: BorderRadius.circular(
+                    AppConstants.defaultBorderRadius,
+                  ),
                 ),
                 child: TextFormField(
                   controller: _addressController,
@@ -195,7 +198,9 @@ class _CreateProfileStep2State extends State<CreateProfileStep2> {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
+                  borderRadius: BorderRadius.circular(
+                    AppConstants.defaultBorderRadius,
+                  ),
                 ),
                 child: TextFormField(
                   controller: _facebookController,
@@ -234,7 +239,9 @@ class _CreateProfileStep2State extends State<CreateProfileStep2> {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
+                  borderRadius: BorderRadius.circular(
+                    AppConstants.defaultBorderRadius,
+                  ),
                 ),
                 child: TextFormField(
                   controller: _messengerController,
@@ -273,7 +280,9 @@ class _CreateProfileStep2State extends State<CreateProfileStep2> {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
+                  borderRadius: BorderRadius.circular(
+                    AppConstants.defaultBorderRadius,
+                  ),
                 ),
                 child: TextFormField(
                   controller: _emailController,
@@ -312,7 +321,9 @@ class _CreateProfileStep2State extends State<CreateProfileStep2> {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
+                  borderRadius: BorderRadius.circular(
+                    AppConstants.defaultBorderRadius,
+                  ),
                 ),
                 child: TextFormField(
                   controller: _mobileNoController,
@@ -357,7 +368,9 @@ class _CreateProfileStep2State extends State<CreateProfileStep2> {
                   foregroundColor: Colors.white,
                   backgroundColor: AppColors.primary,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
+                    borderRadius: BorderRadius.circular(
+                      AppConstants.defaultBorderRadius,
+                    ),
                   ),
                 ),
                 child: SizedBox(
@@ -387,7 +400,9 @@ class _CreateProfileStep2State extends State<CreateProfileStep2> {
                     width: 0.5,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
+                    borderRadius: BorderRadius.circular(
+                      AppConstants.defaultBorderRadius,
+                    ),
                   ),
                 ),
                 child: SizedBox(

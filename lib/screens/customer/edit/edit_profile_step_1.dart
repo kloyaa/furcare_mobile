@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:furcare_app/models/user_info.dart';
 import 'package:furcare_app/providers/authentication.dart';
 import 'package:furcare_app/providers/user.dart';
+import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:furcare_app/widgets/select_gender.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -105,7 +106,9 @@ class _EditProfileStep1State extends State<EditProfileStep1> {
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(15.0),
+                        borderRadius: BorderRadius.circular(
+                          AppConstants.defaultBorderRadius,
+                        ),
                       ),
                       child: TextFormField(
                         controller: _fullNameController,
@@ -142,7 +145,9 @@ class _EditProfileStep1State extends State<EditProfileStep1> {
                 padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
+                  borderRadius: BorderRadius.circular(
+                    AppConstants.defaultBorderRadius,
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,7 +182,9 @@ class _EditProfileStep1State extends State<EditProfileStep1> {
                   foregroundColor: Colors.white,
                   backgroundColor: AppColors.primary,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
+                    borderRadius: BorderRadius.circular(
+                      AppConstants.defaultBorderRadius,
+                    ),
                   ),
                 ),
                 child: SizedBox(

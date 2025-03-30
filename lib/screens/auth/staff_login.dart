@@ -4,6 +4,7 @@ import 'package:furcare_app/apis/auth_api.dart';
 import 'package:furcare_app/models/login_response.dart';
 import 'package:furcare_app/providers/authentication.dart';
 import 'package:furcare_app/services/location_permission.dart';
+import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
@@ -190,7 +191,9 @@ class _StaffLoginState extends State<StaffLogin>
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(15.0),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.defaultBorderRadius,
+                          ),
                         ),
                         child: TextFormField(
                           controller: _usernameController,
@@ -233,7 +236,9 @@ class _StaffLoginState extends State<StaffLogin>
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(15.0),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.defaultBorderRadius,
+                          ),
                         ),
                         child: TextFormField(
                           controller: _passwordController,
@@ -317,7 +322,9 @@ class _StaffLoginState extends State<StaffLogin>
                           foregroundColor: Colors.white,
                           backgroundColor: AppColors.primary,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+                            borderRadius: BorderRadius.circular(
+                              AppConstants.defaultBorderRadius,
+                            ),
                           ),
                         ),
                         child: SizedBox(
@@ -345,7 +352,9 @@ class _StaffLoginState extends State<StaffLogin>
                             width: 0.5,
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+                            borderRadius: BorderRadius.circular(
+                              AppConstants.defaultBorderRadius,
+                            ),
                           ),
                         ),
                         child: SizedBox(

@@ -5,6 +5,7 @@ import 'package:furcare_app/apis/client_api.dart';
 import 'package:furcare_app/models/login_response.dart';
 import 'package:furcare_app/models/owner_info.dart';
 import 'package:furcare_app/providers/authentication.dart';
+import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:furcare_app/widgets/snackbar.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -122,7 +123,9 @@ class _CreateOwnerState extends State<CreateOwner> {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
+                  borderRadius: BorderRadius.circular(
+                    AppConstants.defaultBorderRadius,
+                  ),
                 ),
                 child: TextFormField(
                   controller: _workController,
@@ -160,7 +163,9 @@ class _CreateOwnerState extends State<CreateOwner> {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
+                  borderRadius: BorderRadius.circular(
+                    AppConstants.defaultBorderRadius,
+                  ),
                 ),
                 child: TextFormField(
                   controller: _emergenyNoController,
@@ -204,7 +209,9 @@ class _CreateOwnerState extends State<CreateOwner> {
                   foregroundColor: Colors.white,
                   backgroundColor: AppColors.primary,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
+                    borderRadius: BorderRadius.circular(
+                      AppConstants.defaultBorderRadius,
+                    ),
                   ),
                 ),
                 child: SizedBox(

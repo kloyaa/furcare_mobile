@@ -5,6 +5,7 @@ import 'package:furcare_app/apis/auth_api.dart';
 import 'package:furcare_app/models/login_response.dart';
 import 'package:furcare_app/providers/authentication.dart';
 import 'package:furcare_app/screens/others/setup.dart';
+import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
@@ -206,7 +207,9 @@ class _CustomerRegisterState extends State<CustomerRegister>
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(15.0),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.defaultBorderRadius,
+                          ),
                         ),
                         child: TextFormField(
                           controller: _usernameController,
@@ -250,7 +253,9 @@ class _CustomerRegisterState extends State<CustomerRegister>
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(15.0),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.defaultBorderRadius,
+                          ),
                         ),
                         child: TextFormField(
                           controller: _emailController,
@@ -294,7 +299,9 @@ class _CustomerRegisterState extends State<CustomerRegister>
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(15.0),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.defaultBorderRadius,
+                          ),
                         ),
                         child: TextFormField(
                           controller: _passwordController,
@@ -353,7 +360,9 @@ class _CustomerRegisterState extends State<CustomerRegister>
                       Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(15.0),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.defaultBorderRadius,
+                          ),
                         ),
                         child: TextFormField(
                           controller: _confirmController,
@@ -424,7 +433,9 @@ class _CustomerRegisterState extends State<CustomerRegister>
                           foregroundColor: Colors.white,
                           backgroundColor: AppColors.primary,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+                            borderRadius: BorderRadius.circular(
+                              AppConstants.defaultBorderRadius,
+                            ),
                           ),
                         ),
                         child: SizedBox(
@@ -452,7 +463,9 @@ class _CustomerRegisterState extends State<CustomerRegister>
                             width: 0.5,
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+                            borderRadius: BorderRadius.circular(
+                              AppConstants.defaultBorderRadius,
+                            ),
                           ),
                         ),
                         child: SizedBox(

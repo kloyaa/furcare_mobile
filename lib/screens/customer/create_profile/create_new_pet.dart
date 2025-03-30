@@ -4,6 +4,7 @@ import 'package:furcare_app/apis/client_api.dart';
 import 'package:furcare_app/models/login_response.dart';
 import 'package:furcare_app/models/pet_info.dart';
 import 'package:furcare_app/providers/authentication.dart';
+import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:furcare_app/widgets/select_gender.dart';
 import 'package:furcare_app/widgets/snackbar.dart';
@@ -157,7 +158,9 @@ class _AddNewPetState extends State<AddNewPet> {
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
+                  borderRadius: BorderRadius.circular(
+                    AppConstants.defaultBorderRadius,
+                  ),
                 ),
                 child: TextFormField(
                   controller: _nameController,
@@ -198,7 +201,9 @@ class _AddNewPetState extends State<AddNewPet> {
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(15.0),
+                        borderRadius: BorderRadius.circular(
+                          AppConstants.defaultBorderRadius,
+                        ),
                       ),
                       child: TextFormField(
                         controller: _ageController,
@@ -243,7 +248,9 @@ class _AddNewPetState extends State<AddNewPet> {
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(15.0),
+                        borderRadius: BorderRadius.circular(
+                          AppConstants.defaultBorderRadius,
+                        ),
                       ),
                       child: TextFormField(
                         controller: _identificationController,
@@ -290,7 +297,9 @@ class _AddNewPetState extends State<AddNewPet> {
                 padding: const EdgeInsets.all(20.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
+                  borderRadius: BorderRadius.circular(
+                    AppConstants.defaultBorderRadius,
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,7 +332,9 @@ class _AddNewPetState extends State<AddNewPet> {
                   foregroundColor: Colors.white,
                   backgroundColor: AppColors.primary,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
+                    borderRadius: BorderRadius.circular(
+                      AppConstants.defaultBorderRadius,
+                    ),
                   ),
                 ),
                 child: SizedBox(
@@ -353,7 +364,9 @@ class _AddNewPetState extends State<AddNewPet> {
                     width: 0.5,
                   ),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
+                    borderRadius: BorderRadius.circular(
+                      AppConstants.defaultBorderRadius,
+                    ),
                   ),
                 ),
                 child: SizedBox(

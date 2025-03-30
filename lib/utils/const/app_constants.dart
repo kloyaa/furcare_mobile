@@ -10,4 +10,6 @@ class AppConstants {
 
   // Asset paths
   static const String successGifPath = 'assets/success.gif';
+
+  static const double defaultBorderRadius = 15.0;
 }

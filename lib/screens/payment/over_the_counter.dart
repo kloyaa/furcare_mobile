@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/services.dart';
 import 'package:furcare_app/screens/customer/customer_main.dart';
+import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:furcare_app/utils/const/colors.dart';
@@ -144,7 +145,9 @@ class _OverTheCounterState extends State<OverTheCounter>
                           horizontal: 50,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15.0),
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.defaultBorderRadius,
+                          ),
                           side: BorderSide(
                             color: AppColors.primary.withOpacity(0.5),
                             width: 2,

@@ -7,6 +7,7 @@ import 'package:furcare_app/providers/authentication.dart';
 import 'package:furcare_app/providers/user.dart';
 import 'package:furcare_app/screens/payment/preview.dart';
 import 'package:furcare_app/utils/common.util.dart';
+import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:furcare_app/widgets/dialog_confirm.dart';
 import 'package:furcare_app/widgets/dropdown_pets.dart';
@@ -272,7 +273,9 @@ class _HomeServiceScreenState extends State<HomeServiceScreen>
           backgroundColor: AppColors.primary,
           padding: const EdgeInsets.symmetric(vertical: 15),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.circular(
+              AppConstants.defaultBorderRadius,
+            ),
           ),
         ),
         onPressed: () {

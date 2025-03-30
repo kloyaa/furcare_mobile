@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -21,7 +22,7 @@ class _GenderSelectionWidgetState extends State<GenderSelectionWidget> {
       children: [
         Material(
           color: Colors.transparent, // Disable splash and ripple effects
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
           child: RadioListTile<String>(
             contentPadding: const EdgeInsets.all(0),
             title: Text(
@@ -44,7 +45,7 @@ class _GenderSelectionWidgetState extends State<GenderSelectionWidget> {
         ),
         Material(
           color: Colors.transparent, // Disable splash and ripple effects
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
 
           child: RadioListTile<String>(
             contentPadding: const EdgeInsets.all(0),
@@ -68,7 +69,7 @@ class _GenderSelectionWidgetState extends State<GenderSelectionWidget> {
         ),
         Material(
           color: Colors.transparent, // Disable splash and ripple effects
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
           child: RadioListTile<String>(
             contentPadding: const EdgeInsets.all(0),
             title: Text(

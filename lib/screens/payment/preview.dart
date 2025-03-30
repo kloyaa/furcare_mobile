@@ -5,6 +5,7 @@ import 'package:furcare_app/providers/authentication.dart';
 import 'package:furcare_app/providers/fees.dart';
 import 'package:furcare_app/screens/payment/payment_method.dart';
 import 'package:furcare_app/utils/common.util.dart';
+import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -205,7 +206,9 @@ class _PaymentPreviewState extends State<PaymentPreview>
                               backgroundColor: AppColors.primary,
                               padding: const EdgeInsets.symmetric(vertical: 15),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
+                                borderRadius: BorderRadius.circular(
+                                  AppConstants.defaultBorderRadius,
+                                ),
                               ),
                               elevation: 5,
                             ),
