@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:furcare_app/providers/authentication.dart';
 import 'package:furcare_app/providers/branch.dart';
@@ -18,10 +19,18 @@ import 'package:furcare_app/screens/customer/edit/edit_owner_profile.dart';
 import 'package:furcare_app/screens/customer/edit/edit_profile_step_1.dart';
 import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/utils/const/app_theme.dart';
+import 'package:furcare_app/utils/logger.util.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:furcare_app/screens/auth/customer_login.dart';
 
 void main() {
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((record) {
+    if (kDebugMode) {
+      print('${record.time}: ${record.level.name}: ${record.message}');
+    }
+  });
   runApp(const MyApp());
 }
 
@@ -47,6 +56,12 @@ class MyApp extends StatelessWidget {
         themeMode: ThemeMode.system,
         initialRoute: AppRoutes.login,
         routes: _buildAppRoutes(),
+        navigatorObservers: [RouteLoggingObserver()],
+        onGenerateRoute: (settings) {
+          if (kDebugMode) {
+            print('Generating route: ${settings.name}');
+          }
+        },
       ),
     );
   }
