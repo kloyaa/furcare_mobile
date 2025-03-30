@@ -2,29 +2,21 @@
 
 Follow these steps to set up and run the project.
 
-<h1> Step 1: Generate the Base URL </h1>
+<h1> Step 1: Initialize the scripts, configs and dependendencies </h1>
 
-Before starting the server, generate the base URL for the application. This will determine the local network IP address needed for API communication.
+Before starting the server, initialize the project by installing dependencies. 
 
-<code> npm run generate:base_url </code>
+<code> npm run init </code>
 
-This will create a configuration file containing the generated IP address.
+This command will Install project dependencies.
 
-<h1> Step 2: Install Server Dependencies </h1>
-
-Navigate to the __server__ directory and install the necessary dependencies:
-
-<code> npm run install </code>
-
-This ensures all required Node.js packages are installed.
-
-<h1> Step 3: Start the Server </h1>
+<h1> Step 2: Start the Server </h1>
 
 Run the server to enable backend functionality:
 
 <code> npm run start:server </code>
 
-This will initialize the backend and make the API available.
+This command will initialize the backend, generate local url for mobile app and make the API accessible.
 
 <h1> Step 4: Run the Flutter App </h1>
 
