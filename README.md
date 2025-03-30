@@ -18,7 +18,7 @@ Run the server to enable backend functionality:
 
 This command will initialize the backend, generate local url for mobile app and make the API accessible.
 
-<h1> Step 4: Run the Flutter App </h1>
+<h1> Step 3: Run the Flutter App </h1>
 
 Once the server is running, start the Flutter application:
 
