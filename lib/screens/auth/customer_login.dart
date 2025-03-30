@@ -130,8 +130,8 @@ class _CustomerLoginState extends State<CustomerLogin>
     _usernameFocus = FocusNode();
     _passwordFocus = FocusNode();
 
-    _usernameController.text = "kolya02";
-    _passwordController.text = "Password@123";
+    _usernameController.text = "kolya21";
+    _passwordController.text = "Password@1234";
 
     // Shake Animation Controller
     _animationController = AnimationController(

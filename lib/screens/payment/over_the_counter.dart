@@ -42,7 +42,7 @@ class _OverTheCounterState extends State<OverTheCounter>
             // Background Decoration
             Positioned.fill(
               child: Opacity(
-                opacity: 0.2,
+                opacity: 1,
                 child: Image.asset(
                   'assets/veterinary_pattern.jpg',
                   repeat: ImageRepeat.repeat,
@@ -64,25 +64,39 @@ class _OverTheCounterState extends State<OverTheCounter>
                       fit: BoxFit.contain,
                     ),
                   ),
+
                   // Animated Text
                   FadeInDown(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 1.0),
-                      child: Text(
-                        'Please proceed \nto the counter for \nyour payment \n\nThank you!',
-                        style: GoogleFonts.lilitaOne(
-                          color: AppColors.primary,
-                          fontSize: 34.0,
-                          fontWeight: FontWeight.bold,
-                          shadows: [
-                            Shadow(
-                              blurRadius: 10.0,
-                              color: Colors.black.withAlpha(50),
-                              offset: const Offset(5, 5),
-                            ),
-                          ],
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Text(
+                          'Please proceed \nto the counter for \nyour payment \n\nThank you!',
+                          style: GoogleFonts.lilitaOne(
+                            color: AppColors.primary,
+                            fontSize: 32.0,
+                            fontWeight: FontWeight.bold,
+                            height: 1.2,
+                            letterSpacing: 0.5,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 6.0,
+                                color: Colors.black.withAlpha(40),
+                                offset: const Offset(2, 2),
+                              ),
+                            ],
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
@@ -130,7 +144,7 @@ class _OverTheCounterState extends State<OverTheCounter>
                           horizontal: 50,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
+                          borderRadius: BorderRadius.circular(15.0),
                           side: BorderSide(
                             color: AppColors.primary.withOpacity(0.5),
                             width: 2,

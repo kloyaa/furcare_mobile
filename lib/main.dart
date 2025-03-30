@@ -16,6 +16,8 @@ import 'package:furcare_app/screens/customer/customer_activity_log.dart';
 import 'package:furcare_app/screens/customer/customer_main.dart';
 import 'package:furcare_app/screens/customer/edit/edit_owner_profile.dart';
 import 'package:furcare_app/screens/customer/edit/edit_profile_step_1.dart';
+import 'package:furcare_app/utils/const/app_constants.dart';
+import 'package:furcare_app/utils/const/app_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:furcare_app/screens/auth/customer_login.dart';
 
@@ -40,33 +42,56 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ClientProvider()),
       ],
       child: MaterialApp(
-        title: 'Furcare',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        initialRoute: '/',
-        routes: {
-          // '/': (context) => ProfileSetupAnimation(redirectPath: '/'),
-          // '/': (context) => SuccessScreen(redirectPath: '/'),
-          '/': (context) => const CustomerLogin(),
-          // '/': (context) => const StaffLogin(),
-          '/branches': (context) => const BranchesList(),
-          '/c/activity': (context) => const CustomerActivityLog(),
-          '/c/main': (context) => const CustomerMain(),
-          '/c/register': (context) => const CustomerRegister(),
-          '/c/edit/profile/1': (context) => const EditProfileStep1(),
-          '/c/create/profile/1': (context) => const CreateProfileStep1(),
-          '/c/create/profile/2': (context) => const CreateProfileStep2(),
-          '/c/edit/profile/owner': (context) => const EditOwner(),
-          '/c/create/profile/pet': (context) => const CreatePet(),
-          '/c/add/pet': (context) => const AddNewPet(),
-
-          '/book/boarding': (context) => const BookBoarding(),
-          '/book/transit': (context) => const HomeServiceScreen(),
-          '/book/grooming': (context) => const BookGroomingScreen(),
-        },
+        title: AppConstants.appName,
+        theme: AppTheme.lightTheme,
+        themeMode: ThemeMode.system,
+        initialRoute: AppRoutes.login,
+        routes: _buildAppRoutes(),
       ),
     );
   }
+
+  Map<String, WidgetBuilder> _buildAppRoutes() {
+    return {
+      AppRoutes.login: (context) => const CustomerLogin(),
+      AppRoutes.branches: (context) => const BranchesList(),
+
+      // Customer routes
+      AppRoutes.customerActivity: (context) => const CustomerActivityLog(),
+      AppRoutes.customerMain: (context) => const CustomerMain(),
+      AppRoutes.customerRegister: (context) => const CustomerRegister(),
+      AppRoutes.editProfileStep1: (context) => const EditProfileStep1(),
+      AppRoutes.createProfileStep1: (context) => const CreateProfileStep1(),
+      AppRoutes.createProfileStep2: (context) => const CreateProfileStep2(),
+      AppRoutes.editOwnerProfile: (context) => const EditOwner(),
+      AppRoutes.createPetProfile: (context) => const CreatePet(),
+      AppRoutes.addNewPet: (context) => const AddNewPet(),
+
+      // Booking routes
+      AppRoutes.bookBoarding: (context) => const BookBoarding(),
+      AppRoutes.bookTransit: (context) => const HomeServiceScreen(),
+      AppRoutes.bookGrooming: (context) => const BookGroomingScreen(),
+    };
+  }
+}
+
+class AppRoutes {
+  static const String login = '/';
+  static const String branches = '/branches';
+
+  // Customer routes
+  static const String customerActivity = '/c/activity';
+  static const String customerMain = '/c/main';
+  static const String customerRegister = '/c/register';
+  static const String editProfileStep1 = '/c/edit/profile/1';
+  static const String createProfileStep1 = '/c/create/profile/1';
+  static const String createProfileStep2 = '/c/create/profile/2';
+  static const String editOwnerProfile = '/c/edit/profile/owner';
+  static const String createPetProfile = '/c/create/profile/pet';
+  static const String addNewPet = '/c/add/pet';
+
+  // Booking routes
+  static const String bookBoarding = '/book/boarding';
+  static const String bookTransit = '/book/transit';
+  static const String bookGrooming = '/book/grooming';
 }
