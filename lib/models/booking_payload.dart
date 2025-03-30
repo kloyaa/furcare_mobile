@@ -1,11 +1,13 @@
 class BoardingPayload {
   final String cage;
+  final String branch;
   final String pet;
   final String schedule;
   final int daysOfStay;
 
   BoardingPayload({
     required this.cage,
+    required this.branch,
     required this.pet,
     required this.schedule,
     required this.daysOfStay,
@@ -13,6 +15,7 @@ class BoardingPayload {
 
   Map<String, dynamic> toJson() {
     return {
+      'branch': branch,
       'cage': cage,
       'pet': pet,
       'schedule': schedule,
@@ -24,22 +27,32 @@ class BoardingPayload {
 class GroomingPayload {
   final String pet;
   final String schedule;
+  final String branch;
 
-  GroomingPayload({required this.pet, required this.schedule});
+  GroomingPayload({
+    required this.pet,
+    required this.branch,
+    required this.schedule,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'pet': pet, 'schedule': schedule};
+    return {'pet': pet, 'schedule': schedule, 'branch': branch};
   }
 }
 
 class TransitgPayload {
   final String pet;
   final String schedule;
+  final String branch;
 
-  TransitgPayload({required this.pet, required this.schedule});
+  TransitgPayload({
+    required this.pet,
+    required this.branch,
+    required this.schedule,
+  });
 
   Map<String, dynamic> toJson() {
-    return {'pet': pet, 'schedule': schedule};
+    return {'pet': pet, 'schedule': schedule, 'branch': branch};
   }
 }
 

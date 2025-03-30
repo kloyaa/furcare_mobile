@@ -17,7 +17,7 @@ class _CustomerTabSettingsState extends State<CustomerTabSettings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondary,
+      backgroundColor: Colors.grey[100],
       body: Container(
         margin: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),
         child: ListView(

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:furcare_app/apis/booking_api.dart';
 import 'package:furcare_app/models/booking_payload.dart';
+import 'package:furcare_app/models/branch_info.dart';
 import 'package:furcare_app/models/login_response.dart';
 import 'package:furcare_app/providers/authentication.dart';
+import 'package:furcare_app/providers/branch.dart';
 import 'package:furcare_app/providers/user.dart';
 import 'package:furcare_app/screens/payment/preview.dart';
 import 'package:furcare_app/utils/common.util.dart';
@@ -32,6 +34,7 @@ class _HomeServiceScreenState extends State<HomeServiceScreen>
 
   late AnimationController _animationController;
   late List<dynamic> _pets = [];
+  late Branch _selectedBranch;
   String _accessToken = '';
 
   @override
@@ -45,6 +48,9 @@ class _HomeServiceScreenState extends State<HomeServiceScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeProviders();
     });
+
+    _selectedBranch =
+        Provider.of<BranchProvider>(context, listen: false).branch;
   }
 
   void _initializeProviders() {
@@ -80,6 +86,7 @@ class _HomeServiceScreenState extends State<HomeServiceScreen>
         TransitgPayload(
           pet: selectedPetId,
           schedule: selectedDateTime.toIso8601String(),
+          branch: _selectedBranch.id ?? '',
         ),
       );
 
@@ -176,7 +183,7 @@ class _HomeServiceScreenState extends State<HomeServiceScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondary,
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(

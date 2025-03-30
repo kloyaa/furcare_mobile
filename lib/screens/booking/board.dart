@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:dio/dio.dart';
+import 'package:furcare_app/models/branch_info.dart';
+import 'package:furcare_app/providers/branch.dart';
 import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/widgets/dialog_confirm.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -35,6 +37,8 @@ class _BookBoardingState extends State<BookBoarding>
   String _selectedDate = "";
   String _selectedPet = "";
   String _selectedPetId = "";
+  late Branch _selectedBranch;
+
   List _pets = [];
   List _cages = [];
 
@@ -67,6 +71,9 @@ class _BookBoardingState extends State<BookBoarding>
     _selectedTime = const TimeOfDay(hour: 7, minute: 0);
     _selectedDay = 1;
     _pets = clientProvider.pets ?? [];
+
+    _selectedBranch =
+        Provider.of<BranchProvider>(context, listen: false).branch;
 
     // Load cages
     _loadCages();
@@ -132,6 +139,7 @@ class _BookBoardingState extends State<BookBoarding>
       Response<dynamic> response = await booking.boardBooking(
         BoardingPayload(
           cage: _selectedCageId,
+          branch: _selectedBranch.id ?? "",
           pet: _selectedPetId,
           schedule: schedule.toUtc().toIso8601String(),
           daysOfStay: _selectedDay,
@@ -170,7 +178,7 @@ class _BookBoardingState extends State<BookBoarding>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondary,
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,

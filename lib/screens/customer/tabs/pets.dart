@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:furcare_app/apis/client_api.dart';
+import 'package:furcare_app/extensions.dart';
 import 'package:furcare_app/providers/authentication.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -67,7 +68,7 @@ class _CustomerTabPetsState extends State<CustomerTabPets> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondary,
+      backgroundColor: Colors.grey[100],
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateToAddPet,
         backgroundColor: AppColors.primary,
@@ -391,12 +392,5 @@ class PetDetailsSheet extends StatelessWidget {
         ],
       ),
     ).animate().fadeIn().slideY(begin: 0.5, end: 0);
-  }
-}
-
-// Extension to capitalize first letter
-extension StringExtension on String {
-  String capitalize() {
-    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
 }

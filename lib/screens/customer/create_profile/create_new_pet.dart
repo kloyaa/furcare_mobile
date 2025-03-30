@@ -133,7 +133,7 @@ class _AddNewPetState extends State<AddNewPet> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: AppColors.secondary,
+        backgroundColor: Colors.grey[100],
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Column(

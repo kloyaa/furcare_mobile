@@ -142,7 +142,7 @@ class _CustomerTabDashboardState extends State<CustomerTabDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondary,
+      backgroundColor: Colors.grey[100],
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

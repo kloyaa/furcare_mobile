@@ -3,8 +3,10 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:furcare_app/apis/booking_api.dart';
 import 'package:furcare_app/apis/client_api.dart';
 import 'package:furcare_app/models/booking_payload.dart';
+import 'package:furcare_app/models/branch_info.dart';
 import 'package:furcare_app/models/login_response.dart';
 import 'package:furcare_app/providers/authentication.dart';
+import 'package:furcare_app/providers/branch.dart';
 import 'package:furcare_app/providers/user.dart';
 import 'package:furcare_app/screens/payment/preview.dart';
 import 'package:furcare_app/utils/const/app_constants.dart';
@@ -36,6 +38,7 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
   late List<dynamic> _availableSchedules = [];
   late List<dynamic> _pets = [];
   String _accessToken = '';
+  late Branch _selectedBranch;
 
   @override
   void initState() {
@@ -49,6 +52,9 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
       _initializeProviders();
       _fetchSchedules();
     });
+
+    _selectedBranch =
+        Provider.of<BranchProvider>(context, listen: false).branch;
   }
 
   void _initializeProviders() {
@@ -89,7 +95,11 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
     try {
       final BookingApi bookingApi = BookingApi(_accessToken);
       final Response<dynamic> response = await bookingApi.groomingBooking(
-        GroomingPayload(pet: petId, schedule: scheduleId),
+        GroomingPayload(
+          pet: petId,
+          schedule: scheduleId,
+          branch: _selectedBranch.id ?? '',
+        ),
       );
 
       if (context.mounted) {
@@ -134,7 +144,7 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondary,
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(

@@ -1,5 +1,5 @@
 class Branch {
-  final String id;
+  final String? id;
   final String name;
   final String address;
   final bool isActive;
@@ -8,7 +8,7 @@ class Branch {
   final DateTime updatedAt;
 
   Branch({
-    required this.id,
+    this.id,
     required this.name,
     required this.address,
     required this.isActive,
