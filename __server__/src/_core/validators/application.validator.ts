@@ -6,6 +6,15 @@ export const validateCreateBoardingApplication = (body: any) => {
     const { error } = Joi.object({
         schedule: Joi.date().required(),
         daysOfStay: Joi.number().required(),
+        branch: Joi
+            .string()
+            .custom((value, helpers) => {
+                if (!isObjectIdOrHexString(value)) {
+                    return helpers.error('any.invalid');
+                }
+                return value;
+            })
+            .required(),
         cage: Joi
             .string()
             .custom((value, helpers) => {
@@ -32,6 +41,15 @@ export const validateCreateBoardingApplication = (body: any) => {
 export const validateCreateTransitApplication = (body: any) => {
     const { error } = Joi.object({
         schedule: Joi.date().iso().required(),
+        branch: Joi
+            .string()
+            .custom((value, helpers) => {
+                if (!isObjectIdOrHexString(value)) {
+                    return helpers.error('any.invalid');
+                }
+                return value;
+            })
+            .required(),
         pet: Joi
             .string()
             .custom((value, helpers) => {

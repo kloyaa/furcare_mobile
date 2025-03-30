@@ -13,7 +13,7 @@ import { IActivity } from "../_core/interfaces/activity.interface";
 
 export const createGroomingApplication = async (req: TRequest, res: TResponse) => {
     try {
-        const { schedule: scheduleId, pet: petId } = req.body;
+        const { schedule: scheduleId, pet: petId, branch } = req.body;
         if (!isObjectIdOrHexString(scheduleId) || !isObjectIdOrHexString(petId)) {
             return res.status(400).json(statuses["0901"]);
         }
@@ -37,6 +37,7 @@ export const createGroomingApplication = async (req: TRequest, res: TResponse) =
         const newBooking = new Booking({
             application: newGroomingApplication._id,
             applicationType: BookingServiceType.Grooming,
+            branch,
             user: req.user.id,
             pet: petId,
             status: BookingStatus.Pending,

@@ -21,7 +21,7 @@ export const createBoardingApplication = async (req: TRequest, res: TResponse) =
             });
         }
 
-        const { cage: cageId, pet: petId, schedule, daysOfStay } = req.body;
+        const { cage: cageId, pet: petId, schedule, daysOfStay, branch } = req.body;
 
         const cage = await Cage.findById(cageId);
         if (!cage) {
@@ -46,6 +46,7 @@ export const createBoardingApplication = async (req: TRequest, res: TResponse) =
         const newBooking = new Booking({
             application: newBoardingApplication._id,
             applicationType: BookingServiceType.Boarding,
+            branch,
             user: req.user.id,
             pet: petId,
             status: BookingStatus.Pending,

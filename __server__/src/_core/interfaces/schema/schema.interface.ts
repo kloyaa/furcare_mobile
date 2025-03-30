@@ -63,6 +63,7 @@ export interface IPet extends Document {
 export interface IBooking extends Document {
   user: Types.ObjectId;
   staff?: Types.ObjectId;
+  branch: Types.ObjectId;
   pet: Types.ObjectId;
   application: Types.ObjectId;
   applicationType: BookingServiceType;
@@ -81,6 +82,7 @@ export interface IBoardingApplication extends Document {
   schedule: Date;
   daysOfStay: Number;
   cage: Types.ObjectId;
+  branch: Types.ObjectId;
 }
 
 export interface ITransitApplication extends Document {

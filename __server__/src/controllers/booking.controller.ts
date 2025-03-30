@@ -40,6 +40,14 @@ export const getBookings = async (req: TRequest, res: TResponse) => {
                 }
             },
             {
+                $lookup: {
+                    from: "branches",
+                    localField: "branch",
+                    foreignField: "_id",
+                    as: "branch"
+                }
+            },
+            {
                 $unwind: {
                     path: "$profile",
                     preserveNullAndEmptyArrays: true
@@ -50,7 +58,13 @@ export const getBookings = async (req: TRequest, res: TResponse) => {
                     path: "$pet",
                     preserveNullAndEmptyArrays: true
                 }
-            }
+            },
+            {
+                $unwind: {
+                    path: "$branch",
+                    preserveNullAndEmptyArrays: true
+                }
+            },
         ]);
 
         return res.status(200).json(bookings);
@@ -72,9 +86,26 @@ export const getBookingsByAccessToken = async (req: TRequest, res: TResponse) =>
                 user: req.user.id,
                 status: req.query.status ?? "pending"
             })
-            .populate(['pet', 'staff'])
+            .populate(['pet', 'staff', 'branch'])
             .sort({ createdAt: 'desc' });
-        return res.status(200).json(bookings);
+
+        // Mapping for renaming application types
+        const applicationTypeMap: Record<string, string> = {
+            transit: "Home Service",
+            grooming: "Hair Cut"
+        };
+
+        const modifiedBookings = bookings.map(booking => {
+            const bookingObj = booking.toObject();
+            return {
+                ...bookingObj,
+                applicationType:
+                    applicationTypeMap[bookingObj.applicationType] ||
+                    bookingObj.applicationType
+            };
+        });
+
+        return res.status(200).json(modifiedBookings);
     } catch (error) {
         console.log("@getBookings error", error)
         return res.status(500).json(statuses["0900"])

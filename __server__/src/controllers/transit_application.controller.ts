@@ -20,7 +20,7 @@ export const createTransitApplication = async (req: TRequest, res: TResponse) =>
             });
         }
 
-        const { schedule, pet: petId } = req.body;
+        const { schedule, pet: petId, branch } = req.body;
 
         const pet = await Pet.findOne({ user: req.user.id, _id: petId });
         if (!pet) {
@@ -36,6 +36,7 @@ export const createTransitApplication = async (req: TRequest, res: TResponse) =>
         const newBooking = new Booking({
             application: newTransitApplication._id,
             applicationType: BookingServiceType.Transit,
+            branch,
             user: req.user.id,
             pet: petId,
             status: BookingStatus.Pending,
