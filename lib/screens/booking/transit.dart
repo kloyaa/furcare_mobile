@@ -183,7 +183,6 @@ class _HomeServiceScreenState extends State<HomeServiceScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
@@ -275,16 +274,6 @@ class _HomeServiceScreenState extends State<HomeServiceScreen>
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: AppColors.primary,
-          padding: const EdgeInsets.symmetric(vertical: 15),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              AppConstants.defaultBorderRadius,
-            ),
-          ),
-        ),
         onPressed: () {
           showDialog(
             context: context,
@@ -296,14 +285,7 @@ class _HomeServiceScreenState extends State<HomeServiceScreen>
                 ),
           );
         },
-        child: Text(
-          'Book Home Service',
-          style: GoogleFonts.urbanist(
-            color: Colors.white,
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        child: Text('Book Home Service'),
       ),
     );
   }

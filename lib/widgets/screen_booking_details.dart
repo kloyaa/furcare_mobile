@@ -3,13 +3,13 @@ import 'package:furcare_app/extensions.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BookingDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> booking;
 
-  const BookingDetailsScreen({Key? key, required this.booking})
-    : super(key: key);
+  const BookingDetailsScreen({super.key, required this.booking});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,6 @@ class BookingDetailsScreen extends StatelessWidget {
     final formattedTime = DateFormat('h:mm a').format(createdDate);
 
     return Scaffold(
-      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
@@ -331,6 +330,44 @@ class BookingDetailsScreen extends StatelessWidget {
                               ),
                             ),
                           ),
+                          SizedBox(height: 5),
+                          InkWell(
+                            onTap: () {
+                              MapsLauncher.launchCoordinates(
+                                8.475595321127928,
+                                124.66306220357012,
+                                'Furcare',
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 12,
+                                horizontal: 16,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.map_outlined,
+                                    size: 18,
+                                    color: AppColors.primary,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    "View in maps",
+                                    style: GoogleFonts.urbanist(
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.primary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -418,22 +455,11 @@ class BookingDetailsScreen extends StatelessWidget {
             // Action Buttons
             Padding(
               padding: const EdgeInsets.all(16),
-              child: ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Text(
-                  'Back',
-                  style: GoogleFonts.urbanist(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text('Back'),
                 ),
               ),
             ),

@@ -123,14 +123,8 @@ class _CustomerTabDashboardState extends State<CustomerTabDashboard> {
                   ),
                 ),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                  ),
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: Text(
-                    'Accept',
-                    style: GoogleFonts.roboto(color: Colors.white),
-                  ),
+                  child: Text('Accept'),
                 ),
               ],
             );
@@ -142,7 +136,6 @@ class _CustomerTabDashboardState extends State<CustomerTabDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

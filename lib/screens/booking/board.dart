@@ -178,7 +178,6 @@ class _BookBoardingState extends State<BookBoarding>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -461,26 +460,7 @@ class _BookBoardingState extends State<BookBoarding>
                           ),
                     );
                   },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(
-                        AppConstants.defaultBorderRadius,
-                      ),
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Book Boarding',
-                      style: GoogleFonts.urbanist(
-                        color: Colors.white,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                  child: Center(child: Text('Book Boarding')),
                 ).animate().fadeIn(duration: 500.ms).slide(),
               ],
             ),

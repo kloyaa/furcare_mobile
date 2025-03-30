@@ -92,7 +92,7 @@ class _EditProfileStep1State extends State<EditProfileStep1> {
           ),
         ),
         resizeToAvoidBottomInset: false,
-        backgroundColor: AppColors.secondary,
+
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Column(
@@ -178,27 +178,9 @@ class _EditProfileStep1State extends State<EditProfileStep1> {
                     handleSaveBasicInfo();
                   }
                 },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      AppConstants.defaultBorderRadius,
-                    ),
-                  ),
-                ),
                 child: SizedBox(
                   width: double.infinity,
-                  height: 50,
-                  child: Center(
-                    child: Text(
-                      'Continue',
-                      style: GoogleFonts.urbanist(
-                        color: AppColors.secondary,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
+                  child: Center(child: Text('Continue')),
                 ),
               ),
               const SizedBox(height: 20.0),

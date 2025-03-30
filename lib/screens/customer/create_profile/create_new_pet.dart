@@ -133,7 +133,7 @@ class _AddNewPetState extends State<AddNewPet> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.grey[100],
+
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Column(
@@ -328,27 +328,10 @@ class _AddNewPetState extends State<AddNewPet> {
                 onPressed: () async {
                   handleAddNewPet();
                 },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      AppConstants.defaultBorderRadius,
-                    ),
-                  ),
-                ),
                 child: SizedBox(
                   width: double.infinity,
                   height: 50,
-                  child: Center(
-                    child: Text(
-                      'Save',
-                      style: GoogleFonts.urbanist(
-                        color: AppColors.secondary,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
+                  child: Center(child: Text('Save')),
                 ),
               ),
               const SizedBox(height: 10.0),

@@ -76,7 +76,7 @@ class _CustomerActivityLogState extends State<CustomerActivityLog>
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      backgroundColor: AppColors.secondary,
+
       body: RefreshIndicator(
         onRefresh: () async {
           // Trigger a refresh of the activity logs

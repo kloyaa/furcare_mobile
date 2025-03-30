@@ -68,7 +68,6 @@ class _CustomerTabPetsState extends State<CustomerTabPets> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateToAddPet,
         backgroundColor: AppColors.primary,
@@ -107,13 +106,7 @@ class _CustomerTabPetsState extends State<CustomerTabPets> {
                         const SizedBox(height: 10),
                         ElevatedButton(
                           onPressed: _navigateToAddPet,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primary,
-                          ),
-                          child: Text(
-                            'Add Your First Pet',
-                            style: GoogleFonts.urbanist(color: Colors.white),
-                          ),
+                          child: Text('Add Your First Pet'),
                         ),
                       ],
                     ),
@@ -367,25 +360,8 @@ class PetDetailsSheet extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () => Navigator.pop(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30,
-                    vertical: 12,
-                  ),
-                ),
-                child: Text(
-                  'Close',
-                  style: GoogleFonts.roboto(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
-                ),
+
+                child: Text('Close'),
               ),
             ),
           ),

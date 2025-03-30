@@ -163,7 +163,7 @@ class _CustomerMainState extends State<CustomerMain> {
           ),
         ),
       ),
-      backgroundColor: AppColors.secondary,
+
       bottomNavigationBar: SalomonBottomBar(
         backgroundColor: Colors.white,
         margin: const EdgeInsets.symmetric(horizontal: 70, vertical: 10.0),

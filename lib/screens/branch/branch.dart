@@ -75,7 +75,6 @@ class _BranchesListState extends State<BranchesList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary,
       body:
           isLoading
               ? Center(
@@ -113,8 +112,8 @@ class BranchListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 4,
-      color: AppColors.secondary,
+      elevation: 0,
+      color: Colors.white,
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: ListTile(
@@ -206,22 +205,11 @@ class BranchDetailsSheet extends StatelessWidget {
                       ).setBranch(branch);
                       Navigator.pushReplacementNamed(context, '/c/main');
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
-                        vertical: 12,
-                      ),
-                    ),
+
                     child: Text(
                       branch.isActive
                           ? 'Select Branch'
                           : 'Closed, Please Come back next time',
-                      style: GoogleFonts.roboto(fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),

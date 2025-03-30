@@ -35,20 +35,11 @@ class ConfirmationDialog extends StatelessWidget {
           child: Text('Cancel', style: GoogleFonts.urbanist(color: Colors.red)),
         ),
         ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
           onPressed: () {
             Navigator.of(context).pop();
             onConfirm();
           },
-          child: Text(
-            'Confirm',
-            style: GoogleFonts.urbanist(color: Colors.white),
-          ),
+          child: Text('Confirm'),
         ),
       ],
     );

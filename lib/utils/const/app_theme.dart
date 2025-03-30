@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:furcare_app/utils/const/app_constants.dart';
+import 'package:furcare_app/utils/const/colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // Colors
@@ -14,6 +17,9 @@ class AppTheme {
 
   // Light theme
   static final ThemeData lightTheme = ThemeData(
+    scaffoldBackgroundColor: Colors.grey[100],
+    cardTheme: const CardTheme(color: Colors.white),
+
     colorScheme: ColorScheme.fromSeed(
       seedColor: primaryColor,
       brightness: Brightness.light,
@@ -27,10 +33,15 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.white,
-        backgroundColor: primaryColor,
-        elevation: 2,
-        // padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        backgroundColor: AppColors.primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
+        ),
+        textStyle: GoogleFonts.urbanist(
+          color: AppColors.secondary,
+          fontWeight: FontWeight.bold,
+          fontSize: 12.0,
+        ),
       ),
     ),
   );
@@ -48,6 +59,7 @@ class AppTheme {
       backgroundColor: Colors.black,
       foregroundColor: Colors.white,
     ),
+    cardTheme: const CardTheme(color: Colors.white),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.white,

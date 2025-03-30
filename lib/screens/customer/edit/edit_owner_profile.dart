@@ -117,7 +117,7 @@ class _CreateOwnerState extends State<EditOwner> {
           ),
         ),
         resizeToAvoidBottomInset: false,
-        backgroundColor: AppColors.secondary,
+
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Column(
@@ -209,27 +209,11 @@ class _CreateOwnerState extends State<EditOwner> {
                 onPressed: () async {
                   handleCreateOwner();
                 },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      AppConstants.defaultBorderRadius,
-                    ),
-                  ),
-                ),
+
                 child: SizedBox(
                   width: double.infinity,
                   height: 50,
-                  child: Center(
-                    child: Text(
-                      'Save',
-                      style: GoogleFonts.urbanist(
-                        color: AppColors.secondary,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
+                  child: Center(child: Text('Save')),
                 ),
               ),
               const SizedBox(height: 20.0),

@@ -146,7 +146,7 @@ class _CreateProfileStep2State extends State<CreateProfileStep2> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: AppColors.secondary,
+
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Column(
@@ -364,27 +364,11 @@ class _CreateProfileStep2State extends State<CreateProfileStep2> {
                 onPressed: () async {
                   handleCreateProfile();
                 },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      AppConstants.defaultBorderRadius,
-                    ),
-                  ),
-                ),
+
                 child: SizedBox(
                   width: double.infinity,
                   height: 50,
-                  child: Center(
-                    child: Text(
-                      'Submit',
-                      style: GoogleFonts.urbanist(
-                        color: AppColors.secondary,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
+                  child: Center(child: Text('Submit')),
                 ),
               ),
               const SizedBox(height: 10.0),

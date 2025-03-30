@@ -107,8 +107,6 @@ class _PaymentPreviewState extends State<PaymentPreview>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondary,
-
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: SlideTransition(
@@ -201,27 +199,8 @@ class _PaymentPreviewState extends State<PaymentPreview>
                                 ),
                               );
                             },
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: AppColors.primary,
-                              padding: const EdgeInsets.symmetric(vertical: 15),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  AppConstants.defaultBorderRadius,
-                                ),
-                              ),
-                              elevation: 5,
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Proceed to Payment',
-                                style: GoogleFonts.urbanist(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ),
+
+                            child: Center(child: Text('Proceed to Payment')),
                           )
                           .animate()
                           .fadeIn(duration: 500.ms)

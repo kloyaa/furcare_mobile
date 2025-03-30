@@ -98,7 +98,7 @@ class _CreateOwnerState extends State<CreateOwner> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: AppColors.secondary,
+
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Column(
@@ -205,15 +205,6 @@ class _CreateOwnerState extends State<CreateOwner> {
                 onPressed: () async {
                   handleCreateOwner();
                 },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      AppConstants.defaultBorderRadius,
-                    ),
-                  ),
-                ),
                 child: SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -221,13 +212,7 @@ class _CreateOwnerState extends State<CreateOwner> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          'Save',
-                          style: GoogleFonts.urbanist(
-                            color: AppColors.secondary,
-                            fontSize: 12.0,
-                          ),
-                        ),
+                        Text('Save'),
                         const SizedBox(width: 2.0),
                         const Icon(Ionicons.checkbox_outline, size: 12),
                       ],

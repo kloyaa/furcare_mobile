@@ -163,7 +163,7 @@ class _StaffLoginState extends State<StaffLogin>
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: AppColors.secondary,
+
         body: Center(
           child: AnimatedBuilder(
             animation: _shakeAnimation,
@@ -318,27 +318,11 @@ class _StaffLoginState extends State<StaffLogin>
                         onPressed: () async {
                           await _handleLogin();
                         },
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: AppColors.primary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              AppConstants.defaultBorderRadius,
-                            ),
-                          ),
-                        ),
+
                         child: SizedBox(
                           width: double.infinity,
                           height: 50,
-                          child: Center(
-                            child: Text(
-                              'Sign in',
-                              style: GoogleFonts.urbanist(
-                                color: AppColors.secondary,
-                                fontSize: 12.0,
-                              ),
-                            ),
-                          ),
+                          child: Center(child: Text('Sign in')),
                         ),
                       ),
                       const SizedBox(height: 12.0),

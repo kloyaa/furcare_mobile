@@ -78,7 +78,6 @@ class _ProfileSetupAnimationState extends State<ProfileSetupAnimation>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondary,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

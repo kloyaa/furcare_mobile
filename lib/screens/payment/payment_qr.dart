@@ -170,7 +170,6 @@ class _UploadQRState extends State<UploadQR> {
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: AppColors.secondary,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
@@ -353,20 +352,20 @@ class _UploadQRState extends State<UploadQR> {
                   children: [
                     Expanded(
                       child: ElevatedButton.icon(
-                        onPressed: _captureImage,
-                        icon: const Icon(Icons.camera_alt, size: 18),
-                        label: Text("Camera", style: GoogleFonts.urbanist()),
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: AppColors.primary,
                           backgroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              AppConstants.defaultBorderRadius,
-                            ),
-                            side: BorderSide(
-                              color: AppColors.primary.withOpacity(0.3),
-                            ),
+                        ),
+                        onPressed: _captureImage,
+                        icon: const Icon(
+                          Icons.camera_alt,
+                          size: 18,
+                          color: AppColors.primary,
+                        ),
+                        label: Text(
+                          "Camera",
+                          style: GoogleFonts.urbanist(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -374,20 +373,20 @@ class _UploadQRState extends State<UploadQR> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: ElevatedButton.icon(
-                        onPressed: _selectImage,
-                        icon: const Icon(Icons.photo_library, size: 18),
-                        label: Text("Gallery", style: GoogleFonts.urbanist()),
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: AppColors.primary,
                           backgroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              AppConstants.defaultBorderRadius,
-                            ),
-                            side: BorderSide(
-                              color: AppColors.primary.withOpacity(0.3),
-                            ),
+                        ),
+                        onPressed: _selectImage,
+                        icon: const Icon(
+                          Icons.photo_library,
+                          size: 18,
+                          color: AppColors.primary,
+                        ),
+                        label: Text(
+                          "Gallery",
+                          style: GoogleFonts.urbanist(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -448,22 +447,8 @@ class _UploadQRState extends State<UploadQR> {
                 // Submit Button
                 SizedBox(
                   width: double.infinity,
-                  height: 55,
                   child: ElevatedButton(
                     onPressed: _isUploading ? null : _submitPayment,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: AppColors.primary,
-                      disabledBackgroundColor: AppColors.primary.withOpacity(
-                        0.6,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          AppConstants.defaultBorderRadius,
-                        ),
-                      ),
-                      elevation: 2,
-                    ),
                     child:
                         _isUploading
                             ? const SizedBox(
@@ -474,14 +459,7 @@ class _UploadQRState extends State<UploadQR> {
                                 strokeWidth: 2,
                               ),
                             )
-                            : Text(
-                              'Submit Payment',
-                              style: GoogleFonts.urbanist(
-                                color: AppColors.secondary,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            : Text('Submit Payment'),
                   ),
                 ),
               ],

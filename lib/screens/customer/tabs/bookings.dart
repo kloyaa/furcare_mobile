@@ -203,25 +203,8 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
               onPressed: () => handleGetBookings(_status),
-              child: Text(
-                'Retry',
-                style: GoogleFonts.urbanist(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
+              child: Text('Retry'),
             ),
           ],
         ),
@@ -263,25 +246,8 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
               onPressed: () => handleGetBookings('pending'),
-              child: Text(
-                'View Pending Bookings',
-                style: GoogleFonts.urbanist(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
+              child: Text('View Pending Bookings'),
             ),
           ],
         ),
@@ -599,7 +565,6 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
       appBar: _buildAppBar(), // Use the custom AppBar method
       body: RefreshIndicator(
         onRefresh: () => handleGetBookings(_status),

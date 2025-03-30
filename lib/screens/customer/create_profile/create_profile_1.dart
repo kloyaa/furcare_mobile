@@ -60,7 +60,7 @@ class _CreateProfileStep1State extends State<CreateProfileStep1> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: AppColors.secondary,
+
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Column(
@@ -118,15 +118,6 @@ class _CreateProfileStep1State extends State<CreateProfileStep1> {
                     handleSaveBasicInfo();
                   }
                 },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      AppConstants.defaultBorderRadius,
-                    ),
-                  ),
-                ),
                 child: SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -134,13 +125,7 @@ class _CreateProfileStep1State extends State<CreateProfileStep1> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          'Continue',
-                          style: GoogleFonts.urbanist(
-                            color: AppColors.secondary,
-                            fontSize: 12.0,
-                          ),
-                        ),
+                        Text('Continue'),
                         const SizedBox(width: 2.0),
                         const Icon(Ionicons.arrow_forward_outline, size: 12),
                       ],

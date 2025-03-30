@@ -87,7 +87,6 @@ class _SelectPaymentMethodScreenState extends State<SelectPaymentMethodScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondary,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(

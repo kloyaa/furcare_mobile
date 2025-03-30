@@ -36,7 +36,6 @@ class _OverTheCounterState extends State<OverTheCounter>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondary,
       body: SafeArea(
         child: Stack(
           children: [
@@ -137,34 +136,7 @@ class _OverTheCounterState extends State<OverTheCounter>
                           ),
                         );
                       },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: AppColors.primary,
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 50,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            AppConstants.defaultBorderRadius,
-                          ),
-                          side: BorderSide(
-                            color: AppColors.primary.withOpacity(0.5),
-                            width: 2,
-                          ),
-                        ),
-                        elevation: 10,
-                        shadowColor: AppColors.primary.withOpacity(0.4),
-                      ),
-                      child: Text(
-                        'Finish',
-                        style: GoogleFonts.urbanist(
-                          color: AppColors.secondary,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
+                      child: Text('Finish'),
                     ),
                   ),
                 ],
