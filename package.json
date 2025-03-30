@@ -19,6 +19,14 @@
     "test": "test"
   },
   "scripts": {
-    "generate:base_url": "node __scripts__/generate_base_url.js"
+    "init": "npm install concurrently nodemon ts-node -g",
+    "start:seeding": "concurrently \"cd __server__ && npm run start:seeding\"",
+    "start:install": "concurrently \"cd __server__ && npm install\"",
+    "generate:base_url": "node __scripts__/generate_base_url.js",
+    "start:local": "concurrently \"cd __server__ && nodemon --ext ts --exec ts-node src/index.ts\"",
+    "start:server": "concurrently \"npm run generate:base_url\" \"cd __server__ && npm run start:local\""
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2"
   }
 }
