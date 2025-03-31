@@ -50,7 +50,7 @@ export const createBoardingApplication = async (req: TRequest, res: TResponse) =
             user: req.user.id,
             pet: petId,
             status: BookingStatus.Pending,
-            payable: serviceFee?.fee ?? 0
+            payable: Number(serviceFee?.fee ?? 0) * Number(daysOfStay)
         })
 
         await newBooking.save();
