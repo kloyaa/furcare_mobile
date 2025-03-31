@@ -175,9 +175,9 @@ class _UploadQRState extends State<UploadQR> {
         title: Text(
           "Payment via ${widget.paymentMethod}",
           style: GoogleFonts.urbanist(
+            color: AppColors.primary,
             fontSize: 16.0,
             fontWeight: FontWeight.bold,
-            color: AppColors.primary,
           ),
         ),
         elevation: 0,

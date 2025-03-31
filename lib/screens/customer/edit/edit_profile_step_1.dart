@@ -86,7 +86,7 @@ class _EditProfileStep1State extends State<EditProfileStep1> {
             "Profile",
             style: GoogleFonts.urbanist(
               color: AppColors.primary,
-              fontSize: 12.0,
+              fontSize: 16.0,
               fontWeight: FontWeight.bold,
             ),
           ),

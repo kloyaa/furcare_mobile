@@ -286,9 +286,9 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
                   child: Text(
                     'My Bookings',
                     style: GoogleFonts.urbanist(
-                      fontSize: 22.0,
-                      fontWeight: FontWeight.bold,
                       color: AppColors.primary,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),

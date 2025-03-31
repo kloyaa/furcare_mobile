@@ -146,10 +146,10 @@ class _CustomerMainState extends State<CustomerMain> {
             children: [
               Text(
                 branch.branch?.name ?? '',
-                style: GoogleFonts.roboto(
-                  fontSize: 14,
+                style: GoogleFonts.urbanist(
                   color: AppColors.primary,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               Text(

@@ -17,6 +17,7 @@ import 'package:furcare_app/screens/customer/customer_activity_log.dart';
 import 'package:furcare_app/screens/customer/customer_main.dart';
 import 'package:furcare_app/screens/customer/edit/edit_owner_profile.dart';
 import 'package:furcare_app/screens/customer/edit/edit_profile_step_1.dart';
+import 'package:furcare_app/screens/others/setup.dart';
 import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/utils/const/app_theme.dart';
 import 'package:furcare_app/utils/logger.util.dart';
@@ -86,6 +87,10 @@ class MyApp extends StatelessWidget {
       AppRoutes.bookBoarding: (context) => const BookBoarding(),
       AppRoutes.bookTransit: (context) => const HomeServiceScreen(),
       AppRoutes.bookGrooming: (context) => const BookGroomingScreen(),
+
+      //others
+      AppRoutes.setupAnimation:
+          (context) => const ProfileSetupAnimation(redirectPath: "/"),
     };
   }
 }
@@ -109,4 +114,6 @@ class AppRoutes {
   static const String bookBoarding = '/book/boarding';
   static const String bookTransit = '/book/transit';
   static const String bookGrooming = '/book/grooming';
+
+  static const String setupAnimation = '/setup/animation';
 }

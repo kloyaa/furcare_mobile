@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ionicons/ionicons.dart';
+import 'package:lottie/lottie.dart';
 
 class ProfileSetupAnimation extends StatefulWidget {
   final String redirectPath;
@@ -21,7 +20,6 @@ class ProfileSetupAnimation extends StatefulWidget {
 class _ProfileSetupAnimationState extends State<ProfileSetupAnimation>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _avatarAnimation;
   late Animation<double> _textAnimation;
   late Animation<double> _progressAnimation;
 
@@ -29,20 +27,13 @@ class _ProfileSetupAnimationState extends State<ProfileSetupAnimation>
   void initState() {
     super.initState();
 
-    // Animation controller with extended duration
+    // Animation controller with duration matching your Lottie animation
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 3500),
     );
 
-    // Staggered animations
-    _avatarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.0, 0.4, curve: Curves.elasticOut),
-      ),
-    );
-
+    // Staggered animations for text and progress
     _textAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
@@ -82,39 +73,15 @@ class _ProfileSetupAnimationState extends State<ProfileSetupAnimation>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Animated Avatar
-            AnimatedBuilder(
-              animation: _controller,
-              builder: (context, child) {
-                return Transform.scale(
-                  scale: _avatarAnimation.value,
-                  child: Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [AppColors.primary, AppColors.secondary50],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.secondary50,
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Ionicons.paw,
-                        size: 100.0,
-                        color: AppColors.secondary,
-                      ),
-                    ),
-                  ),
-                );
+            // Lottie Animation
+            Lottie.asset(
+              'assets/processing_profile.json',
+              width: 500,
+              height: 500,
+              controller: _controller,
+              onLoaded: (composition) {
+                // Optional: adjust controller duration to match the Lottie animation
+                _controller.duration = composition.duration;
               },
             ),
 
@@ -147,41 +114,6 @@ class _ProfileSetupAnimationState extends State<ProfileSetupAnimation>
                           ),
                         ),
                       ],
-                    ),
-                  ),
-                );
-              },
-            ),
-
-            const SizedBox(height: 40),
-
-            // Progress Indicator
-            AnimatedBuilder(
-              animation: _controller,
-              builder: (context, child) {
-                return Opacity(
-                  opacity: _progressAnimation.value,
-                  child: Container(
-                    width: 300,
-                    height: 10,
-                    decoration: BoxDecoration(
-                      color: AppColors.secondary50,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: FractionallySizedBox(
-                      widthFactor: _progressAnimation.value,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColors.primary,
-                              AppColors.secondary50,
-                              AppColors.primary,
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
                     ),
                   ),
                 );

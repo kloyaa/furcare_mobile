@@ -92,8 +92,8 @@ class _SelectPaymentMethodScreenState extends State<SelectPaymentMethodScreen> {
         title: Text(
           "Payments",
           style: GoogleFonts.urbanist(
-            fontSize: 16.0,
             color: AppColors.primary,
+            fontSize: 16.0,
             fontWeight: FontWeight.bold,
           ),
         ),

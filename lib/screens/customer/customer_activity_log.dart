@@ -65,9 +65,9 @@ class _CustomerActivityLogState extends State<CustomerActivityLog>
         backgroundColor: Colors.white,
         title: Text(
           "Activity Log",
-          style: GoogleFonts.roboto(
+          style: GoogleFonts.urbanist(
             color: AppColors.primary,
-            fontSize: 18.0,
+            fontSize: 16.0,
             fontWeight: FontWeight.bold,
           ),
         ),

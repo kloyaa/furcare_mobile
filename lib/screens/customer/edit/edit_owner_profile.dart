@@ -111,7 +111,7 @@ class _CreateOwnerState extends State<EditOwner> {
             "Owner Info",
             style: GoogleFonts.urbanist(
               color: AppColors.primary,
-              fontSize: 12.0,
+              fontSize: 16.0,
               fontWeight: FontWeight.bold,
             ),
           ),

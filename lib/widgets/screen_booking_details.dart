@@ -118,18 +118,10 @@ class BookingDetailsScreen extends StatelessWidget {
                   ),
 
                   _buildInfoCard(
-                    title: 'Booking Date',
+                    title: 'Booking Date extended for $days day(s)',
                     value: '$formattedDate at $formattedTime',
                     icon: Icons.calendar_today_outlined,
                   ),
-                  days > 0
-                      ? _buildInfoCard(
-                        title: 'Stay Duration',
-                        value: stayDurationText,
-                        icon:
-                            Icons.timer_outlined, // Changed icon to date_range
-                      )
-                      : SizedBox(),
 
                   _buildInfoCard(
                     title: 'Service Type',
@@ -404,7 +396,6 @@ class BookingDetailsScreen extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 24),
-
                   // Payment Information
                   Text(
                     'Payment Information',

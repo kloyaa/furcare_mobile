@@ -19,7 +19,6 @@ class AppTheme {
   static final ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: Colors.grey[100],
     cardTheme: const CardTheme(color: Colors.white),
-
     colorScheme: ColorScheme.fromSeed(
       seedColor: primaryColor,
       brightness: Brightness.light,
