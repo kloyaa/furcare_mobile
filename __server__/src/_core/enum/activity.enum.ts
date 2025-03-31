@@ -31,9 +31,9 @@ export enum ActivityType {
   SERVICE_TRANSIT_COMPLETED = 'Transit application completed',
   SERVICE_BOARDING_COMPLETED = 'Boarding application completed',
 
-  SERVICE_GROOMING_CREATED = 'Grooming application created',
-  SERVICE_TRANSIT_CREATED = 'Transit application created',
-  SERVICE_BOARDING_CREATED = 'boarding application created',
+  SERVICE_GROOMING_CREATED = 'Grooming application successful',
+  SERVICE_TRANSIT_CREATED = 'Home Service application successful',
+  SERVICE_BOARDING_CREATED = 'Boarding application successful',
 
   UPLOAD_IMAGE_SUCCESSFUL = 'Image uploaded',
   UPLOAD_VIDEO_SUCCESSFUL = 'Video uploaded',
