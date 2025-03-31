@@ -2,11 +2,18 @@ import { statuses } from "../_core/const/api.statuses";
 import { TRequest } from "../_core/interfaces/overrides.interface";
 import { type Response } from 'express';
 import ServiceFee from "../models/service_fee.schema";
-import Cage from "../models/cage.schema";
+import GroomingService from "../models/grooming_service.schema";
 
 export const getServiceFees = async (req: TRequest, res: Response) => {
+    console.log('req.query', req.query);
     try {
-        const serviceFees = await ServiceFee.find();
+        let query = {};
+        if (req.query.title) {
+            query = {
+                title: req.query.title
+            }
+        }
+        const serviceFees = await ServiceFee.find(query);
 
         return res.status(200).json(serviceFees);
     } catch (error) {
@@ -15,6 +22,22 @@ export const getServiceFees = async (req: TRequest, res: Response) => {
     }
 }
 
+export const getGroomingServiceFees = async (req: TRequest, res: Response) => {
+    try {
+        let query = {};
+        if (req.query.title) {
+            query = {
+                title: req.query.title
+            }
+        }
+        const serviceFees = await GroomingService.find(query);
+
+        return res.status(200).json(serviceFees);
+    } catch (error) {
+        console.log('@getGroomingServiceFees error', error);
+        return res.status(500).json(statuses['0900']);
+    }
+}
 export const updateServiceFeeById = async (req: TRequest, res: Response) => {
     const { _id } = req.params;
     const { fee, title } = req.body;

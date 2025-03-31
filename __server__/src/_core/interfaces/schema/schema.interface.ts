@@ -65,6 +65,7 @@ export interface IBooking extends Document {
   staff?: Types.ObjectId;
   branch: Types.ObjectId;
   pet: Types.ObjectId;
+  extraServices?: [Types.ObjectId];
   application: Types.ObjectId;
   applicationType: BookingServiceType;
   status: BookingStatus;
@@ -102,6 +103,7 @@ export interface IBookingSchedule extends Document {
 
 export interface IBookingCage extends Document {
   title: string;
+  price: number;
 }
 
 export interface IServiceFee extends Document {

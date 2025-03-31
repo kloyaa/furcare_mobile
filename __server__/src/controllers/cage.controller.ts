@@ -55,6 +55,7 @@ export const getCages = async (req: TRequest, res: TResponse) => {
         const result = cages.map((cage) => ({
             _id: cage._id,
             title: cage.title,
+            price: cage.price,
             used: cageCounts[cage._id.toString()] || 0,
             limit: findCageLimitByTitle(cage.title),
             available: Number((cageCounts[cage._id.toString()] || 0)) < Number(findCageLimitByTitle(cage.title))

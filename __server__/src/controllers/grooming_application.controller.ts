@@ -32,7 +32,7 @@ export const createGroomingApplication = async (req: TRequest, res: TResponse) =
 
         await newGroomingApplication.save();
 
-        const serviceFee = await findServiceFeeByTitle(BookingServiceType.Grooming);
+        const serviceFee: any = await findServiceFeeByTitle(BookingServiceType.Grooming);
 
         const newBooking = new Booking({
             application: newGroomingApplication._id,
@@ -41,7 +41,8 @@ export const createGroomingApplication = async (req: TRequest, res: TResponse) =
             user: req.user.id,
             pet: petId,
             status: BookingStatus.Pending,
-            payable: serviceFee?.fee ?? 0
+            payable: serviceFee?.fee ?? 0,
+            extraServices: req.body.services
         })
 
         await newBooking.save();

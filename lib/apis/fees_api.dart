@@ -7,15 +7,30 @@ class FeesApi {
     dio.options.baseUrl = AppConfig.baseUrl;
     dio.options.headers = {
       'Authorization': 'Bearer $accessToken',
-      'nodex-user-origin': 'web',
+      'nodex-user-origin': 'mobile',
       'nodex-access-key': 'v7pb6wylg4m0xf0kx5zzoved',
       'nodex-secret-key': 'glrvdwi46mq00fg1oqtdx3rg',
     };
   }
 
-  Future<Response> getServiceFees() async {
+  Future<Response> getServiceFees({queryParameters}) async {
     try {
-      Response response = await dio.get('/service/v1/fees');
+      Response response = await dio.get(
+        '/service/v1/fees',
+        queryParameters: queryParameters,
+      );
+      return response;
+    } on DioException {
+      rethrow;
+    }
+  }
+
+  Future<Response> getGroomingServiceFees({queryParameters}) async {
+    try {
+      Response response = await dio.get(
+        '/service/v1/grooming/fees',
+        queryParameters: queryParameters,
+      );
       return response;
     } on DioException {
       rethrow;

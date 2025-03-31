@@ -8,10 +8,23 @@ export const seedSchedules = [
   { title: '07:00 PM - 08:30 PM' },
 ];
 
-export const seedCageSizes = [{ title: 'Large' }, { title: 'Small' }, { title: 'Medium' }];
+export const seedCageSizes = [
+  { title: 'Large', price: 500.00 },
+  { title: 'Small', price: 350.00 },
+  { title: 'Medium', price: 500.00 }
+];
 
 export const seedServiceFees = [
   { title: "boarding", fee: 350.00 },
   { title: "transit", fee: 390.00 },
-  { title: "grooming", fee: 440.00 }
+  { title: "grooming", fee: 0.00 }
+]
+
+export const seedGroomgServices = [
+  { title: "Full bath shampoo", fee: 80.00 },
+  { title: "Haircut/Trim", fee: 200.00 },
+  { title: "Nail Clipping", fee: 150.00 },
+  { title: "Ear Cleaning", fee: 150.00 },
+  { title: "Teath brushing", fee: 85.00 },
+  { title: "Flea and tick treatment", fee: 200.00 },
 ]

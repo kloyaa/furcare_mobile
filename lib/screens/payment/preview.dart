@@ -5,7 +5,6 @@ import 'package:furcare_app/providers/authentication.dart';
 import 'package:furcare_app/providers/fees.dart';
 import 'package:furcare_app/screens/payment/payment_method.dart';
 import 'package:furcare_app/utils/common.util.dart';
-import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -14,12 +13,16 @@ class PaymentPreview extends StatefulWidget {
   final String serviceName;
   final String referenceNo;
   final String date;
+  double? amount = 0;
+  int? daysOfStay = 1;
 
-  const PaymentPreview({
+  PaymentPreview({
     super.key,
     required this.serviceName,
     required this.referenceNo,
     required this.date,
+    this.amount,
+    this.daysOfStay,
   });
 
   @override
@@ -159,7 +162,10 @@ class _PaymentPreviewState extends State<PaymentPreview>
                         title: "SERVICE FEE",
                         value: "P$_serviceFee.00",
                       ),
-
+                      _buildFinancialSection(
+                        title: "DAYS",
+                        value: "x${widget.daysOfStay ?? 1}",
+                      ),
                       Container(
                         margin: const EdgeInsets.symmetric(vertical: 20.0),
                         child: const Divider(),
@@ -175,7 +181,7 @@ class _PaymentPreviewState extends State<PaymentPreview>
                         ),
                       ),
                       Text(
-                        "P$_serviceFee.00",
+                        phpFormatter.format(widget.amount),
                         style: GoogleFonts.rajdhani(
                           fontSize: 48.0,
                           color: AppColors.primary,

@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:furcare_app/extensions.dart';
+import 'package:furcare_app/models/servcefee_info.dart';
 import 'package:furcare_app/utils/const/colors.dart';
+import 'package:furcare_app/widgets/card_extra_services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:maps_launcher/maps_launcher.dart';
@@ -16,6 +20,10 @@ class BookingDetailsScreen extends StatelessWidget {
     final pet = booking['pet'];
     final branch = booking['branch'];
     final status = booking['status'];
+    final List<ServiceFee> extraServices = ServiceFee.fromJsonList(
+      booking['extraServices'],
+    );
+
     final createdDate = DateTime.parse(booking['createdAt']);
     final formattedDate = DateFormat('MMM dd, yyyy').format(createdDate);
     final formattedTime = DateFormat('h:mm a').format(createdDate);
@@ -109,6 +117,8 @@ class BookingDetailsScreen extends StatelessWidget {
                     chipColor: AppColors.primary.withOpacity(0.1),
                     textColor: AppColors.primary,
                   ),
+
+                  ServicesCard(services: extraServices),
 
                   const SizedBox(height: 24),
 

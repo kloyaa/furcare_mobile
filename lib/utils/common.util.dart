@@ -186,3 +186,10 @@ void execOnConfirm(
     },
   );
 }
+
+final NumberFormat phpFormatter = NumberFormat.currency(
+  locale: 'en_PH',
+  symbol: '',
+  decimalDigits: 2,
+  name: Intl.defaultLocale,
+);

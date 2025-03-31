@@ -3,9 +3,11 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:dio/dio.dart';
 import 'package:furcare_app/models/branch_info.dart';
+import 'package:furcare_app/models/cage_info.dart';
 import 'package:furcare_app/providers/branch.dart';
 import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/widgets/dialog_confirm.dart';
+import 'package:furcare_app/widgets/total_animated.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -38,9 +40,18 @@ class _BookBoardingState extends State<BookBoarding>
   String _selectedPet = "";
   String _selectedPetId = "";
   late Branch _selectedBranch;
+  double _payableAmount = 0;
 
   List _pets = [];
-  List _cages = [];
+  List<Cage> _cages = [];
+  Cage _selectedCage = Cage(
+    title: "",
+    price: 0,
+    limit: 0,
+    available: false,
+    id: "",
+    used: 0,
+  );
 
   // Animation controller
   late AnimationController _animationController;
@@ -88,13 +99,28 @@ class _BookBoardingState extends State<BookBoarding>
     super.dispose();
   }
 
+  void _calculateTotalAmount() {
+    setState(() {
+      _payableAmount = _selectedCage.price * _selectedDay;
+    });
+  }
+
   // Load cages from API
   Future<void> _loadCages() async {
     try {
       ClientApi clientApi = ClientApi(_accessToken);
       Response<dynamic> response = await clientApi.getCages();
+
+      // Parse the response data into a list of Cage objects
+      List<Cage> cages =
+          (response.data as List)
+              .map(
+                (cageJson) => Cage.fromJson(cageJson as Map<String, dynamic>),
+              )
+              .toList();
+
       setState(() {
-        _cages = response.data;
+        _cages = cages;
       });
     } catch (e) {
       showSafeSnackBar("Failed to load cages", color: AppColors.danger);
@@ -154,6 +180,8 @@ class _BookBoardingState extends State<BookBoarding>
           MaterialPageRoute(
             builder:
                 (context) => PaymentPreview(
+                  daysOfStay: _selectedDay,
+                  amount: _payableAmount,
                   serviceName: "boarding",
                   date: response.data['date'],
                   referenceNo: response.data['referenceNo'],
@@ -181,14 +209,21 @@ class _BookBoardingState extends State<BookBoarding>
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        title: Text(
-          "Pet Boarding",
-          style: GoogleFonts.urbanist(
-            color: AppColors.primary,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-          ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Pet Boarding",
+              style: GoogleFonts.urbanist(
+                color: AppColors.primary,
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            AnimatedTotal(amount: _payableAmount),
+          ],
         ),
+
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.primary),
           onPressed: () => Navigator.of(context).pop(),
@@ -309,6 +344,8 @@ class _BookBoardingState extends State<BookBoarding>
                             setState(() {
                               _selectedDay = newValue!;
                             });
+
+                            _calculateTotalAmount();
                           },
                           items: List<DropdownMenuItem<int>>.generate(31, (
                             int index,
@@ -328,44 +365,44 @@ class _BookBoardingState extends State<BookBoarding>
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10.0),
-                    Expanded(
-                      child: _buildDropdownContainer(
-                        child: DropdownButton<dynamic>(
-                          value: _selectedPet.isNotEmpty ? _selectedPet : null,
-                          underline: const SizedBox(),
-                          hint: Text(
-                            "Select Pet",
-                            style: GoogleFonts.urbanist(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          onChanged: (dynamic newValue) {
-                            setState(() {
-                              _selectedPet = newValue!;
-                              _selectedPetId = newValue;
-                            });
-                          },
-                          items:
-                              _pets.map<DropdownMenuItem<dynamic>>((pet) {
-                                return DropdownMenuItem(
-                                  value: pet['_id'],
-                                  child: Text(
-                                    pet['name'],
-                                    style: GoogleFonts.urbanist(
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
-
+                SizedBox(height: 20.0),
+                SizedBox(
+                  width: double.infinity,
+                  child: _buildDropdownContainer(
+                    child: DropdownButton<dynamic>(
+                      value: _selectedPet.isNotEmpty ? _selectedPet : null,
+                      underline: const SizedBox(),
+                      hint: Text(
+                        "Select Pet",
+                        style: GoogleFonts.urbanist(
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      onChanged: (dynamic newValue) {
+                        setState(() {
+                          _selectedPet = newValue!;
+                          _selectedPetId = newValue;
+                        });
+                      },
+                      items:
+                          _pets.map<DropdownMenuItem<dynamic>>((pet) {
+                            return DropdownMenuItem(
+                              value: pet['_id'],
+                              child: Text(
+                                pet['name'],
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 20.0),
 
                 // Cage Selection Section
@@ -384,18 +421,20 @@ class _BookBoardingState extends State<BookBoarding>
                     final cage = _cages[index];
                     return GestureDetector(
                       onTap:
-                          cage['available']
+                          cage.available
                               ? () {
                                 setState(() {
-                                  _selectedCageId = cage['_id'];
+                                  _selectedCageId = cage.id;
+                                  _selectedCage = cage;
                                 });
+                                _calculateTotalAmount();
                               }
                               : null,
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
                         decoration: BoxDecoration(
                           color:
-                              _selectedCageId == cage['_id']
+                              _selectedCageId == cage.id
                                   ? AppColors.primary
                                   : Colors.white,
                           borderRadius: BorderRadius.circular(
@@ -411,30 +450,42 @@ class _BookBoardingState extends State<BookBoarding>
                           ],
                         ),
                         child: Opacity(
-                          opacity: cage['available'] ? 1 : 0.3,
+                          opacity: cage.available ? 1 : 0.3,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                cage['title'],
+                                cage.title,
                                 style: GoogleFonts.urbanist(
                                   fontSize: 14.0,
                                   fontWeight: FontWeight.bold,
                                   color:
-                                      _selectedCageId == cage['_id']
+                                      _selectedCageId == cage.id
                                           ? Colors.white
                                           : AppColors.primary,
                                 ),
                               ),
                               const SizedBox(height: 5),
                               Text(
-                                "${cage['used']}/${cage['limit']} occupied",
+                                "${cage.used}/${cage.limit} occupied",
                                 style: GoogleFonts.urbanist(
                                   fontSize: 12.0,
+                                  fontWeight: FontWeight.w600,
                                   color:
-                                      _selectedCageId == cage['_id']
+                                      _selectedCageId == cage.id
                                           ? Colors.white70
-                                          : AppColors.primary.withOpacity(0.7),
+                                          : AppColors.primary.withAlpha(220),
+                                ),
+                              ),
+                              Text(
+                                "PHP${cage.price}/day",
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 12.0,
+                                  fontWeight: FontWeight.w600,
+                                  color:
+                                      _selectedCageId == cage.id
+                                          ? Colors.white70
+                                          : AppColors.primary.withAlpha(220),
                                 ),
                               ),
                             ],

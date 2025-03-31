@@ -18,6 +18,11 @@ const bookingSchema = new Schema<IBooking>(
       ref: 'Pet',
       required: true,
     },
+    extraServices: {
+      type: [Schema.Types.ObjectId],
+      ref: 'GroomingService',
+      required: false,
+    },
     branch: {
       type: Schema.Types.ObjectId,
       ref: 'Branch',

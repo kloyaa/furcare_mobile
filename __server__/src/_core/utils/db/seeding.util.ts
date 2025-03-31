@@ -6,7 +6,7 @@ import { closeDB, connectDB } from './db.util';
 import RoleName from '../../../models/role_name.schema';
 import UserRole from '../../../models/user_role.schema';
 import BookingSchedule from '../../../models/schedule.schema';
-import { seedCageSizes, seedSchedules, seedServiceFees } from '../../const/booking_seed_data.const';
+import { seedCageSizes, seedGroomgServices, seedSchedules, seedServiceFees } from '../../const/booking_seed_data.const';
 import Cage from '../../../models/cage.schema';
 import ServiceFee from '../../../models/service_fee.schema';
 import Profile from '../../../models/profile.schema';
@@ -14,6 +14,7 @@ import { faker } from '@faker-js/faker';
 import Branch from '../../../models/branch.schema';
 import { seedBranches } from '../../const/branch_seed.data.const';
 import { IBranch } from '../../interfaces/branch.interface';
+import GroomingService from '../../../models/grooming_service.schema';
 
 const registerAccounts = async (): Promise<any> => {
   try {
@@ -219,6 +220,7 @@ const createCages = async (): Promise<any> => {
         console.log(` -> Creating cage ${el.title}...`);
         return {
           title: el?.title,
+          price: el?.price
         };
       }),
     );
@@ -235,7 +237,10 @@ const createCages = async (): Promise<any> => {
 const createServiceFees = async (): Promise<any> => {
   try {
     console.log('Deleting previous service fees seeds...');
-    await ServiceFee.deleteMany({});
+    await Promise.all([
+      ServiceFee.deleteMany({}),
+      GroomingService.deleteMany({}),
+    ])
     console.log('Creating service fees...');
     const services = await Promise.all(
       seedServiceFees.map(async (el: any) => {
@@ -247,8 +252,20 @@ const createServiceFees = async (): Promise<any> => {
       }),
     );
 
-    await ServiceFee.insertMany([...services]);
+    const groomingServices = await Promise.all(
+      seedGroomgServices.map(async (el: any) => {
+        console.log(` -> Creating fee for ${el.title}...`);
+        return {
+          title: el?.title,
+          fee: Number(el?.fee)
+        };
+      }),
+    );
 
+    await Promise.all([
+      ServiceFee.insertMany([...services]),
+      GroomingService.insertMany([...groomingServices])
+    ])
     return true;
   } catch (error) {
     console.log(error);

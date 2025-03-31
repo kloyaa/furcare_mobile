@@ -86,7 +86,7 @@ export const getBookingsByAccessToken = async (req: TRequest, res: TResponse) =>
                 user: req.user.id,
                 status: req.query.status ?? "pending"
             })
-            .populate(['pet', 'staff', 'branch'])
+            .populate(['pet', 'staff', 'branch', 'extraServices'])
             .sort({ createdAt: 'desc' });
 
         // Mapping for renaming application types

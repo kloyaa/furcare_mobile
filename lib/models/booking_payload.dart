@@ -28,15 +28,22 @@ class GroomingPayload {
   final String pet;
   final String schedule;
   final String branch;
+  final List<String> services; // Add this field
 
   GroomingPayload({
     required this.pet,
-    required this.branch,
     required this.schedule,
+    required this.branch,
+    this.services = const [], // Default to empty list
   });
 
   Map<String, dynamic> toJson() {
-    return {'pet': pet, 'schedule': schedule, 'branch': branch};
+    return {
+      'pet': pet,
+      'schedule': schedule,
+      'branch': branch,
+      'services': services, // Include in JSON payload
+    };
   }
 }
 
