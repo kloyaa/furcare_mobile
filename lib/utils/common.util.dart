@@ -37,11 +37,11 @@ Color defineColorByStatus(String status) {
   }
 
   if (status == "pending") {
-    return AppColors.primary.withOpacity(0.3);
+    return AppColors.primary.withAlpha(50);
   }
 
   if (status == "cancelled") {
-    return AppColors.danger.withOpacity(0.3);
+    return AppColors.danger.withAlpha(50);
   }
 
   return AppColors.primary;

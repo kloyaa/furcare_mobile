@@ -27,7 +27,7 @@ class PaymentMethodCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: Colors.grey.withAlpha(100),
               spreadRadius: 1,
               blurRadius: 5,
             ),
@@ -49,7 +49,7 @@ class PaymentMethodCard extends StatelessWidget {
             ),
             Icon(
               Icons.arrow_forward_ios,
-              color: AppColors.primary.withOpacity(0.5),
+              color: AppColors.primary.withAlpha(200),
               size: 18,
             ),
           ],

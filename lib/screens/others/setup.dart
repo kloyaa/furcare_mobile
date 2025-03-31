@@ -99,7 +99,7 @@ class _ProfileSetupAnimationState extends State<ProfileSetupAnimation>
                       children: [
                         Text(
                           "Let's set up your profile",
-                          style: GoogleFonts.roboto(
+                          style: GoogleFonts.urbanist(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                             color: AppColors.primary,
@@ -108,7 +108,7 @@ class _ProfileSetupAnimationState extends State<ProfileSetupAnimation>
                         const SizedBox(height: 10),
                         Text(
                           "Don't worry, it takes just a few seconds...",
-                          style: GoogleFonts.roboto(
+                          style: GoogleFonts.urbanist(
                             fontSize: 12,
                             color: AppColors.primary,
                           ),

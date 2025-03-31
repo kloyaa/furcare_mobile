@@ -141,7 +141,7 @@ class _CreateOwnerState extends State<EditOwner> {
                       color:
                           _isCreateError
                               ? AppColors.danger
-                              : AppColors.primary.withOpacity(0.5),
+                              : AppColors.primary.withAlpha(200),
                       fontSize: 10.0,
                     ),
                     prefixIcon: Icon(
@@ -182,7 +182,7 @@ class _CreateOwnerState extends State<EditOwner> {
                       color:
                           _isCreateError
                               ? AppColors.danger
-                              : AppColors.primary.withOpacity(0.5),
+                              : AppColors.primary.withAlpha(200),
                       fontSize: 10.0,
                     ),
                     prefixIcon: Icon(

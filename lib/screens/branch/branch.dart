@@ -120,7 +120,7 @@ class BranchListItem extends StatelessWidget {
         contentPadding: const EdgeInsets.all(16),
         title: Text(
           branch.name,
-          style: GoogleFonts.roboto(
+          style: GoogleFonts.urbanist(
             fontWeight: FontWeight.w800,
             fontSize: 18,
             color: AppColors.primary,
@@ -128,7 +128,7 @@ class BranchListItem extends StatelessWidget {
         ),
         subtitle: Text(
           branch.address,
-          style: GoogleFonts.roboto(fontSize: 12, color: AppColors.primary),
+          style: GoogleFonts.urbanist(fontSize: 12, color: AppColors.primary),
         ),
         trailing: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -169,7 +169,7 @@ class BranchDetailsSheet extends StatelessWidget {
         children: [
           Text(
             branch.name,
-            style: GoogleFonts.roboto(
+            style: GoogleFonts.urbanist(
               fontSize: 24,
               fontWeight: FontWeight.w700,
             ),
@@ -235,7 +235,7 @@ class BranchDetailsSheet extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: GoogleFonts.roboto(
+              style: GoogleFonts.urbanist(
                 color: color ?? Colors.black87,
                 fontSize: 12,
               ),

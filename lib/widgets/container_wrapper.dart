@@ -29,7 +29,7 @@ class ContainerWrapper extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(30),
+            color: Colors.black.withAlpha(50),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),

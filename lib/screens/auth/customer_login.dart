@@ -214,7 +214,7 @@ class _CustomerLoginState extends State<CustomerLogin>
                               color:
                                   _isLoginError
                                       ? AppColors.danger
-                                      : AppColors.primary.withOpacity(0.5),
+                                      : AppColors.primary.withAlpha(200),
                               fontSize: 10.0,
                             ),
                             prefixIcon: Icon(
@@ -260,7 +260,7 @@ class _CustomerLoginState extends State<CustomerLogin>
                               color:
                                   _isLoginError
                                       ? AppColors.danger
-                                      : AppColors.primary.withOpacity(0.5),
+                                      : AppColors.primary.withAlpha(200),
                               fontSize: 10.0,
                             ),
                             prefixIcon: Icon(
@@ -317,8 +317,8 @@ class _CustomerLoginState extends State<CustomerLogin>
                       Text(
                         "By logging in, you agree to abide by our terms and conditions. Please review them carefully before proceeding.",
                         style: GoogleFonts.urbanist(
-                          color: AppColors.primary.withOpacity(0.7),
-                          fontSize: 10.0,
+                          color: AppColors.primary.withAlpha(200),
+                          fontSize: 12.0,
                           fontWeight: FontWeight.w400,
                         ),
                       ),

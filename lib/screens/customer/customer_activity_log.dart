@@ -102,14 +102,14 @@ class _CustomerActivityLogState extends State<CustomerActivityLog>
                     const SizedBox(height: 16),
                     Text(
                       'Error loading activity logs',
-                      style: GoogleFonts.roboto(
+                      style: GoogleFonts.urbanist(
                         color: AppColors.primary,
                         fontSize: 16,
                       ),
                     ),
                     Text(
                       '${snapshot.error}',
-                      style: GoogleFonts.roboto(
+                      style: GoogleFonts.urbanist(
                         color: Colors.grey,
                         fontSize: 14,
                       ),
@@ -130,7 +130,7 @@ class _CustomerActivityLogState extends State<CustomerActivityLog>
                     const SizedBox(height: 16),
                     Text(
                       'No activity logs found',
-                      style: GoogleFonts.roboto(
+                      style: GoogleFonts.urbanist(
                         color: AppColors.primary,
                         fontSize: 16,
                       ),
@@ -161,7 +161,7 @@ class _CustomerActivityLogState extends State<CustomerActivityLog>
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
+                                color: Colors.grey.withAlpha(100),
                                 spreadRadius: 1,
                                 blurRadius: 5,
                                 offset: const Offset(0, 3),
@@ -175,7 +175,7 @@ class _CustomerActivityLogState extends State<CustomerActivityLog>
                             ),
                             title: Text(
                               snapshot.data[index]['description'],
-                              style: GoogleFonts.roboto(
+                              style: GoogleFonts.urbanist(
                                 fontSize: 14.0,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.primary,
@@ -187,7 +187,7 @@ class _CustomerActivityLogState extends State<CustomerActivityLog>
                                   snapshot.data[index]['createdAt'],
                                 ),
                               ),
-                              style: GoogleFonts.roboto(
+                              style: GoogleFonts.urbanist(
                                 fontSize: 12.0,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.grey[600],
@@ -196,7 +196,7 @@ class _CustomerActivityLogState extends State<CustomerActivityLog>
                             leading: Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: AppColors.primary.withOpacity(0.1),
+                                color: AppColors.primary.withAlpha(50),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(

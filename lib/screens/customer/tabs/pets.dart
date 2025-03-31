@@ -93,7 +93,7 @@ class _CustomerTabPetsState extends State<CustomerTabPets> {
                         Icon(
                           Ionicons.paw_outline,
                           size: 80,
-                          color: AppColors.primary.withOpacity(0.5),
+                          color: AppColors.primary.withAlpha(200),
                         ),
                         const SizedBox(height: 20),
                         Text(
@@ -150,7 +150,7 @@ class PetListItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.1),
+        color: AppColors.primary.withAlpha(50),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -179,7 +179,7 @@ class PetListItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primary.withAlpha(50),
             spreadRadius: 2,
             blurRadius: 10,
             offset: const Offset(0, 4),
@@ -243,7 +243,7 @@ class PetListItem extends StatelessWidget {
                 ),
                 Icon(
                   Ionicons.chevron_forward,
-                  color: AppColors.primary.withOpacity(0.5),
+                  color: AppColors.primary.withAlpha(200),
                 ),
               ],
             ),
@@ -271,7 +271,7 @@ class PetDetailsSheet extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
+              color: AppColors.primary.withAlpha(50),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: AppColors.primary, size: 24),

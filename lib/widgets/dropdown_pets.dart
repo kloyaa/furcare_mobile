@@ -28,7 +28,7 @@ class _PetDropdownState extends State<PetDropdown> {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withAlpha(50),
             spreadRadius: 1,
             blurRadius: 5,
           ),
@@ -39,7 +39,7 @@ class _PetDropdownState extends State<PetDropdown> {
           hint: Text(
             'Select Your Pet',
             style: GoogleFonts.urbanist(
-              color: AppColors.primary.withOpacity(0.5),
+              color: AppColors.primary.withAlpha(200),
               fontSize: 14,
             ),
           ),

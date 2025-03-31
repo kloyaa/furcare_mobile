@@ -46,7 +46,7 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
   String _accessToken = '';
   late Branch _selectedBranch;
   List<ServiceFee> _groomingServiceFee = [];
-  double _baseAmount = 0;
+  final double _baseAmount = 0;
 
   @override
   void initState() {
@@ -306,7 +306,7 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
     return Text(
       title,
       style: GoogleFonts.urbanist(
-        color: AppColors.primary.withOpacity(0.7),
+        color: AppColors.primary.withAlpha(200),
         fontWeight: FontWeight.w600,
         fontSize: 14.0,
       ),
@@ -444,11 +444,11 @@ class ServiceCheckboxTile extends StatelessWidget {
   final Function(bool?) onChanged;
 
   const ServiceCheckboxTile({
-    Key? key,
+    super.key,
     required this.service,
     required this.isSelected,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -456,8 +456,7 @@ class ServiceCheckboxTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color:
-            isSelected ? AppColors.primary.withOpacity(0.1) : Colors.grey[100],
+        color: isSelected ? AppColors.primary.withAlpha(50) : Colors.grey[100],
       ),
       child: CheckboxListTile(
         title: Text(

@@ -250,7 +250,7 @@ class _BookBoardingState extends State<BookBoarding>
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: Colors.grey.withAlpha(100),
                         spreadRadius: 2,
                         blurRadius: 5,
                         offset: const Offset(0, 3),
@@ -270,7 +270,7 @@ class _BookBoardingState extends State<BookBoarding>
                         fontWeight: FontWeight.bold,
                       ),
                       weekdayLabelTextStyle: GoogleFonts.urbanist(
-                        color: AppColors.primary.withOpacity(0.7),
+                        color: AppColors.primary.withAlpha(200),
                         fontWeight: FontWeight.w600,
                       ),
                       nextMonthIcon: Icon(
@@ -442,7 +442,7 @@ class _BookBoardingState extends State<BookBoarding>
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
+                              color: Colors.grey.withAlpha(100),
                               spreadRadius: 2,
                               blurRadius: 5,
                               offset: const Offset(0, 3),
@@ -474,7 +474,7 @@ class _BookBoardingState extends State<BookBoarding>
                                   color:
                                       _selectedCageId == cage.id
                                           ? Colors.white70
-                                          : AppColors.primary.withAlpha(220),
+                                          : AppColors.primary.withAlpha(200),
                                 ),
                               ),
                               Text(
@@ -485,7 +485,7 @@ class _BookBoardingState extends State<BookBoarding>
                                   color:
                                       _selectedCageId == cage.id
                                           ? Colors.white70
-                                          : AppColors.primary.withAlpha(220),
+                                          : AppColors.primary.withAlpha(200),
                                 ),
                               ),
                             ],
@@ -545,7 +545,7 @@ class _BookBoardingState extends State<BookBoarding>
         borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withAlpha(100),
             spreadRadius: 2,
             blurRadius: 5,
             offset: const Offset(0, 3),

@@ -50,7 +50,7 @@ class BookingDetailsScreen extends StatelessWidget {
         title: Center(
           child: Text(
             "Booking details",
-            style: GoogleFonts.roboto(
+            style: GoogleFonts.urbanist(
               fontSize: 14,
               color: AppColors.primary,
               fontWeight: FontWeight.w600,
@@ -65,7 +65,7 @@ class BookingDetailsScreen extends StatelessWidget {
             // Status Bar
             Container(
               width: double.infinity,
-              color: _getStatusColor(status).withOpacity(0.1),
+              color: _getStatusColor(status).withAlpha(50),
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               child: Row(
                 children: [
@@ -127,7 +127,7 @@ class BookingDetailsScreen extends StatelessWidget {
                     title: 'Service Type',
                     value: booking['applicationType'].toString().capitalize(),
                     icon: Icons.medical_services_outlined,
-                    chipColor: AppColors.primary.withOpacity(0.1),
+                    chipColor: AppColors.primary.withAlpha(50),
                     textColor: AppColors.primary,
                   ),
 
@@ -154,7 +154,7 @@ class BookingDetailsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withAlpha(50),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),
@@ -170,7 +170,7 @@ class BookingDetailsScreen extends StatelessWidget {
                                 width: 60,
                                 height: 60,
                                 decoration: BoxDecoration(
-                                  color: AppColors.primary.withOpacity(0.1),
+                                  color: AppColors.primary.withAlpha(50),
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                                 child: Center(
@@ -253,7 +253,7 @@ class BookingDetailsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withAlpha(50),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),
@@ -268,7 +268,7 @@ class BookingDetailsScreen extends StatelessWidget {
                               Container(
                                 width: 50,
                                 decoration: BoxDecoration(
-                                  color: AppColors.primary.withOpacity(0.1),
+                                  color: AppColors.primary.withAlpha(50),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Center(
@@ -415,7 +415,7 @@ class BookingDetailsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withAlpha(50),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),
@@ -498,7 +498,7 @@ class BookingDetailsScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha(50),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),

@@ -3,7 +3,6 @@ import 'package:furcare_app/models/user_info.dart';
 import 'package:furcare_app/providers/authentication.dart';
 import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/utils/const/colors.dart';
-import 'package:furcare_app/widgets/container_wrapper.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:lottie/lottie.dart';
@@ -112,7 +111,7 @@ class _CreateProfileStep1State extends State<CreateProfileStep1>
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: AppColors.primary.withOpacity(0.05),
+        backgroundColor: AppColors.primary.withAlpha(50),
         body: SafeArea(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -129,7 +128,7 @@ class _CreateProfileStep1State extends State<CreateProfileStep1>
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: AppColors.primary.withOpacity(0.1),
+                          color: AppColors.primary.withAlpha(50),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(
@@ -306,7 +305,7 @@ class _CreateProfileStep1State extends State<CreateProfileStep1>
                             decoration: BoxDecoration(
                               color:
                                   _isNameValid
-                                      ? Colors.white.withOpacity(0.2)
+                                      ? Colors.white.withAlpha(100)
                                       : Colors.transparent,
                               borderRadius: BorderRadius.circular(8),
                             ),

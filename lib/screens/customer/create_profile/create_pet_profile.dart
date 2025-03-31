@@ -149,7 +149,7 @@ class _CreatePetState extends State<CreatePet> {
                             color:
                                 _isCreateError
                                     ? AppColors.danger
-                                    : AppColors.primary.withOpacity(0.5),
+                                    : AppColors.primary.withAlpha(200),
                             fontSize: 10.0,
                           ),
                           prefixIcon: Icon(
@@ -200,7 +200,7 @@ class _CreatePetState extends State<CreatePet> {
                             color:
                                 _isCreateError
                                     ? AppColors.danger
-                                    : AppColors.primary.withOpacity(0.5),
+                                    : AppColors.primary.withAlpha(200),
                             fontSize: 10.0,
                           ),
                           prefixIcon: Icon(
@@ -209,7 +209,7 @@ class _CreatePetState extends State<CreatePet> {
                             color:
                                 _isCreateError
                                     ? AppColors.danger
-                                    : AppColors.primary.withOpacity(0.8),
+                                    : AppColors.primary.withAlpha(200),
                           ),
                           prefixIconColor: AppColors.primary,
                           border: InputBorder.none,
@@ -247,7 +247,7 @@ class _CreatePetState extends State<CreatePet> {
                             color:
                                 _isCreateError
                                     ? AppColors.danger
-                                    : AppColors.primary.withOpacity(0.5),
+                                    : AppColors.primary.withAlpha(200),
                             fontSize: 10.0,
                           ),
                           prefixIcon: Icon(
@@ -256,7 +256,7 @@ class _CreatePetState extends State<CreatePet> {
                             color:
                                 _isCreateError
                                     ? AppColors.danger
-                                    : AppColors.primary.withOpacity(0.8),
+                                    : AppColors.primary.withAlpha(200),
                           ),
                           prefixIconColor: AppColors.primary,
                           border: InputBorder.none,
@@ -291,7 +291,7 @@ class _CreatePetState extends State<CreatePet> {
                     Text(
                       'Sex',
                       style: GoogleFonts.urbanist(
-                        color: AppColors.primary.withOpacity(0.5),
+                        color: AppColors.primary.withAlpha(200),
                         fontWeight: FontWeight.w400,
                         fontSize: 8.0,
                       ),

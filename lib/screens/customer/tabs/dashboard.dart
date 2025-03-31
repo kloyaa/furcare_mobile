@@ -62,7 +62,7 @@ class _CustomerTabDashboardState extends State<CustomerTabDashboard> {
             return AlertDialog(
               title: Text(
                 'Service Consent',
-                style: GoogleFonts.roboto(
+                style: GoogleFonts.urbanist(
                   fontWeight: FontWeight.bold,
                   color: AppColors.primary,
                 ),
@@ -73,43 +73,43 @@ class _CustomerTabDashboardState extends State<CustomerTabDashboard> {
                   children: [
                     Text(
                       'By tapping "Accept" below, I consent to the services provided by Furcare Vet Clinic. I understand that grooming involves handling my pet, and I authorize the staff to proceed with the requested services.',
-                      style: GoogleFonts.roboto(),
+                      style: GoogleFonts.urbanist(),
                     ),
                     const SizedBox(height: 10),
                     Text(
                       'Emergency Consent:',
-                      style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
+                      style: GoogleFonts.urbanist(fontWeight: FontWeight.bold),
                     ),
                     Text(
                       'In case of an emergency, I consent to necessary veterinary care, at my expense.',
-                      style: GoogleFonts.roboto(),
+                      style: GoogleFonts.urbanist(),
                     ),
                     const SizedBox(height: 10),
                     Text(
                       'Pet Care Acknowledgment:',
-                      style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
+                      style: GoogleFonts.urbanist(fontWeight: FontWeight.bold),
                     ),
                     Text(
                       'At Furcare Vet Clinic, we prioritize your pet\'s well-being. While we take great care to ensure a pleasant grooming experience, I acknowledge that the staff will address any underlying health issues or worsen existing conditions if needed.',
-                      style: GoogleFonts.roboto(),
+                      style: GoogleFonts.urbanist(),
                     ),
                     const SizedBox(height: 10),
                     Text(
                       'Promotional Use:',
-                      style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
+                      style: GoogleFonts.urbanist(fontWeight: FontWeight.bold),
                     ),
                     Text(
                       'I give permission for Furcare Vet Clinic to use photos of my pet for promotional purposes.',
-                      style: GoogleFonts.roboto(),
+                      style: GoogleFonts.urbanist(),
                     ),
                     const SizedBox(height: 10),
                     Text(
                       'Vaccination Confirmation:',
-                      style: GoogleFonts.roboto(fontWeight: FontWeight.bold),
+                      style: GoogleFonts.urbanist(fontWeight: FontWeight.bold),
                     ),
                     Text(
                       'I confirm that my pet is up to date on Rabies, Distemper, and any required vaccinations.',
-                      style: GoogleFonts.roboto(),
+                      style: GoogleFonts.urbanist(),
                     ),
                   ],
                 ),
@@ -119,7 +119,7 @@ class _CustomerTabDashboardState extends State<CustomerTabDashboard> {
                   onPressed: () => Navigator.of(context).pop(false),
                   child: Text(
                     'Decline',
-                    style: GoogleFonts.roboto(color: Colors.red),
+                    style: GoogleFonts.urbanist(color: Colors.red),
                   ),
                 ),
                 ElevatedButton(
@@ -195,7 +195,7 @@ class _CustomerTabDashboardState extends State<CustomerTabDashboard> {
           borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
+              color: Colors.grey.withAlpha(100),
               spreadRadius: 2,
               blurRadius: 5,
               offset: const Offset(0, 3),
@@ -235,7 +235,7 @@ class _CustomerTabDashboardState extends State<CustomerTabDashboard> {
                         const SizedBox(width: 8),
                         Text(
                           service['title'],
-                          style: GoogleFonts.roboto(
+                          style: GoogleFonts.urbanist(
                             fontSize: 16.0,
                             fontWeight: FontWeight.bold,
                             color: AppColors.primary,
@@ -246,7 +246,7 @@ class _CustomerTabDashboardState extends State<CustomerTabDashboard> {
                     const SizedBox(height: 8),
                     Text(
                       service['subtitle'],
-                      style: GoogleFonts.roboto(
+                      style: GoogleFonts.urbanist(
                         fontSize: 12.0,
                         fontWeight: FontWeight.w400,
                         color: Colors.grey[700],

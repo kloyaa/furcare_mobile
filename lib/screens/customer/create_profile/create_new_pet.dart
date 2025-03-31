@@ -51,7 +51,7 @@ class _AddNewPetState extends State<AddNewPet>
   bool _isBackHovered = false;
 
   // Input field hover states
-  Map<String, bool> _fieldHoverStates = {
+  final Map<String, bool> _fieldHoverStates = {
     'name': false,
     'age': false,
     'breed': false,
@@ -246,7 +246,7 @@ class _AddNewPetState extends State<AddNewPet>
                       _fieldHoverStates[fieldKey] == true
                           ? [
                             BoxShadow(
-                              color: AppColors.primary.withOpacity(0.1),
+                              color: AppColors.primary.withAlpha(50),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
@@ -264,7 +264,7 @@ class _AddNewPetState extends State<AddNewPet>
                       color:
                           _isCreateError
                               ? AppColors.danger
-                              : AppColors.primary.withOpacity(0.5),
+                              : AppColors.primary.withAlpha(200),
                       fontSize: 10.0,
                     ),
                     prefixIcon: AnimatedScale(
@@ -276,7 +276,7 @@ class _AddNewPetState extends State<AddNewPet>
                         color:
                             _isCreateError
                                 ? AppColors.danger
-                                : AppColors.primary.withOpacity(0.8),
+                                : AppColors.primary.withAlpha(200),
                       ),
                     ),
                     prefixIconColor: AppColors.primary,
@@ -419,7 +419,7 @@ class _AddNewPetState extends State<AddNewPet>
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.primary.withOpacity(0.05),
+                              color: AppColors.primary.withAlpha(50),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
@@ -431,7 +431,7 @@ class _AddNewPetState extends State<AddNewPet>
                             Text(
                               'Gender',
                               style: GoogleFonts.urbanist(
-                                color: AppColors.primary.withOpacity(0.5),
+                                color: AppColors.primary.withAlpha(200),
                                 fontWeight: FontWeight.w400,
                                 fontSize: 8.0,
                               ),

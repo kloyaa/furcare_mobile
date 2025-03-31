@@ -122,7 +122,7 @@ class _PaymentPreviewState extends State<PaymentPreview>
                 borderRadius: BorderRadius.circular(20.0),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
+                    color: Colors.grey.withAlpha(50),
                     spreadRadius: 3,
                     blurRadius: 10,
                     offset: const Offset(0, 5),
@@ -179,7 +179,7 @@ class _PaymentPreviewState extends State<PaymentPreview>
                         "TO PAY",
                         style: GoogleFonts.urbanist(
                           fontSize: 12.0,
-                          color: AppColors.primary.withOpacity(0.7),
+                          color: AppColors.primary.withAlpha(200),
                           letterSpacing: 1.2,
                         ),
                       ),
@@ -234,7 +234,7 @@ class _PaymentPreviewState extends State<PaymentPreview>
           title,
           style: GoogleFonts.urbanist(
             fontSize: 10.0,
-            color: AppColors.primary.withOpacity(0.7),
+            color: AppColors.primary.withAlpha(200),
             letterSpacing: 1.2,
           ),
         ),
@@ -265,7 +265,7 @@ class _PaymentPreviewState extends State<PaymentPreview>
             title,
             style: GoogleFonts.urbanist(
               fontSize: 12.0,
-              color: AppColors.primary.withOpacity(0.7),
+              color: AppColors.primary.withAlpha(200),
             ),
           ),
           Text(

@@ -265,7 +265,7 @@ class _UploadQRState extends State<UploadQR> {
                                 // Show image in a lightbox when tapped
                                 showDialog(
                                   context: context,
-                                  barrierColor: Colors.black.withOpacity(0.9),
+                                  barrierColor: Colors.black.withAlpha(200),
                                   builder: (BuildContext context) {
                                     return Dialog(
                                       backgroundColor: Colors.transparent,
@@ -329,13 +329,13 @@ class _UploadQRState extends State<UploadQR> {
                                   Icon(
                                     Icons.upload_file,
                                     size: 64,
-                                    color: AppColors.primary.withOpacity(0.5),
+                                    color: AppColors.primary.withAlpha(200),
                                   ),
                                   const SizedBox(height: 16),
                                   Text(
                                     "Tap to upload \nproof of payment",
                                     style: GoogleFonts.urbanist(
-                                      color: AppColors.primary.withOpacity(0.8),
+                                      color: AppColors.primary.withAlpha(200),
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -412,9 +412,7 @@ class _UploadQRState extends State<UploadQR> {
                     borderRadius: BorderRadius.circular(
                       AppConstants.defaultBorderRadius,
                     ),
-                    border: Border.all(
-                      color: AppColors.primary.withOpacity(0.3),
-                    ),
+                    border: Border.all(color: AppColors.primary.withAlpha(50)),
                   ),
                   child: TextFormField(
                     controller: _refController,
@@ -424,13 +422,13 @@ class _UploadQRState extends State<UploadQR> {
                       fillColor: AppColors.primary,
                       hintText: "Enter reference number",
                       hintStyle: GoogleFonts.urbanist(
-                        color: AppColors.primary.withOpacity(0.5),
+                        color: AppColors.primary.withAlpha(200),
                         fontSize: 14.0,
                       ),
                       prefixIcon: Icon(
                         Icons.numbers_outlined,
                         size: 20.0,
-                        color: AppColors.primary.withOpacity(0.8),
+                        color: AppColors.primary.withAlpha(200),
                       ),
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(vertical: 16),
@@ -478,7 +476,7 @@ class _UploadQRState extends State<UploadQR> {
           label,
           style: GoogleFonts.urbanist(
             fontSize: 14.0,
-            color: AppColors.primary.withOpacity(0.7),
+            color: AppColors.primary.withAlpha(200),
           ),
         ),
         Text(

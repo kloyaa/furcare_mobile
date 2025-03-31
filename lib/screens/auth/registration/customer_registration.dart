@@ -95,25 +95,20 @@ class _CustomerRegisterState extends State<CustomerRegister>
         _loginErrorMessage = "";
       });
 
-      if (context.mounted) {
+      if (mounted) {
         final accessTokenProvider = Provider.of<AuthTokenProvider>(
           context,
           listen: false,
         );
-
         accessTokenProvider.setAuthToken(registerResponse.accessToken);
-
-        if (context.mounted) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (context) => ProfileSetupAnimation(
-                    redirectPath: "/c/create/profile/1",
-                  ),
-            ),
-          );
-        }
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) =>
+                    ProfileSetupAnimation(redirectPath: "/c/create/profile/1"),
+          ),
+        );
       }
     } on DioException catch (e) {
       ErrorResponse errorResponse = ErrorResponse.fromJson(e.response?.data);
@@ -174,7 +169,6 @@ class _CustomerRegisterState extends State<CustomerRegister>
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-
         body: Center(
           child: AnimatedBuilder(
             animation: _shakeAnimation,
@@ -222,7 +216,7 @@ class _CustomerRegisterState extends State<CustomerRegister>
                               color:
                                   _isLoginError
                                       ? AppColors.danger
-                                      : AppColors.primary.withOpacity(0.5),
+                                      : AppColors.primary.withAlpha(200),
                               fontSize: 10.0,
                             ),
                             prefixIcon: Icon(
@@ -268,7 +262,7 @@ class _CustomerRegisterState extends State<CustomerRegister>
                               color:
                                   _isLoginError
                                       ? AppColors.danger
-                                      : AppColors.primary.withOpacity(0.5),
+                                      : AppColors.primary.withAlpha(200),
                               fontSize: 10.0,
                             ),
                             prefixIcon: Icon(
@@ -314,7 +308,7 @@ class _CustomerRegisterState extends State<CustomerRegister>
                               color:
                                   _isLoginError
                                       ? AppColors.danger
-                                      : AppColors.primary.withOpacity(0.5),
+                                      : AppColors.primary.withAlpha(200),
                               fontSize: 10.0,
                             ),
                             prefixIcon: Icon(
@@ -375,7 +369,7 @@ class _CustomerRegisterState extends State<CustomerRegister>
                               color:
                                   _isLoginError
                                       ? AppColors.danger
-                                      : AppColors.primary.withOpacity(0.5),
+                                      : AppColors.primary.withAlpha(200),
                               fontSize: 10.0,
                             ),
                             prefixIcon: Icon(
@@ -419,8 +413,8 @@ class _CustomerRegisterState extends State<CustomerRegister>
                       Text(
                         "By creating an account, you agree to abide by our terms and conditions. Please review them carefully before proceeding.",
                         style: GoogleFonts.urbanist(
-                          color: AppColors.primary.withOpacity(0.7),
-                          fontSize: 10.0,
+                          color: AppColors.primary.withAlpha(200),
+                          fontSize: 12.0,
                           fontWeight: FontWeight.w400,
                         ),
                       ),

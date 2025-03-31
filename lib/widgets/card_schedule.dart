@@ -23,7 +23,7 @@ class ScheduleCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withAlpha(100),
             spreadRadius: 1,
             blurRadius: 5,
           ),
@@ -41,7 +41,7 @@ class ScheduleCard extends StatelessWidget {
         ),
         trailing: Icon(
           Icons.calendar_today,
-          color: isSelected ? Colors.white : AppColors.primary.withOpacity(0.6),
+          color: isSelected ? Colors.white : AppColors.primary.withAlpha(200),
         ),
       ),
     );

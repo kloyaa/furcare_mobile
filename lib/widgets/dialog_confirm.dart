@@ -27,7 +27,7 @@ class ConfirmationDialog extends StatelessWidget {
       ),
       content: Text(
         message,
-        style: GoogleFonts.urbanist(color: AppColors.primary.withOpacity(0.7)),
+        style: GoogleFonts.urbanist(color: AppColors.primary.withAlpha(200)),
       ),
       actions: [
         TextButton(

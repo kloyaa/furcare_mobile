@@ -184,7 +184,7 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
                               vertical: 8,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.primary.withOpacity(0.1),
+                              color: AppColors.primary.withAlpha(50),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
@@ -310,7 +310,7 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
         borderRadius: BorderRadius.circular(12.0),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primary.withAlpha(50),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -487,7 +487,7 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
             borderRadius: BorderRadius.circular(24.0),
             boxShadow: [
               BoxShadow(
-                color: AppColors.primary.withOpacity(0.08),
+                color: AppColors.primary.withAlpha(50),
                 spreadRadius: 1,
                 blurRadius: 12,
                 offset: const Offset(0, 4),
@@ -510,7 +510,7 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.12),
+                        color: AppColors.primary.withAlpha(50),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
@@ -543,7 +543,7 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: _getStatusColor(_status).withOpacity(0.15),
+                        color: _getStatusColor(_status).withAlpha(50),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
@@ -572,7 +572,7 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.08),
+                        color: AppColors.primary.withAlpha(50),
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: Icon(
@@ -609,7 +609,7 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: AppColors.primary.withOpacity(0.08),
+                              color: AppColors.primary.withAlpha(50),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Icon(
@@ -658,7 +658,7 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
                         vertical: 10,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.danger.withOpacity(0.12),
+                        color: AppColors.danger.withAlpha(50),
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: Row(

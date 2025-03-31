@@ -62,6 +62,7 @@ class MyApp extends StatelessWidget {
           if (kDebugMode) {
             print('Generating route: ${settings.name}');
           }
+          return null;
         },
       ),
     );

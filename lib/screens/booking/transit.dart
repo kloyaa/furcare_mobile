@@ -11,7 +11,6 @@ import 'package:furcare_app/providers/branch.dart';
 import 'package:furcare_app/providers/user.dart';
 import 'package:furcare_app/screens/payment/preview.dart';
 import 'package:furcare_app/utils/common.util.dart';
-import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:furcare_app/widgets/dialog_confirm.dart';
 import 'package:furcare_app/widgets/dropdown_pets.dart';
@@ -267,7 +266,7 @@ class _HomeServiceScreenState extends State<HomeServiceScreen>
     return Text(
       title,
       style: GoogleFonts.urbanist(
-        color: AppColors.primary.withOpacity(0.7),
+        color: AppColors.primary.withAlpha(200),
         fontWeight: FontWeight.w600,
         fontSize: 14.0,
       ),
@@ -288,7 +287,7 @@ class _HomeServiceScreenState extends State<HomeServiceScreen>
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
+                  color: Colors.grey.withAlpha(100),
                   spreadRadius: 1,
                   blurRadius: 5,
                 ),

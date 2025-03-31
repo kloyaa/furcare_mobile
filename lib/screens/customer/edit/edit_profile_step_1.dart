@@ -291,7 +291,7 @@ class _EditProfileStep1State extends State<EditProfileStep1>
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withOpacity(0.2),
+                  color: AppColors.primary.withAlpha(100),
                   spreadRadius: 2,
                   blurRadius: 8,
                   offset: const Offset(0, 4),
@@ -314,7 +314,7 @@ class _EditProfileStep1State extends State<EditProfileStep1>
             "Fill in your details to complete your profile",
             style: GoogleFonts.urbanist(
               fontSize: 14,
-              color: AppColors.primary.withOpacity(0.7),
+              color: AppColors.primary.withAlpha(200),
             ),
             textAlign: TextAlign.center,
           ),
@@ -412,7 +412,7 @@ class _EditProfileStep1State extends State<EditProfileStep1>
             isActive
                 ? [
                   BoxShadow(
-                    color: AppColors.primary.withOpacity(0.3),
+                    color: AppColors.primary.withAlpha(50),
                     blurRadius: 8,
                     offset: const Offset(0, 4),
                   ),
@@ -426,9 +426,7 @@ class _EditProfileStep1State extends State<EditProfileStep1>
           labelText: labelText,
           labelStyle: GoogleFonts.urbanist(
             color:
-                isActive
-                    ? AppColors.primary
-                    : AppColors.primary.withOpacity(0.5),
+                isActive ? AppColors.primary : AppColors.primary.withAlpha(200),
             fontSize: 10.0,
             fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
           ),
@@ -441,7 +439,7 @@ class _EditProfileStep1State extends State<EditProfileStep1>
               color:
                   isActive
                       ? AppColors.primary
-                      : AppColors.primary.withOpacity(0.5),
+                      : AppColors.primary.withAlpha(200),
             ),
           ),
           fillColor: AppColors.primary,
@@ -464,7 +462,7 @@ class _EditProfileStep1State extends State<EditProfileStep1>
         borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withAlpha(50),
             spreadRadius: 1,
             blurRadius: 4,
             offset: const Offset(0, 2),

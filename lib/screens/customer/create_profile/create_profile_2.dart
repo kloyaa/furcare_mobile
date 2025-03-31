@@ -10,7 +10,6 @@ import 'package:furcare_app/utils/const/colors.dart';
 import 'package:furcare_app/widgets/snackbar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:animate_do/animate_do.dart'; // Add this package for animations
@@ -331,8 +330,8 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
                     BoxShadow(
                       color:
                           hasError
-                              ? AppColors.danger.withOpacity(0.2)
-                              : AppColors.primary.withOpacity(0.15),
+                              ? AppColors.danger.withAlpha(100)
+                              : AppColors.primary.withAlpha(10),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -356,7 +355,7 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
             fillColor: AppColors.primary,
             labelText: label,
             prefixText: prefixText,
-            labelStyle: GoogleFonts.roboto(
+            labelStyle: GoogleFonts.urbanist(
               color:
                   hasError
                       ? AppColors.danger
@@ -398,7 +397,7 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        backgroundColor: AppColors.primary.withOpacity(0.05),
+        backgroundColor: AppColors.primary.withAlpha(50),
         resizeToAvoidBottomInset: true,
         body: SafeArea(
           child: Column(
@@ -425,7 +424,7 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
                                 icon: Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    color: AppColors.primary.withOpacity(0.1),
+                                    color: AppColors.primary.withAlpha(50),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Icon(
@@ -635,7 +634,7 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
                   color: Colors.grey[100],
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withAlpha(50),
                       blurRadius: 10,
                       offset: const Offset(0, -5),
                     ),
@@ -658,7 +657,7 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
                               _isFormValid
                                   ? [
                                     BoxShadow(
-                                      color: AppColors.primary.withOpacity(0.3),
+                                      color: AppColors.primary.withAlpha(50),
                                       blurRadius: 10,
                                       offset: const Offset(0, 5),
                                     ),

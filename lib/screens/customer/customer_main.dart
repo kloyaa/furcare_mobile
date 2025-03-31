@@ -100,7 +100,7 @@ class _CustomerMainState extends State<CustomerMain> {
         SnackBar(
           content: Text(
             'Pull down to refresh Pets',
-            style: GoogleFonts.roboto(color: Colors.white),
+            style: GoogleFonts.urbanist(color: Colors.white),
           ),
           duration: Duration(seconds: 2),
           showCloseIcon: true,
@@ -145,7 +145,7 @@ class _CustomerMainState extends State<CustomerMain> {
           child: Column(
             children: [
               Text(
-                branch.branch?.name ?? '',
+                branch.branch.name ?? '',
                 style: GoogleFonts.urbanist(
                   color: AppColors.primary,
                   fontSize: 16.0,
@@ -153,8 +153,8 @@ class _CustomerMainState extends State<CustomerMain> {
                 ),
               ),
               Text(
-                branch.branch?.address ?? '',
-                style: GoogleFonts.roboto(
+                branch.branch.address ?? '',
+                style: GoogleFonts.urbanist(
                   fontSize: 12,
                   color: AppColors.primary,
                 ),
