@@ -10,7 +10,15 @@ Before starting the server, initialize the project by installing dependencies.
 
 This command will Install project dependencies.
 
-<h1> Step 2: Start the Server </h1>
+<h1> Step 2: Run seed </h1>
+
+After installing the dependencies we need to run the seed to initialize the datas, go to __server__ 
+
+<code> npm run start:seeding </code>
+
+This command will run the seed
+
+<h1> Step 3: Start the Server </h1>
 
 Run the server to enable backend functionality:
 
@@ -18,7 +26,7 @@ Run the server to enable backend functionality:
 
 This command will initialize the backend, generate local url for mobile app and make the API accessible.
 
-<h1> Step 3: Run the Flutter App </h1>
+<h1> Step 4: Run the Flutter App </h1>
 
 Once the server is running, start the Flutter application:
 
