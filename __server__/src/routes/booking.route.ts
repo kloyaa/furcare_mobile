@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { isAuthenticated } from '../_core/middlewares/jwt.middleware';
-import { getBoardingApplicationsByAppId, getBookings, getBookingsByAccessToken, getGroomingApplicationsByAppId, getTransitApplicationsByAppId, updateBookingStatusById } from '../controllers/booking.controller';
+import { getBoardingApplicationsByAppId, getBookings, getBookingsByAccessToken, getGroomingApplicationsByAppId, getTransitApplicationsByAppId, updateBookingStatusById, updateBookingExtensionById } from '../controllers/booking.controller';
 import { isStaff } from '../_core/middlewares/is_staff.middleware';
 import { isProfileCreated } from '../_core/middlewares/is_profile_created.middleware';
 const router = Router();
@@ -17,5 +17,6 @@ router.get('/staff/v1/booking/grooming/:_id', commonMiddlewares, getGroomingAppl
 router.get('/staff/v1/booking/transit/:_id', commonMiddlewares, getTransitApplicationsByAppId as any);
 
 router.put('/staff/v1/booking/status', commonMiddlewares, updateBookingStatusById as any);
+router.put('/customer/v1/booking/extension', [isAuthenticated, isProfileCreated], updateBookingExtensionById as any);
 
 export default router;

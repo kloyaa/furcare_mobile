@@ -10,6 +10,7 @@ import { findServiceFeeByTitle } from "../services/service_fee.service";
 import { EventName, ActivityType } from "../_core/enum/activity.enum";
 import { emitter } from "../_core/events/activity.event";
 import { IActivity } from "../_core/interfaces/activity.interface";
+import GroomingService from "../models/grooming_service.schema";
 
 export const createGroomingApplication = async (req: TRequest, res: TResponse) => {
     try {
@@ -33,7 +34,28 @@ export const createGroomingApplication = async (req: TRequest, res: TResponse) =
         await newGroomingApplication.save();
 
         const serviceFee: any = await findServiceFeeByTitle(BookingServiceType.Grooming);
+        // Get all available grooming services
+        const groomingServices = await GroomingService.find();
 
+        // Calculate the total fee from selected services
+        let totalServiceFees = 0;
+
+        // Check if req.body.services exists and is an array
+        if (req.body.services && Array.isArray(req.body.services)) {
+            // Create a map of service IDs to their fees for quick lookup
+            const serviceFeesMap = groomingServices.reduce((map: any, service) => {
+                map[service._id.toString()] = service.fee;
+                return map;
+            }, {});
+
+            // Sum up the fees for all selected services
+            totalServiceFees = req.body.services.reduce((total: number, serviceId: string) => {
+                const serviceFee = serviceFeesMap[serviceId.toString()] || 0;
+                return total + serviceFee;
+            }, 0);
+        }
+
+        // Create the new booking with total payable amount
         const newBooking = new Booking({
             application: newGroomingApplication._id,
             applicationType: BookingServiceType.Grooming,
@@ -41,10 +63,9 @@ export const createGroomingApplication = async (req: TRequest, res: TResponse) =
             user: req.user.id,
             pet: petId,
             status: BookingStatus.Pending,
-            payable: serviceFee?.fee ?? 0,
+            payable: (serviceFee?.fee || 0) + totalServiceFees, // Add base fee plus all selected service fees
             extraServices: req.body.services
-        })
-
+        });
         await newBooking.save();
 
         emitter.emit(EventName.ACTIVITY, {

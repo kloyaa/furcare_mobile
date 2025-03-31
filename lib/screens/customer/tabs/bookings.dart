@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:furcare_app/apis/booking_api.dart';
 import 'package:furcare_app/extensions.dart';
+import 'package:furcare_app/models/booking_payload.dart';
 import 'package:furcare_app/providers/authentication.dart';
+import 'package:furcare_app/utils/common.util.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:furcare_app/utils/enums/enum.dart';
 import 'package:furcare_app/widgets/screen_booking_details.dart';
@@ -83,6 +85,182 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
         _errorMessage = e.response?.data['message'] ?? 'An error occurred';
       });
     }
+  }
+
+  // Extend Stay method
+  Future<void> handleExtendStay(String bookingId, int days) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      BookingApi bookingApi = BookingApi(_accessToken);
+      await bookingApi.extendBoarding(
+        BoardingExtensionPayload(booking: bookingId, days: days),
+      );
+
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Stay extended by $days day(s)'),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+
+      // Refresh bookings
+      await handleGetBookings(_status);
+    } on DioException catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.response?.data['message'] ?? 'Failed to extend stay'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
+  // Show extend stay dialog
+  void _showExtendStayDialog(String bookingId) {
+    int days = 1;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Row(
+            children: [
+              Icon(Icons.hotel, color: AppColors.primary),
+              const SizedBox(width: 10),
+              Text(
+                'Extend Boarding Stay',
+                style: GoogleFonts.urbanist(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'How many additional days would you like to extend the stay?',
+                style: GoogleFonts.urbanist(),
+              ),
+              const SizedBox(height: 20),
+              StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              if (days > 1) {
+                                setState(() {
+                                  days--;
+                                });
+                              }
+                            },
+                            icon: Icon(
+                              Icons.remove_circle_outline,
+                              color: days > 1 ? AppColors.primary : Colors.grey,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              '$days ${days == 1 ? 'day' : 'days'}',
+                              style: GoogleFonts.urbanist(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              if (days < 30) {
+                                setState(() {
+                                  days++;
+                                });
+                              }
+                            },
+                            icon: Icon(
+                              Icons.add_circle_outline,
+                              color:
+                                  days < 30 ? AppColors.primary : Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Maximum: 30 days',
+                        style: GoogleFonts.urbanist(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Cancel',
+                style: GoogleFonts.urbanist(color: Colors.grey),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                handleExtendStay(bookingId, days);
+              },
+              child: Text(
+                'Confirm Extension',
+                style: GoogleFonts.urbanist(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   // Status dropdown widget with animation
@@ -271,21 +449,6 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
     }
   }
 
-  String _getActionButtonText(String status) {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return "Confirm";
-      case 'confirmed':
-        return "Check In";
-      case 'completed':
-        return "Rate Service";
-      case 'cancelled':
-        return "Rebook";
-      default:
-        return "View";
-    }
-  }
-
   void _viewDetails(Map<String, dynamic> booking) {
     // Navigate to booking details
     Navigator.push(
@@ -296,9 +459,6 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
     );
   }
 
-  void _handleMainAction(Map<String, dynamic> booking, String status) {
-    // Handle main action based on status
-  }
   // Animated booking card widget
   Widget _buildAnimatedBookingCard(
     BuildContext context,
@@ -306,6 +466,9 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
     Animation<double> animation,
   ) {
     final booking = _bookings[index];
+    final bool isBoardingType =
+        booking['applicationType'].toString().toLowerCase() == 'boarding';
+
     return SizeTransition(
       sizeFactor: animation,
       child: Animate(
@@ -354,7 +517,9 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            Icons.assignment_outlined,
+                            isBoardingType
+                                ? Icons.hotel
+                                : Icons.assignment_outlined,
                             size: 14,
                             color: AppColors.primary,
                           ),
@@ -506,7 +671,7 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            "PHP${booking['payable']}.00",
+                            "PHP${phpFormatter.format(booking['payable'])}",
                             style: GoogleFonts.urbanist(
                               fontSize: 16.0,
                               fontWeight: FontWeight.bold,
@@ -522,13 +687,58 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
                 const SizedBox(height: 16.0),
 
                 // Action Buttons
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () => _viewDetails(booking),
-                    child: Text("View Details"),
-                  ),
-                ),
+                isBoardingType &&
+                        (_status == 'confirmed' || _status == 'pending')
+                    ? Row(
+                      children: [
+                        // View Details Button
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => _viewDetails(booking),
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: AppColors.primary),
+                            ),
+                            child: Text(
+                              "View Details",
+                              style: GoogleFonts.urbanist(
+                                color: AppColors.primary,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        // Extend Stay Button
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed:
+                                () => _showExtendStayDialog(booking['_id']),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              foregroundColor: Colors.white,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.hotel, size: 16),
+                                const SizedBox(width: 6),
+                                Text(
+                                  "Extend Stay",
+                                  style: GoogleFonts.urbanist(),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                    : SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton(
+                        onPressed: () => _viewDetails(booking),
+                        child: Text("View Details"),
+                      ),
+                    ),
               ],
             ),
           ),
@@ -580,5 +790,3 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
     );
   }
 }
-
-// Extension to capitalize first letter

@@ -4,7 +4,7 @@ import { TRequest, TResponse } from "../_core/interfaces/overrides.interface";
 import BoardingApplication from "../models/boarding_application.schema";
 import Booking from "../models/booking.schema";
 import GroomingApplication from "../models/grooming_application.schema";
-import { validateUpdateBookingStatusById } from "../_core/validators/application.validator";
+import { validateUpdateBookingExtensionById, validateUpdateBookingStatusById } from "../_core/validators/application.validator";
 import { BookingStatus } from "../_core/enum/booking.enum";
 import { ActivityType, EventName } from "../_core/enum/activity.enum";
 import { emitter } from "../_core/events/activity.event";
@@ -14,6 +14,7 @@ import { findServiceFeeByTitle } from "../services/service_fee.service";
 import TransitApplication from "../models/transit_application.schema";
 import { validateUpdateProfile } from "../_core/validators/user.validator";
 import Profile from "../models/profile.schema";
+import { IBooking } from "../_core/interfaces/schema/schema.interface";
 
 export const getBookings = async (req: TRequest, res: TResponse) => {
     try {
@@ -73,7 +74,6 @@ export const getBookings = async (req: TRequest, res: TResponse) => {
         return res.status(500).json(statuses["0900"]);
     }
 }
-
 
 export const getBookingsByAccessToken = async (req: TRequest, res: TResponse) => {
     try {
@@ -220,6 +220,39 @@ export const updateBookingStatusById = async (req: TRequest, res: TResponse) => 
     }
 };
 
+export const updateBookingExtensionById = async (req: TRequest, res: TResponse) => {
+    try {
+        const error = validateUpdateBookingExtensionById(req.body);
+        if (error) {
+            return res.status(403).json({
+                ...statuses['501'],
+                message: error.details[0].message.replace(/['"]/g, ''),
+            });
+        }
+
+        const { booking: bookingId, days } = req.body;
+
+        // Fixed: properly await the findById operation
+        const booking = await Booking.findById(bookingId);
+        if (!booking) {
+            return res.status(404).json(statuses["02"]);
+        }
+
+        // Fixed: corrected the Partial type by adding the interface name
+        const update: Partial<IBooking> = {
+            extension: days,
+            payable: Number(days) * Number(booking.payable)
+        };
+
+        // Fixed: replaced booking.findByIdAndUpdate with Booking model
+        await Booking.findByIdAndUpdate(bookingId, update, { new: true });
+
+        return res.status(200).json(statuses["00"]);
+    } catch (error) {
+        console.log("@updateBookingExtensionById error", error);
+        return res.status(500).json(statuses["0900"]);
+    }
+}
 
 export const getTransactions = async (req: TRequest, res: TResponse) => {
     try {

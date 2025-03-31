@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:furcare_app/extensions.dart';
 import 'package:furcare_app/models/servcefee_info.dart';
+import 'package:furcare_app/utils/common.util.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:furcare_app/widgets/card_extra_services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,6 +19,7 @@ class BookingDetailsScreen extends StatelessWidget {
     final pet = booking['pet'];
     final branch = booking['branch'];
     final status = booking['status'];
+    final days = booking['extension'] ?? 0;
     final List<ServiceFee> extraServices = ServiceFee.fromJsonList(
       booking['extraServices'],
     );
@@ -27,6 +27,19 @@ class BookingDetailsScreen extends StatelessWidget {
     final createdDate = DateTime.parse(booking['createdAt']);
     final formattedDate = DateFormat('MMM dd, yyyy').format(createdDate);
     final formattedTime = DateFormat('h:mm a').format(createdDate);
+
+    // Calculate the end date based on days
+    String stayDurationText;
+    if (days == 0) {
+      // If days is 0, only show the booking date
+      stayDurationText = DateFormat('MMM DD, yyyy').format(createdDate);
+    } else {
+      // Calculate end date by adding days to the created date
+      final endDate = createdDate.add(Duration(days: days));
+      final formattedEndDate = DateFormat('MMMM d').format(endDate);
+      stayDurationText =
+          '${DateFormat('MMMM d').format(createdDate)} to $formattedEndDate';
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -109,6 +122,14 @@ class BookingDetailsScreen extends StatelessWidget {
                     value: '$formattedDate at $formattedTime',
                     icon: Icons.calendar_today_outlined,
                   ),
+                  days > 0
+                      ? _buildInfoCard(
+                        title: 'Stay Duration',
+                        value: stayDurationText,
+                        icon:
+                            Icons.timer_outlined, // Changed icon to date_range
+                      )
+                      : SizedBox(),
 
                   _buildInfoCard(
                     title: 'Service Type',
@@ -412,44 +433,37 @@ class BookingDetailsScreen extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.max,
                             children: [
-                              Text(
-                                'Total Amount',
-                                style: GoogleFonts.urbanist(
-                                  fontSize: 16,
-                                  color: Colors.black87,
-                                ),
+                              Icon(
+                                Icons.payments_outlined,
+                                size: 16,
+                                color: AppColors.danger,
                               ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColors.danger.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Text(
-                                  'PHP${booking['payable']}.00',
-                                  style: GoogleFonts.urbanist(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.danger,
-                                  ),
+                              const SizedBox(width: 4),
+                              Text(
+                                "PHP${phpFormatter.format(booking['payable'])}",
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 24.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.danger,
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 5),
                           Text(
-                            'Pay at the branch upon arrival',
+                            'Total amount to be paid\nPlease disregard if already settled.',
                             style: GoogleFonts.urbanist(
                               fontSize: 14,
                               color: Colors.black54,
                             ),
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),

@@ -84,7 +84,22 @@ export const validateUpdateBookingStatusById = (body: any) => {
             })
             .required(),
     }).validate(body);
+    return error;
+};
 
+export const validateUpdateBookingExtensionById = (body: any) => {
+    const { error } = Joi.object({
+        days: Joi.number().required(),
+        booking: Joi
+            .string()
+            .custom((value, helpers) => {
+                if (!isObjectIdOrHexString(value)) {
+                    return helpers.error('any.invalid');
+                }
+                return value;
+            })
+            .required(),
+    }).validate(body);
     return error;
 };
 

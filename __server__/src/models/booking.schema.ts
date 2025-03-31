@@ -41,6 +41,10 @@ const bookingSchema = new Schema<IBooking>(
       type: Number,
       required: true,
     },
+    extension: {
+      type: Number,
+      required: false,
+    },
     status: {
       type: String,
       enum: Object.values(BookingStatus),

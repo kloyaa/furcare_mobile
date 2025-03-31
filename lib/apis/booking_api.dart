@@ -26,6 +26,18 @@ class BookingApi {
     }
   }
 
+  Future<Response> extendBoarding(BoardingExtensionPayload payload) async {
+    try {
+      Response response = await dio.put(
+        '/customer/v1/booking/extension',
+        data: payload.toJson(),
+      );
+      return response;
+    } on DioException {
+      rethrow;
+    }
+  }
+
   Future<Response> groomingBooking(GroomingPayload payload) async {
     try {
       Response response = await dio.post(

@@ -73,3 +73,14 @@ class UpdateBookingStatusPayload {
     return {'status': status, 'booking': booking};
   }
 }
+
+class BoardingExtensionPayload {
+  final String booking;
+  final int days;
+
+  BoardingExtensionPayload({required this.booking, required this.days});
+
+  Map<String, dynamic> toJson() {
+    return {'booking': booking, 'days': days};
+  }
+}
