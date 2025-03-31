@@ -120,7 +120,6 @@ class _CreateProfileStep1State extends State<CreateProfileStep1> {
                 },
                 child: SizedBox(
                   width: double.infinity,
-                  height: 50,
                   child: Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

@@ -212,7 +212,6 @@ class _CreateOwnerState extends State<EditOwner> {
 
                 child: SizedBox(
                   width: double.infinity,
-                  height: 50,
                   child: Center(child: Text('Save')),
                 ),
               ),

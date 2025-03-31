@@ -526,18 +526,7 @@ class _CustomerTabBookingsState extends State<CustomerTabBookings>
                   width: double.infinity,
                   child: OutlinedButton(
                     onPressed: () => _viewDetails(booking),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.primary,
-                      side: BorderSide(color: AppColors.primary),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                    child: Text(
-                      "View Details",
-                      style: GoogleFonts.urbanist(fontWeight: FontWeight.w600),
-                    ),
+                    child: Text("View Details"),
                   ),
                 ),
               ],

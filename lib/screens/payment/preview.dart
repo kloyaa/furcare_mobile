@@ -155,7 +155,10 @@ class _PaymentPreviewState extends State<PaymentPreview>
                       // Service Details
                       _buildInfoSection(
                         title: "SERVICE",
-                        value: widget.serviceName.toUpperCase(),
+                        value:
+                            widget.serviceName.toUpperCase() == "TRANSIT"
+                                ? "HOME SERVICE"
+                                : widget.serviceName.toUpperCase(),
                       ),
 
                       _buildFinancialSection(

@@ -44,6 +44,19 @@ class AppTheme {
         ),
       ),
     ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(color: AppColors.primary.withAlpha(220), width: 0.5),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppConstants.defaultBorderRadius),
+        ),
+        textStyle: GoogleFonts.urbanist(
+          color: AppColors.primary.withAlpha(220),
+          fontWeight: FontWeight.bold,
+          fontSize: 12.0,
+        ),
+      ),
+    ),
   );
 
   // Dark theme

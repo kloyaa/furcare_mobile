@@ -254,7 +254,6 @@ class BookingDetailsScreen extends StatelessWidget {
                             children: [
                               Container(
                                 width: 50,
-                                height: 50,
                                 decoration: BoxDecoration(
                                   color: AppColors.primary.withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(12),

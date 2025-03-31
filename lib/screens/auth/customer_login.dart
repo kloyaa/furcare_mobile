@@ -329,7 +329,6 @@ class _CustomerLoginState extends State<CustomerLogin>
                         },
                         child: SizedBox(
                           width: double.infinity,
-                          height: 50,
                           child: Center(child: Text('Sign in')),
                         ),
                       ),
@@ -338,29 +337,9 @@ class _CustomerLoginState extends State<CustomerLogin>
                         onPressed: () async {
                           Navigator.pushNamed(context, "/c/register");
                         },
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: AppColors.primary.withOpacity(0.3),
-                            width: 0.5,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              AppConstants.defaultBorderRadius,
-                            ),
-                          ),
-                        ),
                         child: SizedBox(
                           width: double.infinity,
-                          height: 50,
-                          child: Center(
-                            child: Text(
-                              "Don't have an account?",
-                              style: GoogleFonts.urbanist(
-                                color: AppColors.primary,
-                                fontSize: 12.0,
-                              ),
-                            ),
-                          ),
+                          child: Center(child: Text("Don't have an account?")),
                         ),
                       ),
                     ],

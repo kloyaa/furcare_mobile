@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:furcare_app/apis/booking_api.dart';
+import 'package:furcare_app/apis/fees_api.dart';
 import 'package:furcare_app/models/booking_payload.dart';
 import 'package:furcare_app/models/branch_info.dart';
 import 'package:furcare_app/models/login_response.dart';
+import 'package:furcare_app/models/servcefee_info.dart';
 import 'package:furcare_app/providers/authentication.dart';
 import 'package:furcare_app/providers/branch.dart';
 import 'package:furcare_app/providers/user.dart';
@@ -14,6 +16,7 @@ import 'package:furcare_app/utils/const/colors.dart';
 import 'package:furcare_app/widgets/dialog_confirm.dart';
 import 'package:furcare_app/widgets/dropdown_pets.dart';
 import 'package:furcare_app/widgets/snackbar_animated.dart';
+import 'package:furcare_app/widgets/total_animated.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +38,8 @@ class _HomeServiceScreenState extends State<HomeServiceScreen>
   late AnimationController _animationController;
   late List<dynamic> _pets = [];
   late Branch _selectedBranch;
+  double _baseAmount = 0;
+
   String _accessToken = '';
 
   @override
@@ -47,6 +52,7 @@ class _HomeServiceScreenState extends State<HomeServiceScreen>
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeProviders();
+      _fetchServiceFees();
     });
 
     _selectedBranch =
@@ -63,6 +69,29 @@ class _HomeServiceScreenState extends State<HomeServiceScreen>
     setState(() {
       _accessToken = accessTokenProvider.authToken?.accessToken ?? '';
       _pets = clientProvider.pets ?? [];
+    });
+  }
+
+  Future<void> _fetchServiceFees() async {
+    // Create the API client
+    FeesApi appApi = FeesApi(_accessToken);
+
+    // Get the response from the API
+    Response<dynamic> response = await appApi.getServiceFees(
+      queryParameters: {'title': 'transit'},
+    );
+
+    // Transform the response data into a list of ServiceFee objects
+    List<ServiceFee> serviceFees =
+        (response.data as List)
+            .map(
+              (cageJson) =>
+                  ServiceFee.fromJson(cageJson as Map<String, dynamic>),
+            )
+            .toList();
+
+    setState(() {
+      _baseAmount = serviceFees.isNotEmpty ? serviceFees[0].fee : 0;
     });
   }
 
@@ -96,7 +125,9 @@ class _HomeServiceScreenState extends State<HomeServiceScreen>
           PageRouteBuilder(
             pageBuilder:
                 (context, animation, secondaryAnimation) => PaymentPreview(
-                  serviceName: "home service",
+                  amount: _baseAmount,
+                  daysOfStay: 1,
+                  serviceName: "transit",
                   date: response.data['date'],
                   referenceNo: response.data['referenceNo'],
                 ),
@@ -184,14 +215,25 @@ class _HomeServiceScreenState extends State<HomeServiceScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: Colors.white,
-        title: Text(
-          "Home Service",
-          style: GoogleFonts.urbanist(
-            color: AppColors.primary,
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-          ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Home Service",
+              style: GoogleFonts.urbanist(
+                color: AppColors.primary,
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            AnimatedTotal(amount: _baseAmount),
+          ],
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: SafeArea(

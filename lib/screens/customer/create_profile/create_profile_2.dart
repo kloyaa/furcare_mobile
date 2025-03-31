@@ -367,7 +367,6 @@ class _CreateProfileStep2State extends State<CreateProfileStep2> {
 
                 child: SizedBox(
                   width: double.infinity,
-                  height: 50,
                   child: Center(child: Text('Submit')),
                 ),
               ),
@@ -378,29 +377,10 @@ class _CreateProfileStep2State extends State<CreateProfileStep2> {
                     Navigator.pop(context);
                   }
                 },
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(
-                    color: AppColors.primary.withOpacity(0.3),
-                    width: 0.5,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      AppConstants.defaultBorderRadius,
-                    ),
-                  ),
-                ),
+
                 child: SizedBox(
                   width: double.infinity,
-                  height: 50,
-                  child: Center(
-                    child: Text(
-                      "Back",
-                      style: GoogleFonts.urbanist(
-                        color: AppColors.primary,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
+                  child: Center(child: Text("Back")),
                 ),
               ),
               const SizedBox(height: 20.0),

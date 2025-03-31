@@ -207,7 +207,6 @@ class _CreateOwnerState extends State<CreateOwner> {
                 },
                 child: SizedBox(
                   width: double.infinity,
-                  height: 50,
                   child: Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

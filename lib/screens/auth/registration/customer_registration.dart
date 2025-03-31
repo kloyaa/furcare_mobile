@@ -432,7 +432,6 @@ class _CustomerRegisterState extends State<CustomerRegister>
 
                         child: SizedBox(
                           width: double.infinity,
-                          height: 50,
                           child: Center(child: Text('Register')),
                         ),
                       ),
@@ -441,28 +440,10 @@ class _CustomerRegisterState extends State<CustomerRegister>
                         onPressed: () async {
                           Navigator.pushNamed(context, "/");
                         },
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: AppColors.primary.withOpacity(0.3),
-                            width: 0.5,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              AppConstants.defaultBorderRadius,
-                            ),
-                          ),
-                        ),
                         child: SizedBox(
                           width: double.infinity,
-                          height: 50,
                           child: Center(
-                            child: Text(
-                              "Already have an account?",
-                              style: GoogleFonts.urbanist(
-                                color: AppColors.primary,
-                                fontSize: 12.0,
-                              ),
-                            ),
+                            child: Text("Already have an account?"),
                           ),
                         ),
                       ),

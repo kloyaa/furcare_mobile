@@ -330,7 +330,6 @@ class _AddNewPetState extends State<AddNewPet> {
                 },
                 child: SizedBox(
                   width: double.infinity,
-                  height: 50,
                   child: Center(child: Text('Save')),
                 ),
               ),
@@ -341,29 +340,9 @@ class _AddNewPetState extends State<AddNewPet> {
                     Navigator.pop(context);
                   }
                 },
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(
-                    color: AppColors.primary.withValues(alpha: 0.5),
-                    width: 0.5,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      AppConstants.defaultBorderRadius,
-                    ),
-                  ),
-                ),
                 child: SizedBox(
                   width: double.infinity,
-                  height: 50,
-                  child: Center(
-                    child: Text(
-                      "Back",
-                      style: GoogleFonts.urbanist(
-                        color: AppColors.primary,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
+                  child: Center(child: Text("Back")),
                 ),
               ),
               const SizedBox(height: 20.0),
