@@ -6,7 +6,6 @@ import 'package:furcare_app/models/login_response.dart';
 import 'package:furcare_app/models/user_info.dart';
 import 'package:furcare_app/providers/authentication.dart';
 import 'package:furcare_app/utils/const/colors.dart';
-import 'package:furcare_app/widgets/select_gender.dart';
 import 'package:furcare_app/widgets/snackbar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
@@ -191,18 +190,12 @@ class _AdminStaffEditState extends State<AdminStaffEdit> {
     final Map<String, dynamic> arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
+    print(arguments);
     _mobileNoController.text =
         arguments["profile"]["contact"]["number"].substring(1, 11) ?? '';
     _emailController.text = arguments["profile"]["contact"]["email"];
-    _selectedGender = arguments["profile"]["gender"];
-    _presentAddController.text = arguments["profile"]["address"]["present"];
-    _permanentAddController.text = arguments["profile"]["address"]["permanent"];
-    _firstNameController.text = arguments["profile"]["firstName"];
-    _lastNameController.text = arguments["profile"]["lastName"];
-    _lastNameController.text = arguments["profile"]["lastName"];
-    _birthdateController.text = arguments["profile"]["birthdate"]
-        .toString()
-        .substring(0, 10);
+    _presentAddController.text = arguments["profile"]["address"];
+    _firstNameController.text = arguments["profile"]["fullName"];
 
     return Scaffold(
       backgroundColor: AppColors.secondary,
@@ -609,75 +602,7 @@ class _AdminStaffEditState extends State<AdminStaffEdit> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10.0),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.secondary,
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        child: TextFormField(
-                          controller: _birthdateController,
-                          focusNode: _birthdateFocus,
-                          decoration: InputDecoration(
-                            fillColor:
-                                _isCreateError
-                                    ? AppColors.danger
-                                    : AppColors.primary,
-                            labelText: "Birthdate YYYY/MM/DD",
-                            labelStyle: GoogleFonts.urbanist(
-                              color:
-                                  _isCreateError
-                                      ? AppColors.danger
-                                      : AppColors.primary.withOpacity(0.5),
-                              fontSize: 10.0,
-                            ),
-                            prefixIcon: Icon(
-                              Ionicons.calendar_clear_outline,
-                              size: 18.0,
-                              color:
-                                  _isCreateError
-                                      ? AppColors.danger
-                                      : AppColors.primary,
-                            ),
-                            prefixIconColor: AppColors.primary,
-                            border: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            floatingLabelAlignment:
-                                FloatingLabelAlignment.start,
-                          ),
-                          style: TextStyle(
-                            color:
-                                _isCreateError
-                                    ? AppColors.danger
-                                    : AppColors.primary,
-                            fontSize: 12.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(1.0),
-                        decoration: BoxDecoration(
-                          color: AppColors.secondary,
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        child: GenderSelectionWidget(
-                          onGenderSelected: (gender) {
-                            setState(() {
-                              _selectedGender = gender!;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+
                 const SizedBox(height: 25.0),
                 Text(
                   "Address",
@@ -704,55 +629,7 @@ class _AdminStaffEditState extends State<AdminStaffEdit> {
                                 _isCreateError
                                     ? AppColors.danger
                                     : AppColors.primary,
-                            labelText: "Present Address",
-                            labelStyle: GoogleFonts.urbanist(
-                              color:
-                                  _isCreateError
-                                      ? AppColors.danger
-                                      : AppColors.primary.withOpacity(0.5),
-                              fontSize: 10.0,
-                            ),
-                            prefixIcon: Icon(
-                              Ionicons.map_outline,
-                              size: 18.0,
-                              color:
-                                  _isCreateError
-                                      ? AppColors.danger
-                                      : AppColors.primary,
-                            ),
-                            prefixIconColor: AppColors.primary,
-                            border: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            floatingLabelAlignment:
-                                FloatingLabelAlignment.start,
-                          ),
-                          style: TextStyle(
-                            color:
-                                _isCreateError
-                                    ? AppColors.danger
-                                    : AppColors.primary,
-                            fontSize: 12.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.secondary,
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        child: TextFormField(
-                          controller: _permanentAddController,
-                          focusNode: _permanentAddFocus,
-                          decoration: InputDecoration(
-                            fillColor:
-                                _isCreateError
-                                    ? AppColors.danger
-                                    : AppColors.primary,
-                            labelText: "Permanent Address",
+                            labelText: "Address",
                             labelStyle: GoogleFonts.urbanist(
                               color:
                                   _isCreateError
@@ -829,7 +706,7 @@ class _AdminStaffEditState extends State<AdminStaffEdit> {
                 const SizedBox(height: 10.0),
                 ElevatedButton(
                   onPressed: () async {
-                    handleUpdateProfile(arguments["profile"]["_id"]);
+                    // handleUpdateProfile(arguments["profile"]["_id"]);
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,

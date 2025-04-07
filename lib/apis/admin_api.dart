@@ -95,7 +95,7 @@ class AdminApi {
 
   Future<Response> enrollment(Ekyc ekyc) async {
     try {
-      ekyc.profile.isActive;
+      print(ekyc.toJson());
       Response response = await dio.post('/auth/v1/ekyc', data: ekyc.toJson());
       return response;
     } on DioException {

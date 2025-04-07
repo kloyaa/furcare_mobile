@@ -57,8 +57,8 @@ export const validateEkyc = (body: any) => {
       fullName: Joi.string().trim().min(2).max(50).required(),
       birthdate: Joi.date().iso().required(),
       address: Joi.string().required(),
-      facebook: Joi.string().optional(),
-      messenger: Joi.string().optional(),
+      facebook: Joi.optional(),
+      messenger: Joi.optional(),
       contact: Joi.object({
         email: Joi.string().trim().email().required().messages({ 'string.email': 'Invalid email format' }),
         number: Joi.string()
@@ -67,7 +67,7 @@ export const validateEkyc = (body: any) => {
           .messages({ 'string.pattern.base': 'Invalid Mobile No. format' })
           .required(),
       }).required(),
-      isActive: Joi.boolean().required(),
+      isActive: Joi.bool(),
     }).required(),
   }).validate(body);
 

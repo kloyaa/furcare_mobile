@@ -28,11 +28,9 @@ const profileSchema = new Schema<IProfile>(
     },
     facebook: {
       type: String,
-      required: true
     },
     messenger: {
       type: String,
-      required: true
     },
     isActive: {
       type: Boolean,

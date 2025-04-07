@@ -15,7 +15,8 @@ class Ekyc {
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> profileJson = profile.toJson();
-    profileJson.remove('isActive'); // Remove isActive property from profileJson
+    profileJson.remove('isActive');
+    profileJson.remove('gender');
     return {'account': account.toJson(), 'profile': profileJson};
   }
 }
