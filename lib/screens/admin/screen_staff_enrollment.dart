@@ -404,12 +404,47 @@ class _AdminStaffEnrollmentState extends State<AdminStaffEnrollment>
                   ),
                 ),
                 const SizedBox(width: 25.0),
-                _buildNavLink("Sign out", "/auth/admin"),
+                _buildSignOutButton(),
               ],
             ),
           ),
         ),
       ],
+    );
+  }
+
+  /// Builds the sign out button
+  Widget _buildSignOutButton() {
+    return GestureDetector(
+      onTap: () => Navigator.pushReplacementNamed(context, '/auth/admin'),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Sign out",
+                style: GoogleFonts.urbanist(
+                  color: AppColors.primary,
+                  fontSize: 12.0,
+                ),
+              ),
+              const SizedBox(width: 4.0),
+              const Icon(
+                Ionicons.log_out_outline,
+                size: 12.0,
+                color: AppColors.primary,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -705,37 +740,6 @@ class _AdminStaffEnrollmentState extends State<AdminStaffEnrollment>
             label: "Full name",
             icon: Ionicons.person_outline,
             isError: _isCreateError || _validationState['fullName'] == false,
-          ),
-        ),
-      ],
-    );
-  }
-
-  // Birthdate and gender form fields row
-  Widget _buildBirthdateGenderRow() {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(1.0),
-            decoration: BoxDecoration(
-              color: AppColors.secondary,
-              borderRadius: BorderRadius.circular(15.0),
-              border: Border.all(
-                color:
-                    _isCreateError
-                        ? AppColors.danger.withOpacity(0.5)
-                        : Colors.transparent,
-                width: 1.0,
-              ),
-            ),
-            child: GenderSelectionWidget(
-              onGenderSelected: (gender) {
-                setState(() {
-                  _selectedGender = gender!;
-                });
-              },
-            ),
           ),
         ),
       ],

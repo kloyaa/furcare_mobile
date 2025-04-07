@@ -211,7 +211,7 @@ class _AdminStaffManagementState extends State<AdminStaffManagement>
 
     return Scaffold(
       backgroundColor: AppColors.secondary,
-      appBar: _buildAppBar(isWideScreen),
+      appBar: _buildAppBar(),
       body: Center(
         child: FadeTransition(
           opacity: _fadeAnimation,
@@ -241,39 +241,113 @@ class _AdminStaffManagementState extends State<AdminStaffManagement>
   }
 
   // Build app bar with navigation items
-  PreferredSizeWidget _buildAppBar(bool isWideScreen) {
+  PreferredSizeWidget _buildAppBar() {
     return AppBar(
       backgroundColor: Colors.white,
+      elevation: 0,
       leading: const SizedBox(),
       leadingWidth: 0,
+      actions: [
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.20,
+            ),
+            child: _buildNavLinks(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Build navigation links in the app bar
+  Widget _buildNavLinks() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildNavLink(
+          "Profile",
+          () => Navigator.pushReplacementNamed(context, "/a/profile"),
+        ),
+        const SizedBox(width: 25.0),
+        _buildReportsMenu(),
+        const SizedBox(width: 25.0),
+        _buildNavLink(
+          "Staffs",
+          () => Navigator.pushReplacementNamed(context, "/a/management/staff"),
+        ),
+        const SizedBox(width: 25.0),
+        _buildNavLink(
+          "Users and Pets",
+          () => Navigator.pushReplacementNamed(
+            context,
+            "/a/management/customers",
+          ),
+        ),
+        const Spacer(),
+        _buildNavLink("Enroll Staff", () {}, isBold: true, fontSize: 10.0),
+        const SizedBox(width: 25.0),
+        _buildSignOutButton(),
+      ],
+    );
+  }
+
+  Widget _buildReportsMenu() {
+    return PopupMenuButton<String>(
+      offset: const Offset(0, 10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5.0),
+        side: const BorderSide(color: Colors.grey, width: 0.1),
+      ),
+      tooltip: "Click to view",
+      color: Colors.white,
       elevation: 2,
-      title:
-          isWideScreen
-              ? _buildDesktopNavItems()
-              : Text(
-                'Staff Management',
-                style: GoogleFonts.urbanist(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-      actions:
-          isWideScreen
-              ? null
-              : [
-                PopupMenuButton<String>(
-                  icon: Icon(Icons.menu, color: AppColors.primary),
-                  onSelected: _handleMenuSelection,
-                  itemBuilder:
-                      (context) => [
-                        _buildMenuItem('Profile', 'profile'),
-                        _buildMenuItem('Reports', 'reports'),
-                        _buildMenuItem('Users and Pets', 'users'),
-                        _buildMenuItem('Enroll Staff', 'enroll'),
-                        _buildMenuItem('Sign out', 'signout'),
-                      ],
-                ),
-              ],
+      position: PopupMenuPosition.under,
+      child: Text(
+        "Reports",
+        style: GoogleFonts.urbanist(color: AppColors.primary, fontSize: 12.0),
+      ),
+      itemBuilder:
+          (BuildContext context) => [
+            _buildMenuItem('check_ins', 'Check ins'),
+            _buildMenuItem('service_usages', 'Service usages'),
+            _buildMenuItem('transactions', 'Transactions'),
+          ],
+      onSelected: (String value) {
+        switch (value) {
+          case 'check_ins':
+            Navigator.pushReplacementNamed(context, "/a/report/checkins");
+            break;
+          case 'service_usages':
+            Navigator.pushReplacementNamed(context, "/a/report/service-usage");
+            break;
+          case 'transactions':
+            Navigator.pushReplacementNamed(context, "/a/report/transactions");
+            break;
+        }
+      },
+    );
+  }
+
+  Widget _buildNavLink(
+    String title,
+    VoidCallback onTap, {
+    bool isBold = false,
+    double fontSize = 12.0,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Text(
+          title,
+          style: GoogleFonts.urbanist(
+            color: AppColors.primary,
+            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            fontSize: fontSize,
+          ),
+        ),
+      ),
     );
   }
 
@@ -754,6 +828,41 @@ class _AdminStaffManagementState extends State<AdminStaffManagement>
         ),
         const SizedBox(height: 4),
       ],
+    );
+  }
+
+  /// Builds the sign out button
+  Widget _buildSignOutButton() {
+    return GestureDetector(
+      onTap: () => Navigator.pushReplacementNamed(context, '/auth/admin'),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Sign out",
+                style: GoogleFonts.urbanist(
+                  color: AppColors.primary,
+                  fontSize: 12.0,
+                ),
+              ),
+              const SizedBox(width: 4.0),
+              const Icon(
+                Ionicons.log_out_outline,
+                size: 12.0,
+                color: AppColors.primary,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
