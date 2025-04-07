@@ -18,7 +18,6 @@ export const validateCreateProfile = (body: any) => {
         .required(),
     }).required(),
     isActive: Joi.boolean().required(),
-    gender: Joi.string().valid('male', 'female', 'other').required(),
   });
 
   const { error } = schema.validate(body);

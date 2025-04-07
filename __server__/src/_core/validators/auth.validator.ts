@@ -54,23 +54,20 @@ export const validateEkyc = (body: any) => {
         .required(),
     }).required(),
     profile: Joi.object({
-      firstName: Joi.string().trim().min(2).max(50).required(),
-      lastName: Joi.string().trim().min(2).max(50).required(),
+      fullName: Joi.string().trim().min(2).max(50).required(),
       birthdate: Joi.date().iso().required(),
-      address: Joi.object({
-        present: Joi.string().trim().min(5).max(255),
-        permanent: Joi.string().trim().min(5).max(255).optional().allow(null),
-      }),
+      address: Joi.string().required(),
+      facebook: Joi.string().optional(),
+      messenger: Joi.string().optional(),
       contact: Joi.object({
-        email: Joi.string().trim().email().optional().allow(null).messages({ 'string.email': 'Invalid email format' }),
+        email: Joi.string().trim().email().required().messages({ 'string.email': 'Invalid email format' }),
         number: Joi.string()
           .trim()
           .pattern(/^09\d{9}$/) // Pattern for a valid Philippine mobile number starting with '09'
           .messages({ 'string.pattern.base': 'Invalid Mobile No. format' })
-          .optional()
-          .allow(null),
-      }),
-      gender: Joi.string().valid('male', 'female', 'other').required(),
+          .required(),
+      }).required(),
+      isActive: Joi.boolean().required(),
     }).required(),
   }).validate(body);
 

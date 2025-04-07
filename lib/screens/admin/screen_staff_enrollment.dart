@@ -23,14 +23,9 @@ class AdminStaffEnrollment extends StatefulWidget {
 class _AdminStaffEnrollmentState extends State<AdminStaffEnrollment>
     with SingleTickerProviderStateMixin {
   // Controllers for form fields
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _presentAddController = TextEditingController();
-  final TextEditingController _permanentAddController = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
   final _mobileNoController = MaskedTextController(mask: '0000-000-000');
-  final TextEditingController _birthdateController = MaskedTextController(
-    mask: '0000/00/00',
-  );
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmController = TextEditingController();
@@ -68,12 +63,9 @@ class _AdminStaffEnrollmentState extends State<AdminStaffEnrollment>
       'email': FocusNode(),
       'password': FocusNode(),
       'confirm': FocusNode(),
-      'firstName': FocusNode(),
-      'lastName': FocusNode(),
-      'presentAdd': FocusNode(),
-      'permanentAdd': FocusNode(),
+      'fullName': FocusNode(),
+      'address': FocusNode(),
       'mobileNo': FocusNode(),
-      'birthdate': FocusNode(),
     };
 
     // Initialize animations
@@ -127,12 +119,9 @@ class _AdminStaffEnrollmentState extends State<AdminStaffEnrollment>
   void dispose() {
     // Dispose all controllers and focus nodes
     for (final controller in [
-      _firstNameController,
-      _lastNameController,
-      _presentAddController,
-      _permanentAddController,
+      _fullNameController,
+      _addressController,
       _mobileNoController,
-      _birthdateController,
       _usernameController,
       _passwordController,
       _confirmController,
@@ -223,11 +212,8 @@ class _AdminStaffEnrollmentState extends State<AdminStaffEnrollment>
       'email': _emailController.text,
       'password': _passwordController.text,
       'confirm': _confirmController.text,
-      'firstName': _firstNameController.text,
-      'lastName': _lastNameController.text,
-      'birthdate': _birthdateController.text,
-      'presentAdd': _presentAddController.text,
-      'permanentAdd': _permanentAddController.text,
+      'fullName': _fullNameController.text,
+      'address': _addressController.text,
       'mobileNo': _mobileNoController.text,
     };
 
@@ -270,14 +256,13 @@ class _AdminStaffEnrollmentState extends State<AdminStaffEnrollment>
         ),
         profile: Profile(
           facebook: '',
-          basicInfo: BasicInfo(
-            fullName:
-                '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}',
-            birthdate: _birthdateController.text.trim(),
-            gender: _selectedGender,
-          ),
           messenger: '',
-          address: _presentAddController.text.trim(),
+          basicInfo: BasicInfo(
+            fullName: _fullNameController.text.trim(),
+            gender: '',
+            birthdate: "1999-01-01",
+          ),
+          address: _addressController.text.trim(),
           contact: Contact(
             email: _emailController.text.trim(),
             number: formattedMobileNo,
@@ -356,16 +341,13 @@ class _AdminStaffEnrollmentState extends State<AdminStaffEnrollment>
   void _resetEkycForm() {
     // Reset all text controllers
     for (final controller in [
-      _firstNameController,
-      _lastNameController,
-      _presentAddController,
-      _permanentAddController,
+      _fullNameController,
+      _addressController,
       _mobileNoController,
       _usernameController,
       _passwordController,
       _confirmController,
       _emailController,
-      _birthdateController,
     ]) {
       controller.clear();
     }
@@ -546,8 +528,6 @@ class _AdminStaffEnrollmentState extends State<AdminStaffEnrollment>
                       _buildSectionTitle("Basic info"),
                       const SizedBox(height: 25.0),
                       _buildBasicInfoFormRow(),
-                      const SizedBox(height: 10.0),
-                      _buildBirthdateGenderRow(),
                     ],
                   ),
                 ),
@@ -720,21 +700,11 @@ class _AdminStaffEnrollmentState extends State<AdminStaffEnrollment>
       children: [
         Expanded(
           child: _buildTextField(
-            controller: _firstNameController,
-            focusNode: _focusNodes['firstName']!,
-            label: "First name",
+            controller: _fullNameController,
+            focusNode: _focusNodes['fullName']!,
+            label: "Full name",
             icon: Ionicons.person_outline,
-            isError: _isCreateError || _validationState['firstName'] == false,
-          ),
-        ),
-        const SizedBox(width: 10.0),
-        Expanded(
-          child: _buildTextField(
-            controller: _lastNameController,
-            focusNode: _focusNodes['lastName']!,
-            label: "Last name",
-            icon: Ionicons.person_outline,
-            isError: _isCreateError || _validationState['lastName'] == false,
+            isError: _isCreateError || _validationState['fullName'] == false,
           ),
         ),
       ],
@@ -745,16 +715,6 @@ class _AdminStaffEnrollmentState extends State<AdminStaffEnrollment>
   Widget _buildBirthdateGenderRow() {
     return Row(
       children: [
-        Expanded(
-          child: _buildTextField(
-            controller: _birthdateController,
-            focusNode: _focusNodes['birthdate']!,
-            label: "Birthdate YYYY/MM/DD",
-            icon: Ionicons.calendar_clear_outline,
-            isError: _isCreateError || _validationState['birthdate'] == false,
-          ),
-        ),
-        const SizedBox(width: 10.0),
         Expanded(
           child: Container(
             padding: const EdgeInsets.all(1.0),
@@ -788,22 +748,11 @@ class _AdminStaffEnrollmentState extends State<AdminStaffEnrollment>
       children: [
         Expanded(
           child: _buildTextField(
-            controller: _presentAddController,
-            focusNode: _focusNodes['presentAdd']!,
-            label: "Present Address",
+            controller: _addressController,
+            focusNode: _focusNodes['address']!,
+            label: "Address",
             icon: Ionicons.map_outline,
-            isError: _isCreateError || _validationState['presentAdd'] == false,
-          ),
-        ),
-        const SizedBox(width: 10.0),
-        Expanded(
-          child: _buildTextField(
-            controller: _permanentAddController,
-            focusNode: _focusNodes['permanentAdd']!,
-            label: "Permanent Address",
-            icon: Ionicons.map_outline,
-            isError:
-                _isCreateError || _validationState['permanentAdd'] == false,
+            isError: _isCreateError || _validationState['address'] == false,
           ),
         ),
       ],
