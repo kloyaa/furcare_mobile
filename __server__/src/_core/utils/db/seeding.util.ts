@@ -73,21 +73,17 @@ const registerAccounts = async (): Promise<any> => {
     ])
 
     const adminCreatedAccounts = admins.map((el) => {
+      const fullName = faker.person.fullName();
       const firstName = faker.person.firstName('male');
       const lastName = faker.person.lastName('male');
       const present = faker.location.streetAddress({ useFullAddress: true });
-      const permanent = faker.location.streetAddress({ useFullAddress: true });
-      const birthdate = faker.date.birthdate({ min: 18, max: 23, mode: 'age' }).toISOString().substring(0, 10);
       const email = faker.internet.email({ firstName, lastName });
       const number = `09277${faker.string.numeric(6)}`;
       return {
-        "user": el._id,
-        firstName,
-        lastName,
-        birthdate,
-        "address": { present, permanent },
-        "contact": { email, number },
-        "gender": "male",
+        user: el._id,
+        fullName,
+        address: present,
+        contact: { email, number },
         isActive: true
       }
     });
