@@ -105,7 +105,7 @@ class _StaffTabSettingsState extends State<StaffTabSettings> {
               ),
               tileColor: Colors.white,
               onTap: () {
-                redirectOnConfirm(context);
+                redirectOnConfirm(context, path: "/auth/staff");
               },
               // Add any other content you want here
             ),

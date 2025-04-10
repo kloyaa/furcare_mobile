@@ -318,20 +318,9 @@ class _StaffLoginState extends State<StaffLogin>
                         onPressed: () async {
                           await _handleLogin();
                         },
-
                         child: SizedBox(
                           width: double.infinity,
                           child: Center(child: Text('Sign in')),
-                        ),
-                      ),
-                      const SizedBox(height: 12.0),
-                      OutlinedButton(
-                        onPressed: () async {
-                          Navigator.pushNamed(context, "/c/register");
-                        },
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Center(child: Text("Don't have an account?")),
                         ),
                       ),
                     ],
