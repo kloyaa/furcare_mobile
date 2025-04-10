@@ -60,7 +60,6 @@ class _EditProfileStep1State extends State<EditProfileStep1>
                   ? _selectedBirthdate
                   : _birthDate,
           fullName: fullName,
-          gender: _selectedGender,
         ),
       );
     });
@@ -124,7 +123,6 @@ class _EditProfileStep1State extends State<EditProfileStep1>
     _facebookController.text = clientProvider.profile?.facebook ?? '';
     _messengerController.text = clientProvider.profile?.messenger ?? '';
     _addressController.text = clientProvider.profile?.address ?? '';
-    _selectedGender = clientProvider.profile?.basicInfo.gender ?? '';
     _birthDate = clientProvider.profile?.basicInfo.birthdate ?? '';
 
     // Start animation

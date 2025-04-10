@@ -3,24 +3,17 @@ import 'package:furcare_app/models/pet_info.dart';
 class BasicInfo {
   final String fullName;
   final String birthdate;
-  final String gender;
 
-  const BasicInfo({
-    required this.fullName,
-    required this.birthdate,
-    required this.gender,
-  });
+  const BasicInfo({required this.fullName, required this.birthdate});
 
   factory BasicInfo.fromJson(Map<String, dynamic> json) => BasicInfo(
     fullName: json['fullName'] ?? '',
     birthdate: json['birthdate'] ?? '',
-    gender: json['gender'] ?? '',
   );
 
   Map<String, dynamic> toJson() => {
     'fullName': fullName,
     'birthdate': birthdate,
-    'gender': gender,
   };
 }
 

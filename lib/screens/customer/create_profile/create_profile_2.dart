@@ -43,7 +43,6 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
   bool _isCreateError = false;
   Map<String, bool> _focusStates = {};
   Map<String, bool> _validStates = {};
-  int _activeFieldIndex = -1;
 
   Future<void> handleCreateProfile() async {
     setState(() {
@@ -61,7 +60,6 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
       _addressFocus.requestFocus();
       setState(() {
         _isLoading = false;
-        _activeFieldIndex = 0;
       });
       return;
     }
@@ -69,7 +67,6 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
       _emailFocus.requestFocus();
       setState(() {
         _isLoading = false;
-        _activeFieldIndex = 3;
       });
       return;
     }
@@ -77,7 +74,6 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
       _mobileNoFocus.requestFocus();
       setState(() {
         _isLoading = false;
-        _activeFieldIndex = 4;
       });
       return;
     }
@@ -85,7 +81,6 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
       _facebookFocus.requestFocus();
       setState(() {
         _isLoading = false;
-        _activeFieldIndex = 1;
       });
       return;
     }
@@ -93,7 +88,6 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
       _messengerFocus.requestFocus();
       setState(() {
         _isLoading = false;
-        _activeFieldIndex = 2;
       });
       return;
     }
@@ -110,16 +104,11 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
 
     final fullName = registrationProvider.basicInfo!.fullName;
     final birthdate = registrationProvider.basicInfo!.birthdate;
-    final gender = registrationProvider.basicInfo!.gender;
 
     Profile profile = Profile(
       facebook: facebook,
       messenger: messenger,
-      basicInfo: BasicInfo(
-        fullName: fullName,
-        birthdate: birthdate,
-        gender: gender,
-      ),
+      basicInfo: BasicInfo(fullName: fullName, birthdate: birthdate),
       address: address,
       isActive: true,
       contact: Contact(email: email, number: "0${number.replaceAll('-', '')}"),
@@ -177,16 +166,7 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
   void _onFocusChange(FocusNode node, String field) {
     setState(() {
       _focusStates[field] = node.hasFocus;
-      if (node.hasFocus) {
-        _activeFieldIndex =
-            {
-              'address': 0,
-              'facebook': 1,
-              'messenger': 2,
-              'email': 3,
-              'mobile': 4,
-            }[field]!;
-      }
+      if (node.hasFocus) {}
     });
   }
 

@@ -175,8 +175,10 @@ export const updateBookingStatusById = async (req: TRequest, res: TResponse) => 
     }
     try {
         const { booking: bookingId, status } = req.body;
+
+        console.log(req.body)
         const update = { status, staff: req.user.id };
-        const updatedBooking = await Booking.findByIdAndUpdate(bookingId, update, { new: true });
+        const updatedBooking = await Booking.findOneAndUpdate({ application: bookingId }, update, { new: true });
 
         if (!updatedBooking) {
             return res.status(404).json(statuses["02"]);

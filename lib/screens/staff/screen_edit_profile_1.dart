@@ -45,7 +45,6 @@ class _StaffEditProfileStep1State extends State<StaffEditProfileStep1> {
             _selectedBirthdate != "1999-01-01"
                 ? _selectedBirthdate
                 : _birthDate,
-        gender: _selectedGender,
         fullName: '',
       ),
     );

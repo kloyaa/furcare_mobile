@@ -22,7 +22,6 @@ class PreviewBoarding extends StatefulWidget {
 class _PreviewBoardingState extends State<PreviewBoarding>
     with SingleTickerProviderStateMixin {
   // State variables
-  String _accessToken = "";
   bool _isLoading = false;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -32,6 +31,9 @@ class _PreviewBoardingState extends State<PreviewBoarding>
   Map<String, dynamic>? _pet;
   String? _application;
   String? _booking;
+
+  // Add a class variable to store the future
+  late Future<Map<String, dynamic>?> _bookingDetailsFuture;
 
   @override
   void initState() {
@@ -47,20 +49,29 @@ class _PreviewBoardingState extends State<PreviewBoarding>
       CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
     );
 
-    // Get auth token
-    _getAccessToken();
-
     // Start animation after widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _animationController.forward();
     });
+
+    _bookingDetailsFuture = getBookingDetails();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Extract arguments safely
-    _extractArguments();
+
+    // Get arguments only when dependencies change
+    final Map<String, dynamic> arguments =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ??
+        {};
+
+    // Only recreate the future if needed data has changed
+    // This should be customized based on your specific needs
+    if (_application != arguments['application']) {
+      _application = arguments['application'];
+      _bookingDetailsFuture = getBookingDetails();
+    }
   }
 
   @override
@@ -69,58 +80,22 @@ class _PreviewBoardingState extends State<PreviewBoarding>
     super.dispose();
   }
 
-  /// Get the authentication token from provider
-  void _getAccessToken() {
+  /// Fetch booking details from API
+  Future<Map<String, dynamic>?> getBookingDetails() async {
     final accessTokenProvider = Provider.of<AuthTokenProvider>(
       context,
       listen: false,
     );
-    _accessToken = accessTokenProvider.authToken?.accessToken ?? '';
-  }
+    final String accessToken = accessTokenProvider.authToken?.accessToken ?? '';
 
-  /// Extract and validate routing arguments
-  void _extractArguments() {
-    final arguments = ModalRoute.of(context)?.settings.arguments;
-
-    if (arguments == null || arguments is! Map<String, dynamic>) {
-      // Handle missing arguments
-      _showErrorAndNavigateBack('Invalid booking data');
-      return;
-    }
-
-    try {
-      _profile = arguments['profile'] as Map<String, dynamic>?;
-      _pet = arguments['pet'] as Map<String, dynamic>?;
-      _application = arguments['application'] as String?;
-      _booking = arguments['booking'] as String?;
-
-      // Validate required fields
-      if (_application == null || _booking == null) {
-        _showErrorAndNavigateBack('Missing booking information');
-      }
-    } catch (e) {
-      _showErrorAndNavigateBack('Error processing booking data: $e');
-    }
-  }
-
-  /// Show error and navigate back to previous screen
-  void _showErrorAndNavigateBack(String message) {
-    Future.delayed(Duration.zero, () {
-      showSnackBar(context, message, color: AppColors.danger, fontSize: 12.0);
-      Navigator.of(context).pop();
-    });
-  }
-
-  /// Fetch booking details from API
-  Future<Map<String, dynamic>?> getBookingDetails() async {
-    if (_accessToken.isEmpty || _application == null) {
+    if (accessToken.isEmpty || _application == null) {
       return null;
     }
 
     setState(() => _isLoading = true);
 
     try {
-      BookingApi bookingApi = BookingApi(_accessToken);
+      BookingApi bookingApi = BookingApi(accessToken);
       Response<dynamic> response = await bookingApi.getBookingDetails(
         _application!,
       );
@@ -145,25 +120,65 @@ class _PreviewBoardingState extends State<PreviewBoarding>
     }
   }
 
-  /// Update booking status (confirm or decline)
-  Future<void> updateBookingStatus(String status) async {
-    if (_accessToken.isEmpty || _booking == null) {
-      showSnackBar(
-        context,
-        'Cannot update booking: Missing information',
-        color: AppColors.danger,
-        fontSize: 12.0,
-      );
-      return;
+  String moveToNextState() {
+    final Map<String, dynamic> arguments =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ??
+        {};
+
+    final currentStatus = arguments['currentStatus'];
+
+    if (currentStatus == "confirmed") {
+      return 'done';
     }
+
+    if (currentStatus == "declined") {
+      return 'declined';
+    }
+
+    if (currentStatus == "pending") {
+      return 'confirmed';
+    }
+
+    return 'pending';
+  }
+
+  Widget actionsBasedOnCurrentStatus(Map booking) {
+    final Map<String, dynamic> arguments =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ??
+        {};
+
+    final currentStatus = arguments['currentStatus'];
+
+    if (currentStatus == "confirmed") {
+      return _buildAcceptedActionButtons(booking);
+    }
+
+    if (currentStatus == "declined") {
+      return SizedBox();
+    }
+
+    if (currentStatus == "pending") {
+      return _buildActionButtons(booking);
+    }
+
+    return SizedBox();
+  }
+
+  /// Update booking status (confirm or decline)
+  Future<void> updateBookingStatus(String status, String id) async {
+    final accessTokenProvider = Provider.of<AuthTokenProvider>(
+      context,
+      listen: false,
+    );
+    final String accessToken = accessTokenProvider.authToken?.accessToken ?? '';
 
     setState(() => _isLoading = true);
 
     try {
-      StaffApi staffApi = StaffApi(_accessToken);
+      StaffApi staffApi = StaffApi(accessToken);
       UpdateBookingStatusPayload payload = UpdateBookingStatusPayload(
-        status: status,
-        booking: _booking!,
+        status: status == 'declined' ? 'declined' : moveToNextState(),
+        booking: id,
       );
 
       await staffApi.updateBookingStatus(payload);
@@ -371,7 +386,7 @@ class _PreviewBoardingState extends State<PreviewBoarding>
   /// Booking details card with actions widget
   Widget _buildBookingDetailsCard() {
     return FutureBuilder<Map<String, dynamic>?>(
-      future: getBookingDetails(),
+      future: _bookingDetailsFuture, // Use the stored future
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -428,8 +443,12 @@ class _PreviewBoardingState extends State<PreviewBoarding>
         // Extract booking data safely
         final data = snapshot.data!;
         final cageTitle = data['cage']?['title'] ?? 'Unknown';
-        final daysOfStay = data['daysOfStay']?.toString() ?? '0';
+        final cagePrice = data['cage']['price'];
+        final daysOfStay = data['daysOfStay'];
 
+        final totalAmount = phpFormatter.format(
+          data['cage']['price'] * daysOfStay,
+        );
         return _AnimatedCard(
           delay: 300,
           child: CardContainer(
@@ -468,8 +487,19 @@ class _PreviewBoardingState extends State<PreviewBoarding>
                     label: "Notes",
                     value: data['additionalNotes'],
                   ),
+                _BoardingDetailItem(
+                  icon: Icons.price_check_outlined,
+                  label: "Cage Price",
+                  value: phpFormatter.format(cagePrice),
+                ),
+                _BoardingDetailItem(
+                  icon: Icons.payment,
+                  label: "Amount to pay",
+                  value: totalAmount,
+                ),
                 const SizedBox(height: 24.0),
-                _buildActionButtons(),
+
+                actionsBasedOnCurrentStatus(data),
               ],
             ),
           ),
@@ -479,7 +509,8 @@ class _PreviewBoardingState extends State<PreviewBoarding>
   }
 
   /// Action buttons for accepting/declining booking
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(Map booking) {
+    String bookingId = booking['_id'];
     return Column(
       children: [
         ElevatedButton(
@@ -488,7 +519,8 @@ class _PreviewBoardingState extends State<PreviewBoarding>
                   ? null
                   : () => confirmAction(
                     message: "Are you sure you want to accept this booking?",
-                    onConfirm: () => updateBookingStatus('confirmed'),
+                    onConfirm:
+                        () => updateBookingStatus('confirmed', bookingId),
                   ),
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
@@ -513,20 +545,24 @@ class _PreviewBoardingState extends State<PreviewBoarding>
                           color: Colors.white,
                         ),
                       )
-                      : Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.check_circle_outline, size: 18),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Accept Booking',
-                            style: GoogleFonts.urbanist(
-                              color: AppColors.secondary,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w600,
+                      : GestureDetector(
+                        onTap:
+                            () => updateBookingStatus('confirmed', bookingId),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.check_circle_outline, size: 18),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Accept Booking',
+                              style: GoogleFonts.urbanist(
+                                color: AppColors.secondary,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
             ),
           ),
@@ -538,7 +574,7 @@ class _PreviewBoardingState extends State<PreviewBoarding>
                   ? null
                   : () => confirmAction(
                     message: "Are you sure you want to decline this booking?",
-                    onConfirm: () => updateBookingStatus('declined'),
+                    onConfirm: () => updateBookingStatus('declined', bookingId),
                   ),
           style: OutlinedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 12),
@@ -577,6 +613,110 @@ class _PreviewBoardingState extends State<PreviewBoarding>
         ),
       ],
     );
+  }
+
+  Widget _buildAcceptedActionButtons(Map booking) {
+    String bookingId = booking['_id'];
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed:
+              _isLoading
+                  ? null
+                  : () => confirmAction(
+                    message: "Are you sure you want to complete this booking?",
+                    onConfirm: () => updateBookingStatus('done', bookingId),
+                  ),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.greenAccent,
+            disabledBackgroundColor: Colors.greenAccent.withOpacity(0.5),
+            elevation: 2,
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+          ),
+          child: SizedBox(
+            width: double.infinity,
+            child: Center(
+              child:
+                  _isLoading
+                      ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                      : GestureDetector(
+                        onTap: () => updateBookingStatus('done', bookingId),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.check_circle_outline, size: 18),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Done',
+                              style: GoogleFonts.urbanist(
+                                color: AppColors.secondary,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void navigateToBookingDetail(dynamic booking) {
+    if (!mounted) return;
+
+    final String applicationType = booking['applicationType'] ?? '';
+    final Object arguments = {
+      "application": booking['application'],
+      "booking": booking['_id'],
+      "pet": booking["pet"],
+      "profile": booking["profile"],
+    };
+
+    switch (applicationType) {
+      case "boarding":
+        Navigator.pushNamed(
+          context,
+          "/s/preview/boarding",
+          arguments: arguments,
+        );
+        break;
+      case "transit":
+        Navigator.pushNamed(
+          context,
+          "/s/preview/transit",
+          arguments: arguments,
+        );
+        break;
+      case "grooming":
+        Navigator.pushNamed(
+          context,
+          "/s/preview/grooming",
+          arguments: arguments,
+        );
+        break;
+      default:
+        // Show snackbar for unsupported booking types
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Cannot preview this booking type: $applicationType'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+    }
   }
 }
 

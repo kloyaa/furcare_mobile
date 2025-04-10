@@ -113,11 +113,7 @@ class _AdminStaffEditState extends State<AdminStaffEdit>
     return Profile(
       facebook: '',
       messenger: '',
-      basicInfo: BasicInfo(
-        fullName: fullName,
-        birthdate: '1999-01-01',
-        gender: _selectedGender,
-      ),
+      basicInfo: BasicInfo(fullName: fullName, birthdate: '1999-01-01'),
       address: address,
       isActive: true,
       contact: Contact(

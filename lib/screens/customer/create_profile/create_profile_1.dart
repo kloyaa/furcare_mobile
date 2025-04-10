@@ -49,11 +49,7 @@ class _CreateProfileStep1State extends State<CreateProfileStep1>
     if (!mounted) return;
 
     Provider.of<RegistrationProvider>(context, listen: false).setBasicInfo(
-      BasicInfo(
-        birthdate: _selectedBirthdate,
-        fullName: fullName,
-        gender: _selectedGender,
-      ),
+      BasicInfo(birthdate: _selectedBirthdate, fullName: fullName),
     );
 
     Navigator.pushNamed(context, '/c/create/profile/2');

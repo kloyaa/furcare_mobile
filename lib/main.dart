@@ -34,7 +34,6 @@ import 'package:furcare_app/screens/staff/screen_edit_profile_2.dart';
 import 'package:furcare_app/screens/staff/tabs/preview/boarding.dart';
 import 'package:furcare_app/screens/staff/tabs/preview/grooming.dart';
 import 'package:furcare_app/screens/staff/tabs/preview/transit.dart';
-import 'package:furcare_app/screens/staff/tabs/preview_inprogress_bookings/boarding.dart';
 import 'package:furcare_app/screens/staff/tabs/preview_inprogress_bookings/grooming.dart';
 import 'package:furcare_app/screens/staff/tabs/preview_inprogress_bookings/transit.dart';
 import 'package:furcare_app/utils/const/app_constants.dart';
@@ -126,8 +125,6 @@ class MyApp extends StatelessWidget {
       AppRoutes.previewTransit: (context) => const PreviewTransit(),
       AppRoutes.previewGrooming: (context) => const PreviewGrooming(),
 
-      AppRoutes.previewInprogressBoarding:
-          (context) => const PreviewInprogressBoarding(),
       AppRoutes.previewInprogressTransit:
           (context) => const PreviewInprogressTransit(),
       AppRoutes.previewInprogressGrooming:

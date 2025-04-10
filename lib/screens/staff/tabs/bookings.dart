@@ -74,6 +74,7 @@ class _StaffTabBookingsState extends State<StaffTabBookings>
       "booking": booking['_id'],
       "pet": booking["pet"],
       "profile": booking["profile"],
+      "currentStatus": _status,
     };
 
     switch (applicationType) {
@@ -261,6 +262,7 @@ class _StaffTabBookingsState extends State<StaffTabBookings>
                     selectedColor: AppColors.primary,
                     onSelected: (_) {
                       setState(() {
+                        _status = filter['value'];
                         _isLoading = true;
                       });
 
@@ -492,6 +494,7 @@ class _StaffTabBookingsState extends State<StaffTabBookings>
               );
 
               setState(() {
+                // Simulate refresh for better UX
                 _status = nextFilter['value'];
                 _isLoading = true;
               });

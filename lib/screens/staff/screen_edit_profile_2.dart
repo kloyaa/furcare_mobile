@@ -69,14 +69,9 @@ class _StaffEditProfileStep2State extends State<StaffEditProfileStep2> {
 
     final fullName = registrationProvider.basicInfo!.fullName;
     final birthdate = registrationProvider.basicInfo!.birthdate;
-    final gender = registrationProvider.basicInfo!.gender;
 
     Profile profile = Profile(
-      basicInfo: BasicInfo(
-        fullName: fullName,
-        birthdate: birthdate,
-        gender: gender,
-      ),
+      basicInfo: BasicInfo(fullName: fullName, birthdate: birthdate),
       address: present,
       isActive: true,
       contact: Contact(email: email, number: "0${number.replaceAll('-', '')}"),

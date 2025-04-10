@@ -7,7 +7,6 @@ import 'package:furcare_app/models/login_response.dart';
 import 'package:furcare_app/models/user_info.dart';
 import 'package:furcare_app/providers/authentication.dart';
 import 'package:furcare_app/utils/const/colors.dart';
-import 'package:furcare_app/widgets/select_gender.dart';
 import 'package:furcare_app/widgets/snackbar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
@@ -259,7 +258,6 @@ class _AdminStaffEnrollmentState extends State<AdminStaffEnrollment>
           messenger: '',
           basicInfo: BasicInfo(
             fullName: _fullNameController.text.trim(),
-            gender: '',
             birthdate: "1999-01-01",
           ),
           address: _addressController.text.trim(),
