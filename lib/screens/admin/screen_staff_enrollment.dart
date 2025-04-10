@@ -395,15 +395,6 @@ class _AdminStaffEnrollmentState extends State<AdminStaffEnrollment>
                 const SizedBox(width: 25.0),
                 _buildNavLink("Users and Pets", "/a/management/customers"),
                 const Spacer(),
-                Text(
-                  "Enroll Staff",
-                  style: GoogleFonts.urbanist(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 10.0,
-                  ),
-                ),
-                const SizedBox(width: 25.0),
                 _buildSignOutButton(),
               ],
             ),

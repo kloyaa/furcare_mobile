@@ -100,18 +100,22 @@ export const getCustomers = async (req: TRequest, res: Response) => {
                     'pets.user': 0
                 }
             },
-            {
-                $match: {
-                    profile: { $exists: true },
-                    owner: { $exists: true }
-
-                }
-            }
+            // {
+            //     $match: {
+            //         profile: { $exists: true },
+            //         owner: { $exists: true }
+            //     }
+            // }
         ]);
 
         const result = await getCustomerDataAggregate.exec();
 
         return res.status(200).json(result);
+
+
+        // return await User.find({}).then((result) => {
+        //     return res.status(200).json(result);
+        // });
     } catch (error) {
         console.log('@getCustomers error', error);
         return res.status(500).json(statuses['0900']);
@@ -328,10 +332,10 @@ export const removeUser = async (req: TRequest, res: Response) => {
     try {
         const user = req.params._id;
 
-        if(!user) {
+        if (!user) {
             return res.status(400).json(statuses["501"]);
         }
-        if(!isObjectIdOrHexString(user)) {
+        if (!isObjectIdOrHexString(user)) {
             return res.status(400).json(statuses["0901"]);
         }
 

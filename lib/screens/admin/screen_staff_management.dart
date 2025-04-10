@@ -285,7 +285,15 @@ class _AdminStaffManagementState extends State<AdminStaffManagement>
           ),
         ),
         const Spacer(),
-        _buildNavLink("Enroll Staff", () {}, isBold: true, fontSize: 10.0),
+        _buildNavLink(
+          "Enroll Staff",
+          () => Navigator.pushReplacementNamed(
+            context,
+            "/a/management/staff/enrollment",
+          ),
+          isBold: true,
+          fontSize: 10.0,
+        ),
         const SizedBox(width: 25.0),
         _buildSignOutButton(),
       ],
@@ -351,89 +359,6 @@ class _AdminStaffManagementState extends State<AdminStaffManagement>
     );
   }
 
-  // Build desktop navigation items
-  Widget _buildDesktopNavItems() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildNavItem('Profile', () => _navigateTo('/a/profile')),
-        const SizedBox(width: 25.0),
-        _buildReportsDropdown(),
-        const SizedBox(width: 25.0),
-        _buildNavItem('Staffs', () {}, isCurrent: true),
-        const SizedBox(width: 25.0),
-        _buildNavItem(
-          'Users and Pets',
-          () => _navigateTo('/a/management/customers'),
-        ),
-        const Spacer(),
-        _buildNavItem('Sign out', () => _navigateTo('/')),
-      ],
-    );
-  }
-
-  // Build individual navigation item
-  Widget _buildNavItem(
-    String title,
-    VoidCallback onTap, {
-    bool isCurrent = false,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: Text(
-          title,
-          style: GoogleFonts.urbanist(
-            color: AppColors.primary,
-            fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
-            fontSize: 12.0,
-          ),
-        ),
-      ),
-    );
-  }
-
-  // Build reports dropdown
-  Widget _buildReportsDropdown() {
-    return PopupMenuButton<String>(
-      offset: const Offset(0, 10),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5.0),
-        side: const BorderSide(color: Colors.grey, width: 0.1),
-      ),
-      tooltip: "Click to view",
-      color: Colors.white,
-      elevation: 3,
-      position: PopupMenuPosition.under,
-      child: Text(
-        "Reports",
-        style: GoogleFonts.urbanist(color: AppColors.primary, fontSize: 12.0),
-      ),
-      itemBuilder:
-          (BuildContext context) => [
-            _buildMenuItem('Check ins', 'check_ins'),
-            _buildMenuItem('Service usages', 'service_usages'),
-            _buildMenuItem('Transactions', 'transactions'),
-          ],
-      onSelected: (value) {
-        String route = '/';
-        switch (value) {
-          case 'check_ins':
-            route = "/a/report/checkins";
-            break;
-          case 'service_usages':
-            route = "/a/report/service-usage";
-            break;
-          case 'transactions':
-            route = "/a/report/transactions";
-            break;
-        }
-        _navigateTo(route);
-      },
-    );
-  }
-
   // Build menu item for dropdown or popup menu
   PopupMenuItem<String> _buildMenuItem(String title, String value) {
     return PopupMenuItem<String>(
@@ -446,26 +371,6 @@ class _AdminStaffManagementState extends State<AdminStaffManagement>
   }
 
   // Handle menu selection for mobile view
-  void _handleMenuSelection(String value) {
-    switch (value) {
-      case 'profile':
-        _navigateTo('/a/profile');
-        break;
-      case 'reports':
-        // Show reports submenu
-        break;
-      case 'users':
-        _navigateTo('/a/management/customers');
-        break;
-      case 'enroll':
-        _navigateTo('/a/management/staff/enrollment');
-        break;
-      case 'signout':
-        _navigateTo('/');
-        break;
-    }
-  }
-
   // Navigate to a route with replacement
   void _navigateTo(String route, {Map<String, dynamic>? arguments}) {
     Navigator.pushReplacementNamed(context, route, arguments: arguments);
