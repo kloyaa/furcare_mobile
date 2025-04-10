@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:furcare_app/apis/staff_api.dart';
 import 'package:furcare_app/providers/authentication.dart';
+import 'package:furcare_app/utils/common.util.dart';
 import 'package:furcare_app/widgets/fade_transition.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
@@ -533,6 +534,7 @@ class _StaffTabBookingsState extends State<StaffTabBookings>
         booking['profile']?['fullName']?.toString() ?? 'Unknown User';
     final int payable = (booking['payable'] ?? 0) ~/ 2;
 
+    final branchName = booking?['branch']?['name'] ?? 'Branch not specified';
     return Card(
       margin: const EdgeInsets.only(bottom: 12.0),
       elevation: 2,
@@ -588,10 +590,29 @@ class _StaffTabBookingsState extends State<StaffTabBookings>
                             ? "Unknown Client"
                             : fullName.toUpperCase(),
                         style: GoogleFonts.urbanist(
-                          fontSize: 14.0,
+                          fontSize: 16.0,
                           fontWeight: FontWeight.bold,
                           color: AppColors.primary,
                         ),
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.home,
+                            size: 16,
+                            color: AppColors.primary.withAlpha(200),
+                          ),
+                          SizedBox(width: 5),
+                          Text(
+                            branchName,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.primary.withAlpha(200),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 8.0),
                       Row(
@@ -603,7 +624,7 @@ class _StaffTabBookingsState extends State<StaffTabBookings>
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            "PHP ${payable.toStringAsFixed(2)}",
+                            "PHP ${phpFormatter.format(payable)}",
                             style: GoogleFonts.rajdhani(
                               fontSize: 14.0,
                               fontWeight: FontWeight.bold,
