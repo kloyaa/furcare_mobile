@@ -597,7 +597,7 @@ class _PreviewTransitState extends State<PreviewTransit>
 
 // Shimmer loading effect for cards
 class ShimmerLoadingCard extends StatelessWidget {
-  const ShimmerLoadingCard({Key? key}) : super(key: key);
+  const ShimmerLoadingCard({super.key});
 
   @override
   Widget build(BuildContext context) {

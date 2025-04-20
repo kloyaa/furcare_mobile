@@ -587,7 +587,7 @@ class CardContainer extends StatelessWidget {
   final String title;
   final Widget child;
 
-  const CardContainer({required this.title, required this.child});
+  const CardContainer({super.key, required this.title, required this.child});
 
   @override
   Widget build(BuildContext context) {

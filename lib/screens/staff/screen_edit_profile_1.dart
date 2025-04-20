@@ -21,10 +21,10 @@ class _StaffEditProfileStep1State extends State<StaffEditProfileStep1> {
   late final FocusNode _lastNameFocus;
 
   // State
-  String _selectedGender = "male";
-  String _selectedBirthdate = "1999-01-01";
+  final String _selectedGender = "male";
+  final String _selectedBirthdate = "1999-01-01";
   String _accessToken = "";
-  String _birthDate = "";
+  final String _birthDate = "";
 
   Future handleSaveBasicInfo() async {
     final firstName = _firstNameController.text.trim();

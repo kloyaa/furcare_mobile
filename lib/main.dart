@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
         title: AppConstants.appName,
         theme: AppTheme.lightTheme,
         themeMode: ThemeMode.system,
-        initialRoute: AppRoutes.loginStaff,
+        initialRoute: AppRoutes.loginAdmin,
         routes: _buildAppRoutes(),
         navigatorObservers: [RouteLoggingObserver()],
         onGenerateRoute: (settings) {
@@ -88,7 +88,7 @@ class MyApp extends StatelessWidget {
 
   Map<String, WidgetBuilder> _buildAppRoutes() {
     return {
-      AppRoutes.login: (context) => const CustomerLogin(),
+      AppRoutes.loginCustomer: (context) => const CustomerLogin(),
       AppRoutes.loginStaff: (context) => const StaffLogin(),
       AppRoutes.loginAdmin: (context) => const ScreenAdminLogin(),
 
@@ -147,7 +147,7 @@ class MyApp extends StatelessWidget {
 }
 
 class AppRoutes {
-  static const String login = '/';
+  static const String loginCustomer = '/';
   static const String loginStaff = '/auth/staff';
   static const String loginAdmin = '/auth/admin';
 

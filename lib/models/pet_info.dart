@@ -25,6 +25,26 @@ class Pet {
     required this.v,
   });
 
+  factory Pet.infomrationJson(Map<String, dynamic> json) {
+    return Pet(
+      id: json['_id'],
+      user: json['user'],
+      name: json['name'],
+      specie: json['breed'],
+      age: json['age'],
+      gender: json['gender'],
+      identification: '',
+      additionalInfo: AdditionalInfo(
+        historyOfBitting: false,
+        feedingInstructions: '',
+        medicationInstructions: '',
+      ),
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      v: json['__v'],
+    );
+  }
+
   factory Pet.fromJson(Map<String, dynamic> json) {
     return Pet(
       id: json['_id'],

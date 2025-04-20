@@ -4,6 +4,8 @@ import 'package:furcare_app/apis/booking_api.dart';
 import 'package:furcare_app/apis/staff_api.dart';
 import 'package:furcare_app/models/booking_payload.dart';
 import 'package:furcare_app/models/login_response.dart';
+import 'package:furcare_app/models/pet_info.dart';
+import 'package:furcare_app/models/user_info.dart';
 import 'package:furcare_app/screens/others/success.dart';
 import 'package:furcare_app/utils/common.util.dart';
 import 'package:furcare_app/widgets/snackbar.dart';
@@ -240,6 +242,12 @@ class _PreviewBoardingState extends State<PreviewBoarding>
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, dynamic> arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+    final owner = Profile.fromJson(arguments['profile']);
+    final pet = Pet.infomrationJson(arguments['pet']);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -273,9 +281,9 @@ class _PreviewBoardingState extends State<PreviewBoarding>
                       ),
                       child: Column(
                         children: [
-                          _buildOwnerInfoCard(),
+                          _buildOwnerInfoCard(owner),
                           const SizedBox(height: 16.0),
-                          _buildPetInfoCard(),
+                          _buildPetInfoCard(pet),
                           const SizedBox(height: 16.0),
                           _buildBookingDetailsCard(),
                         ],
@@ -288,7 +296,7 @@ class _PreviewBoardingState extends State<PreviewBoarding>
   }
 
   /// Owner information card widget
-  Widget _buildOwnerInfoCard() {
+  Widget _buildOwnerInfoCard(Profile basicInfo) {
     return _AnimatedCard(
       delay: 100,
       child: CardContainer(
@@ -302,10 +310,7 @@ class _PreviewBoardingState extends State<PreviewBoarding>
                 children: [
                   _InfoField(
                     label: "Name",
-                    value:
-                        _profile != null
-                            ? "${_profile?["fullName"] ?? ''}"
-                            : "Not available",
+                    value: basicInfo.basicInfo.fullName,
                   ),
                   const SizedBox(height: 8.0),
                   _InfoField(
@@ -321,7 +326,7 @@ class _PreviewBoardingState extends State<PreviewBoarding>
                 children: [
                   _InfoField(
                     label: "Contact No.",
-                    value: _profile?["contact"]?["number"] ?? "Not available",
+                    value: basicInfo.contact.number,
                   ),
                 ],
               ),
@@ -333,7 +338,7 @@ class _PreviewBoardingState extends State<PreviewBoarding>
   }
 
   /// Pet information card widget
-  Widget _buildPetInfoCard() {
+  Widget _buildPetInfoCard(Pet pet) {
     return _AnimatedCard(
       delay: 200,
       child: CardContainer(
@@ -347,15 +352,9 @@ class _PreviewBoardingState extends State<PreviewBoarding>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _InfoField(
-                        label: "Name",
-                        value: _pet?["name"] ?? "Not available",
-                      ),
+                      _InfoField(label: "Name", value: pet.name),
                       const SizedBox(height: 8.0),
-                      _InfoField(
-                        label: "Specie",
-                        value: _pet?["specie"] ?? "Not specified",
-                      ),
+                      _InfoField(label: "Specie", value: pet.specie),
                     ],
                   ),
                 ),
@@ -363,14 +362,11 @@ class _PreviewBoardingState extends State<PreviewBoarding>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _InfoField(
-                        label: "Gender",
-                        value: _pet?["gender"] ?? "Not specified",
-                      ),
+                      _InfoField(label: "Gender", value: pet.gender),
                       const SizedBox(height: 8.0),
                       _InfoField(
                         label: "Identification",
-                        value: _pet?["identification"] ?? "Not available",
+                        value: "Not specified",
                       ),
                     ],
                   ),
@@ -780,7 +776,7 @@ class CardContainer extends StatelessWidget {
   final String title;
   final Widget child;
 
-  const CardContainer({required this.title, required this.child});
+  const CardContainer({super.key, required this.title, required this.child});
 
   @override
   Widget build(BuildContext context) {

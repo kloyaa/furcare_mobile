@@ -1,20 +1,10 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:furcare_app/apis/client_api.dart';
-import 'package:furcare_app/apis/fees_api.dart';
-import 'package:furcare_app/apis/staff_api.dart';
-import 'package:furcare_app/models/login_response.dart';
-import 'package:furcare_app/models/user_info.dart';
-import 'package:furcare_app/providers/authentication.dart';
-import 'package:furcare_app/providers/fees.dart';
-import 'package:furcare_app/providers/user.dart';
 import 'package:furcare_app/screens/staff/tabs/bookings.dart';
 import 'package:furcare_app/screens/staff/tabs/inprogress_bookings.dart';
 import 'package:furcare_app/screens/staff/tabs/settings.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:provider/provider.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class StaffMain extends StatefulWidget {

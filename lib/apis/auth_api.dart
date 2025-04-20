@@ -23,7 +23,6 @@ class AuthenticationApi {
       );
       return response;
     } on DioException {
-      print('error');
       rethrow;
     }
   }

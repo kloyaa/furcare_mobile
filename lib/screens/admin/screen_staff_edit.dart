@@ -45,7 +45,7 @@ class _AdminStaffEditState extends State<AdminStaffEdit>
   late Animation<double> _fadeAnimation;
 
   // State variables
-  String _selectedGender = "male";
+  final String _selectedGender = "male";
   String _accessToken = "";
   String _errorMessage = "";
   bool _hasError = false;

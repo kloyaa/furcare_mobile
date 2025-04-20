@@ -41,7 +41,7 @@ class _AdminStaffEnrollmentState extends State<AdminStaffEnrollment>
   late List<Animation<Offset>> _slideAnimations;
 
   // State variables
-  String _selectedGender = "male";
+  final String _selectedGender = "male";
   String _accessToken = "";
   String _registrationErrorMessage = "";
   bool _isCreateError = false;

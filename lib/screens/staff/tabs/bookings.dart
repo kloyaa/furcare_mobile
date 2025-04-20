@@ -532,7 +532,6 @@ class _StaffTabBookingsState extends State<StaffTabBookings>
 
     final String fullName =
         booking['profile']?['fullName']?.toString() ?? 'Unknown User';
-    final int payable = (booking['payable'] ?? 0) ~/ 2;
 
     final branchName = booking?['branch']?['name'] ?? 'Branch not specified';
     return Card(
@@ -610,25 +609,6 @@ class _StaffTabBookingsState extends State<StaffTabBookings>
                               fontSize: 14.0,
                               fontWeight: FontWeight.w600,
                               color: AppColors.primary.withAlpha(200),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8.0),
-                      Row(
-                        children: [
-                          Icon(
-                            Ionicons.wallet_outline,
-                            size: 12,
-                            color: AppColors.danger,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            "PHP ${phpFormatter.format(payable)}",
-                            style: GoogleFonts.rajdhani(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.danger,
                             ),
                           ),
                         ],

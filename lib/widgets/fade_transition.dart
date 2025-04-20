@@ -8,8 +8,8 @@ class AnimatedSlideAndFadeTransition extends StatefulWidget {
   const AnimatedSlideAndFadeTransition({
     required this.child,
     this.delay = Duration.zero,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<AnimatedSlideAndFadeTransition> createState() =>

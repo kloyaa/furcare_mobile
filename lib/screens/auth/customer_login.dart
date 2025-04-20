@@ -94,8 +94,8 @@ class _CustomerLoginState extends State<CustomerLogin>
         }
       }
     } on DioException catch (e) {
+      print(e);
       ErrorResponse errorResponse = ErrorResponse.fromJson(e.response?.data);
-
       if (errorResponse.code == '0104') {
         if (context.mounted) {
           if (errorResponse.accessToken != null) {
