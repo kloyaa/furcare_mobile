@@ -1,12 +1,13 @@
-import 'dart:math';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:furcare_app/apis/auth_api.dart';
-import 'package:furcare_app/providers/authentication.dart';
+import 'package:furcare_app/services/auth_service.dart';
 import 'package:furcare_app/utils/const/colors.dart';
+import 'package:furcare_app/widgets/auth_button.dart';
+import 'package:furcare_app/widgets/auth_error_message.dart';
+import 'package:furcare_app/widgets/auth_form_field.dart';
+import 'package:furcare_app/widgets/auth_terms_text.dart';
+import 'package:furcare_app/animations/shake_animation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:provider/provider.dart' show Provider;
 
 class ScreenAdminLogin extends StatefulWidget {
   const ScreenAdminLogin({super.key});
@@ -16,17 +17,18 @@ class ScreenAdminLogin extends StatefulWidget {
 }
 
 class _ScreenAdminLoginState extends State<ScreenAdminLogin>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   // Controllers & Focus Nodes
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   late final FocusNode _usernameFocus;
   late final FocusNode _passwordFocus;
 
-  // Animation controller for enhanced UI feedback
+  // Animation controllers
   late AnimationController _animationController;
   late Animation<double> _fadeInAnimation;
   late Animation<Offset> _slideAnimation;
+  late ShakeAnimationController _shakeController;
 
   // State variables
   bool _isPasswordVisible = false;
@@ -43,49 +45,33 @@ class _ScreenAdminLoginState extends State<ScreenAdminLogin>
       _isLoading = true;
     });
 
-    final authenticationApi = AuthenticationApi("web");
-    final username = _usernameController.text.trim();
-    final password = _passwordController.text.trim();
+    // Use AuthService for login
+    final authService = AuthService(
+      context: context,
+      platform: "web",
+      allowedRole: AuthRole.admin,
+    );
 
-    try {
-      Response response = await authenticationApi.login(
-        username: username,
-        password: password,
-      );
+    final result = await authService.login(
+      username: _usernameController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
 
-      // Check for correct role
-      String role = response.data["role"].toString().toLowerCase();
-      if (role == "staff" || role == "customer") {
-        _showLoginError("Please use the Furcare Mobile app, Thank you.");
-        return;
-      }
-
+    if (result.result == AuthResult.success) {
       // Clear any previous errors
       setState(() {
         _isLoginError = false;
         _loginErrorMessage = "";
       });
 
-      // Handle successful login
-      if (context.mounted) {
-        final accessTokenProvider = Provider.of<AuthTokenProvider>(
-          context,
-          listen: false,
-        );
-
-        accessTokenProvider.setAuthToken(response.data['data']);
-
-        // Add login success animation
-        _animationController.forward().then((_) {
-          if (context.mounted) {
-            Navigator.pushReplacementNamed(context, '/a/profile');
-          }
-        });
-      }
-    } on DioException catch (e) {
-      _showLoginError(
-        e.response?.data["message"] ?? "Login failed. Please try again.",
-      );
+      // Add login success animation
+      _animationController.forward().then((_) {
+        if (context.mounted) {
+          Navigator.pushReplacementNamed(context, '/a/profile');
+        }
+      });
+    } else {
+      _showLoginError(result.message);
     }
   }
 
@@ -115,8 +101,7 @@ class _ScreenAdminLoginState extends State<ScreenAdminLogin>
     });
 
     // Play shake animation for error feedback
-    _animationController.reset();
-    _animationController.forward();
+    _shakeController.shake();
   }
 
   @override
@@ -130,6 +115,9 @@ class _ScreenAdminLoginState extends State<ScreenAdminLogin>
       vsync: this,
       duration: const Duration(milliseconds: 400),
     );
+
+    // Initialize shake controller
+    _shakeController = ShakeAnimationController(vsync: this);
 
     // Configure animations
     _fadeInAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -158,6 +146,7 @@ class _ScreenAdminLoginState extends State<ScreenAdminLogin>
     _usernameFocus.dispose();
     _passwordFocus.dispose();
     _animationController.dispose();
+    _shakeController.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -314,92 +303,66 @@ class _ScreenAdminLoginState extends State<ScreenAdminLogin>
           ),
           SizedBox(height: isMobile ? 15.0 : 20.0),
 
-          // Form fields with animation
-          AnimatedBuilder(
-            animation: _animationController,
-            builder: (context, child) {
-              return Transform.translate(
-                offset:
-                    _isLoginError
-                        ? Offset(sin(_animationController.value * 10) * 5, 0)
-                        : Offset.zero,
-                child: Column(
-                  children: [
-                    // Username field
-                    _buildFormField(
-                      controller: _usernameController,
-                      focusNode: _usernameFocus,
-                      label: "Username or Email",
-                      icon: Ionicons.person_outline,
-                      obscureText: false,
-                    ),
-                    const SizedBox(height: 15.0),
-
-                    // Password field
-                    _buildFormField(
-                      controller: _passwordController,
-                      focusNode: _passwordFocus,
-                      label: "Password",
-                      icon: Ionicons.lock_closed_outline,
-                      obscureText: !_isPasswordVisible,
-                      suffixIcon: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isPasswordVisible = !_isPasswordVisible;
-                          });
-                        },
-                        child: Icon(
-                          _isPasswordVisible
-                              ? Ionicons.eye_outline
-                              : Ionicons.eye_off_outline,
-                          size: 18.0,
-                          color:
-                              _isLoginError
-                                  ? AppColors.danger
-                                  : AppColors.primary,
-                        ),
-                      ),
-                    ),
-                  ],
+          // Form fields with shake animation
+          ShakeAnimationBuilder(
+            animation: _shakeController.animation,
+            child: Column(
+              children: [
+                // Username field
+                AuthFormField(
+                  controller: _usernameController,
+                  focusNode: _usernameFocus,
+                  label: "Username or Email",
+                  icon: Ionicons.person_outline,
+                  hasError: _isLoginError,
+                  obscureText: false,
                 ),
-              );
-            },
+                const SizedBox(height: 15.0),
+
+                // Password field
+                AuthFormField(
+                  controller: _passwordController,
+                  focusNode: _passwordFocus,
+                  label: "Password",
+                  icon: Ionicons.lock_closed_outline,
+                  hasError: _isLoginError,
+                  obscureText: !_isPasswordVisible,
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                    child: Icon(
+                      _isPasswordVisible
+                          ? Ionicons.eye_outline
+                          : Ionicons.eye_off_outline,
+                      size: 18.0,
+                      color:
+                          _isLoginError ? AppColors.danger : AppColors.primary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
 
           const SizedBox(height: 15.0),
 
           // Error message with animation
-          AnimatedSize(
-            duration: const Duration(milliseconds: 300),
-            child:
-                _loginErrorMessage.isNotEmpty
-                    ? Padding(
-                      padding: const EdgeInsets.only(bottom: 10.0),
-                      child: Text(
-                        _loginErrorMessage,
-                        style: GoogleFonts.urbanist(
-                          color: AppColors.danger,
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    )
-                    : const SizedBox.shrink(),
-          ),
+          AuthErrorMessage(message: _loginErrorMessage),
 
           // Terms text
-          Text(
-            "By logging in, you agree to abide by our terms and conditions. Please review them carefully before proceeding.",
-            style: GoogleFonts.urbanist(
-              color: AppColors.primary.withOpacity(0.7),
-              fontSize: 12.0,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
+          const AuthTermsText(),
+
           const SizedBox(height: 30.0),
 
-          // Sign in button with animation
-          _buildSignInButton(),
+          // Sign in button
+          AuthButton(
+            label: "Sign in",
+            onPressed: _handleLogin,
+            isLoading: _isLoading,
+          ),
 
           // Forgot password link
           Padding(
@@ -429,162 +392,6 @@ class _ScreenAdminLoginState extends State<ScreenAdminLogin>
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  /// Enhanced form field with animated feedback
-  Widget _buildFormField({
-    required TextEditingController controller,
-    required FocusNode focusNode,
-    required String label,
-    required IconData icon,
-    required bool obscureText,
-    Widget? suffixIcon,
-  }) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15.0),
-        boxShadow: [
-          BoxShadow(
-            color: (_isLoginError ? AppColors.danger : AppColors.primary)
-                .withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: TextFormField(
-        controller: controller,
-        focusNode: focusNode,
-        obscureText: obscureText,
-        onChanged: (_) {
-          // Clear error on input change
-          if (_isLoginError) {
-            setState(() {
-              _isLoginError = false;
-              _loginErrorMessage = "";
-            });
-          }
-        },
-        decoration: InputDecoration(
-          fillColor: Colors.white,
-          labelText: label,
-          labelStyle: GoogleFonts.urbanist(
-            color:
-                _isLoginError
-                    ? AppColors.danger
-                    : AppColors.primary.withOpacity(0.5),
-            fontSize: 10.0,
-          ),
-          prefixIcon: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: Icon(
-              icon,
-              size: 18.0,
-              color: _isLoginError ? AppColors.danger : AppColors.primary,
-            ),
-          ),
-          prefixIconColor: AppColors.primary,
-          border: InputBorder.none,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: const BorderSide(color: Colors.transparent),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(
-              color: (_isLoginError ? AppColors.danger : AppColors.primary)
-                  .withOpacity(0.3),
-              width: 1.0,
-            ),
-          ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 16.0),
-          suffixIcon: suffixIcon,
-        ),
-        style: TextStyle(
-          color: _isLoginError ? AppColors.danger : AppColors.primary,
-          fontSize: 12.0,
-        ),
-      ),
-    );
-  }
-
-  /// Enhanced sign-in button with loading animation
-  Widget _buildSignInButton() {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      width: double.infinity,
-      height: 50,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15.0),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withOpacity(_isLoading ? 0.2 : 0.4),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: ElevatedButton(
-        onPressed: _isLoading ? null : _handleLogin,
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: AppColors.primary,
-          disabledBackgroundColor: AppColors.primary.withOpacity(0.7),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          elevation: _isLoading ? 1 : 3,
-          shadowColor: AppColors.primary.withOpacity(0.4),
-          padding: EdgeInsets.zero,
-        ),
-        child: Container(
-          width: double.infinity,
-          height: 50,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.0),
-            gradient: LinearGradient(
-              colors: [AppColors.primary, AppColors.primary.withOpacity(0.8)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: Center(
-            child:
-                _isLoading
-                    ? TweenAnimationBuilder<double>(
-                      tween: Tween(begin: 0.0, end: 1.0),
-                      duration: const Duration(milliseconds: 300),
-                      builder: (context, value, child) {
-                        return Opacity(
-                          opacity: value,
-                          child: SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.0,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                AppColors.secondary,
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                    : Text(
-                      'Sign in',
-                      style: GoogleFonts.urbanist(
-                        color: AppColors.secondary,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-          ),
-        ),
       ),
     );
   }

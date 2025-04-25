@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
         title: AppConstants.appName,
         theme: AppTheme.lightTheme,
         themeMode: ThemeMode.system,
-        initialRoute: AppRoutes.loginCustomer,
+        initialRoute: AppRoutes.loginAdmin,
         routes: _buildAppRoutes(),
         navigatorObservers: [RouteLoggingObserver()],
         onGenerateRoute: (settings) {
