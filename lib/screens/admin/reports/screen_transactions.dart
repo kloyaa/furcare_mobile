@@ -157,7 +157,168 @@ class _TransactionsState extends State<Transactions>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.secondary,
-      appBar: _buildAppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: const SizedBox(),
+        leadingWidth: 0,
+        actions: [
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.20,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap:
+                        () => Navigator.pushReplacementNamed(
+                          context,
+                          "/a/profile",
+                        ),
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: Text(
+                        "Profile",
+                        style: GoogleFonts.urbanist(
+                          color: AppColors.primary,
+                          fontSize: 12.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 25.0),
+                  PopupMenuButton<String>(
+                    offset: const Offset(0, 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      side: const BorderSide(
+                        color: Colors.grey,
+                        width: 0.1,
+                      ), // Border color
+                    ),
+                    tooltip: "Click to view",
+                    color: Colors.white,
+                    elevation: 0,
+                    position: PopupMenuPosition.under,
+                    child: Text(
+                      "Reports",
+                      style: GoogleFonts.urbanist(
+                        color: AppColors.primary,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    itemBuilder:
+                        (BuildContext context) => <PopupMenuEntry<String>>[
+                          PopupMenuItem<String>(
+                            value: 'check_ins',
+                            child: Text(
+                              'Check ins',
+                              style: GoogleFonts.urbanist(
+                                color: AppColors.primary,
+                                fontSize: 12.0,
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem<String>(
+                            value: 'service_usages',
+                            child: Text(
+                              'Service usages',
+                              style: GoogleFonts.urbanist(
+                                color: AppColors.primary,
+                                fontSize: 12.0,
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem<String>(
+                            value: 'transactions',
+                            child: Text(
+                              'Transactions',
+                              style: GoogleFonts.urbanist(
+                                color: AppColors.primary,
+                                fontSize: 12.0,
+                              ),
+                            ),
+                          ),
+                        ],
+                    onSelected: (String value) {
+                      switch (value) {
+                        case 'check_ins':
+                          break;
+                        case 'service_usages':
+                          Navigator.pushReplacementNamed(
+                            context,
+                            "/a/report/service-usage",
+                          );
+                          break;
+                        case 'transactions':
+                          Navigator.pushReplacementNamed(
+                            context,
+                            "/a/report/transactions",
+                          );
+                          break;
+                        default:
+                          break;
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 25.0),
+                  GestureDetector(
+                    onTap:
+                        () => Navigator.pushReplacementNamed(
+                          context,
+                          "/a/management/staff",
+                        ),
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: Text(
+                        "Staffs",
+                        style: GoogleFonts.urbanist(
+                          color: AppColors.primary,
+                          fontSize: 12.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 25.0),
+                  GestureDetector(
+                    onTap:
+                        () => Navigator.pushReplacementNamed(
+                          context,
+                          "/a/management/customers",
+                        ),
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: Text(
+                        "Users and Pets",
+                        style: GoogleFonts.urbanist(
+                          color: AppColors.primary,
+                          fontSize: 12.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  GestureDetector(
+                    onTap: () => Navigator.pushReplacementNamed(context, '/'),
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: Text(
+                        "Sign out",
+                        style: GoogleFonts.urbanist(
+                          color: AppColors.primary,
+                          fontSize: 12.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
       body: _buildBody(),
     );
   }
@@ -327,22 +488,15 @@ class _TransactionsState extends State<Transactions>
   /// Builds the main body content with loading, error, and data states
   Widget _buildBody() {
     return Center(
-      child: Container(
-        constraints: const BoxConstraints(
-          maxWidth: 1200,
-        ), // Constrain width for readability
-        child: Column(
-          children: [
-            // Search and filter bar - web specific
-            if (!_isLoading &&
-                _errorMessage == null &&
-                _transactions.isNotEmpty)
-              _buildSearchBar(),
+      child: Column(
+        children: [
+          // Search and filter bar - web specific
+          if (!_isLoading && _errorMessage == null && _transactions.isNotEmpty)
+            _buildSearchBar(),
 
-            // Main content area
-            Expanded(child: _buildContent()),
-          ],
-        ),
+          // Main content area
+          Expanded(child: _buildContent()),
+        ],
       ),
     );
   }
