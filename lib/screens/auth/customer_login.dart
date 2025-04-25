@@ -1,16 +1,16 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:furcare_app/apis/auth_api.dart';
-import 'package:furcare_app/models/login_response.dart';
-import 'package:furcare_app/providers/authentication.dart';
+import 'package:furcare_app/animations/shake_animation.dart';
 import 'package:furcare_app/services/location_permission.dart';
-import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/utils/const/colors.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
+import 'package:furcare_app/widgets/auth_button.dart';
+import 'package:furcare_app/widgets/auth_error_message.dart';
+import 'package:furcare_app/widgets/auth_form_field.dart';
+import 'package:furcare_app/widgets/auth_terms_text.dart';
+import 'package:furcare_app/widgets/furcare_logo.dart';
+import 'package:furcare_app/services/auth_service.dart';
 
 class CustomerLogin extends StatefulWidget {
   const CustomerLogin({super.key});
@@ -27,101 +27,68 @@ class _CustomerLoginState extends State<CustomerLogin>
   late final FocusNode _usernameFocus;
   late final FocusNode _passwordFocus;
 
-  late AnimationController _animationController;
-  late Animation<double> _shakeAnimation;
+  late final ShakeAnimationController _shakeController;
 
   // State
   bool _isPasswordVisible = false;
   bool _isLoginError = false;
+  bool _isLoading = false;
   String _loginErrorMessage = "";
 
   Future<void> _handleLogin() async {
-    final authenticationApi = AuthenticationApi("mobile");
+    setState(() => _isLoading = true);
+
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
 
     if (username.isEmpty) {
       _usernameFocus.requestFocus();
+      setState(() => _isLoading = false);
+      return;
     }
+
     if (password.isEmpty) {
       _passwordFocus.requestFocus();
+      setState(() => _isLoading = false);
+      return;
     }
 
-    final accessTokenProvider = Provider.of<AuthTokenProvider>(
-      context,
-      listen: false,
+    // Use AuthService for login
+    final authService = AuthService(
+      context: context,
+      platform: "mobile",
+      allowedRole: AuthRole.customer,
     );
 
-    try {
-      Response response = await authenticationApi.login(
-        username: username,
-        password: password,
-      );
+    final result = await authService.login(
+      username: username,
+      password: password,
+    );
 
-      LoginResponse loginResponse = LoginResponse.fromJson(response.data);
+    setState(() {
+      _isLoading = false;
+      _isLoginError = result.result != AuthResult.success;
+      _loginErrorMessage = result.message;
+    });
 
-      String role = response.data["role"].toString().toLowerCase();
-      if (role == "administrator") {
-        setState(() {
-          _isLoginError = true;
-          _loginErrorMessage = "Please use the Furcare web app, Thank you.";
-        });
-
-        return;
+    if (result.result == AuthResult.success) {
+      if (context.mounted) {
+        Navigator.pushReplacementNamed(context, '/branches');
       }
-
-      if (role == "staff") {
-        setState(() {
-          _isLoginError = true;
-          _loginErrorMessage =
-              "Account not authorized to use this Furcare Mobile App version.";
-        });
-
-        return;
+    } else if (result.result == AuthResult.needsProfile) {
+      if (context.mounted) {
+        Navigator.pushReplacementNamed(context, '/c/create/profile/1');
       }
-
-      setState(() {
-        _isLoginError = false;
-        _loginErrorMessage = "";
-      });
-
-      if (loginResponse.code == "00") {
-        if (context.mounted) {
-          print('loginResponse.accessToken${loginResponse.accessToken}');
-
-          accessTokenProvider.setAuthToken(loginResponse.accessToken);
-          Navigator.pushReplacementNamed(context, '/branches');
-        }
-      }
-    } on DioException catch (e) {
-      print(e);
-      ErrorResponse errorResponse = ErrorResponse.fromJson(e.response?.data);
-      if (errorResponse.code == '0104') {
-        if (context.mounted) {
-          if (errorResponse.accessToken != null) {
-            accessTokenProvider.setAuthToken(errorResponse.accessToken ?? "");
-          }
-          Navigator.pushReplacementNamed(context, '/c/create/profile/1');
-        }
-      }
-
-      setState(() {
-        _isLoginError = true;
-        _loginErrorMessage = e.response!.data["message"];
-      });
+    } else {
+      _shakeController.shake(); // Trigger shake animation
     }
-    _animationController.forward(from: 0); // Trigger shake animation
   }
 
   Future<void> _requestPermission() async {
     bool granted = await LocationPermissionHandler.requestLocationPermission(
       context,
     );
-    if (granted) {
-      // Location permission granted, proceed with your logic
-    } else {
-      // Location permission denied, handle accordingly
-    }
+    // Handle permission result if needed
   }
 
   @override
@@ -131,22 +98,12 @@ class _CustomerLoginState extends State<CustomerLogin>
     _usernameFocus = FocusNode();
     _passwordFocus = FocusNode();
 
+    // For development convenience
     _usernameController.text = "kolya";
     _passwordController.text = "Password@1234";
 
-    // Shake Animation Controller
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      vsync: this,
-    );
-
-    _shakeAnimation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 0, end: -10), weight: 1),
-      TweenSequenceItem(tween: Tween(begin: -10, end: 10), weight: 2),
-      TweenSequenceItem(tween: Tween(begin: 10, end: -10), weight: 2),
-      TweenSequenceItem(tween: Tween(begin: -10, end: 10), weight: 2),
-      TweenSequenceItem(tween: Tween(begin: 10, end: 0), weight: 1),
-    ]).animate(_animationController);
+    // Initialize shake animation controller
+    _shakeController = ShakeAnimationController(vsync: this);
 
     _requestPermission();
   }
@@ -155,7 +112,7 @@ class _CustomerLoginState extends State<CustomerLogin>
   void dispose() {
     _usernameFocus.dispose();
     _passwordFocus.dispose();
-    _animationController.dispose();
+    _shakeController.dispose();
     super.dispose();
   }
 
@@ -166,187 +123,99 @@ class _CustomerLoginState extends State<CustomerLogin>
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Center(
-          child: AnimatedBuilder(
-            animation: _shakeAnimation,
-            builder: (context, child) {
-              return Transform.translate(
-                offset: Offset(_shakeAnimation.value, 0),
-                child: SizedBox(
-                  width: 300.0,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FadeInDown(
-                        child: Lottie.asset(
-                          'assets/lady_with_dog.json',
-                          width: 250,
-                          height: 250,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      Text(
-                        "Login to your account",
-                        style: GoogleFonts.urbanist(
-                          color:
-                              _loginErrorMessage.isNotEmpty
-                                  ? AppColors.danger
-                                  : AppColors.primary,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 20.0),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(
-                            AppConstants.defaultBorderRadius,
-                          ),
-                        ),
-                        child: TextFormField(
-                          controller: _usernameController,
-                          focusNode: _usernameFocus,
-                          decoration: InputDecoration(
-                            fillColor: AppColors.primary,
-                            labelText: "Username or Email",
-                            labelStyle: GoogleFonts.urbanist(
-                              color:
-                                  _isLoginError
-                                      ? AppColors.danger
-                                      : AppColors.primary.withAlpha(200),
-                              fontSize: 10.0,
+          child: ShakeAnimationBuilder(
+            animation: _shakeController.animation,
+            child: SizedBox(
+              width: 300.0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FadeInDown(
+                    child:
+                        _isLoginError
+                            ? FurcareLogo(
+                              hasError: true,
+                              fontSize: 80,
+                              taglineSize: 18,
+                            )
+                            : Lottie.asset(
+                              'assets/lady_with_dog.json',
+                              width: 250,
+                              height: 250,
+                              fit: BoxFit.contain,
                             ),
-                            prefixIcon: Icon(
-                              Ionicons.person_outline,
-                              size: 18.0,
-                              color:
-                                  _isLoginError
-                                      ? AppColors.danger
-                                      : AppColors.primary,
-                            ),
-                            prefixIconColor: AppColors.primary,
-                            border: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            floatingLabelAlignment:
-                                FloatingLabelAlignment.start,
-                          ),
-                          style: TextStyle(
-                            color:
-                                _isLoginError
-                                    ? AppColors.danger
-                                    : AppColors.primary,
-                            fontSize: 12.0,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10.0),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(
-                            AppConstants.defaultBorderRadius,
-                          ),
-                        ),
-                        child: TextFormField(
-                          controller: _passwordController,
-                          focusNode: _passwordFocus,
-                          obscureText: !_isPasswordVisible,
-                          decoration: InputDecoration(
-                            fillColor: Colors.white,
-                            labelText: "Password",
-                            labelStyle: GoogleFonts.urbanist(
-                              color:
-                                  _isLoginError
-                                      ? AppColors.danger
-                                      : AppColors.primary.withAlpha(200),
-                              fontSize: 10.0,
-                            ),
-                            prefixIcon: Icon(
-                              Ionicons.lock_closed_outline,
-                              size: 18.0,
-                              color:
-                                  _isLoginError
-                                      ? AppColors.danger
-                                      : AppColors.primary,
-                            ),
-                            prefixIconColor: AppColors.primary,
-                            border: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            suffixIcon: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _isPasswordVisible = !_isPasswordVisible;
-                                });
-                              },
-                              child: Icon(
-                                _isPasswordVisible
-                                    ? Ionicons.eye_outline
-                                    : Ionicons.eye_off_outline,
-                                size: 18.0,
-                                color:
-                                    _isLoginError
-                                        ? AppColors.danger
-                                        : AppColors.primary,
-                              ),
-                            ),
-                          ),
-                          style: TextStyle(
-                            color:
-                                _isLoginError
-                                    ? AppColors.danger
-                                    : AppColors.primary,
-                            fontSize: 12.0,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10.0),
-                      _loginErrorMessage.isNotEmpty
-                          ? Text(
-                            _loginErrorMessage,
-                            style: GoogleFonts.urbanist(
-                              color: AppColors.danger,
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          )
-                          : const SizedBox(),
-                      const SizedBox(height: 12.0),
-                      Text(
-                        "By logging in, you agree to abide by our terms and conditions. Please review them carefully before proceeding.",
-                        style: GoogleFonts.urbanist(
-                          color: AppColors.primary.withAlpha(200),
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      const SizedBox(height: 80.0),
-                      ElevatedButton(
-                        onPressed: () async {
-                          await _handleLogin();
-                        },
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Center(child: Text('Sign in')),
-                        ),
-                      ),
-                      const SizedBox(height: 12.0),
-                      OutlinedButton(
-                        onPressed: () async {
-                          Navigator.pushNamed(context, "/c/register");
-                        },
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Center(child: Text("Don't have an account?")),
-                        ),
-                      ),
-                    ],
                   ),
-                ),
-              );
-            },
+                  const SizedBox(height: 20.0),
+
+                  // Username field
+                  AuthFormField(
+                    controller: _usernameController,
+                    focusNode: _usernameFocus,
+                    label: "Username or Email",
+                    icon: Ionicons.person_outline,
+                    hasError: _isLoginError,
+                  ),
+
+                  const SizedBox(height: 10.0),
+
+                  // Password field
+                  AuthFormField(
+                    controller: _passwordController,
+                    focusNode: _passwordFocus,
+                    label: "Password",
+                    icon: Ionicons.lock_closed_outline,
+                    obscureText: !_isPasswordVisible,
+                    hasError: _isLoginError,
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                      child: Icon(
+                        _isPasswordVisible
+                            ? Ionicons.eye_outline
+                            : Ionicons.eye_off_outline,
+                        size: 18.0,
+                        color:
+                            _isLoginError
+                                ? AppColors.danger
+                                : AppColors.primary,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10.0),
+
+                  // Error message
+                  AuthErrorMessage(message: _loginErrorMessage),
+
+                  // Terms text
+                  const AuthTermsText(isRegister: false),
+
+                  const SizedBox(height: 80.0),
+
+                  // Login button
+                  AuthButton(
+                    label: "Sign in",
+                    isLoading: _isLoading,
+                    onPressed: _handleLogin,
+                  ),
+
+                  const SizedBox(height: 12.0),
+
+                  // Register button
+                  AuthButton(
+                    label: "Don't have an account?",
+                    isOutlined: true,
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/c/register");
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),

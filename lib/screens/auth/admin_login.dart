@@ -1,8 +1,4 @@
-// A responsive admin login screen with enhanced UI, animations, and better code organization
-// Supports desktop, tablet, and mobile layouts
-
 import 'dart:math';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:furcare_app/apis/auth_api.dart';
