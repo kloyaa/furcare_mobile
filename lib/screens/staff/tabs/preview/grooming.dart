@@ -4,7 +4,10 @@ import 'package:furcare_app/apis/booking_api.dart';
 import 'package:furcare_app/apis/staff_api.dart';
 import 'package:furcare_app/models/booking_payload.dart';
 import 'package:furcare_app/models/login_response.dart';
+import 'package:furcare_app/models/pet_info.dart';
+import 'package:furcare_app/models/user_info.dart';
 import 'package:furcare_app/screens/others/success.dart';
+import 'package:furcare_app/utils/common.util.dart';
 import 'package:furcare_app/widgets/snackbar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:furcare_app/providers/authentication.dart';
@@ -21,57 +24,172 @@ class PreviewGrooming extends StatefulWidget {
 class _PreviewGroomingState extends State<PreviewGrooming>
     with SingleTickerProviderStateMixin {
   // State variables
-  String _accessToken = "";
+  bool _isLoading = false;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  bool _isLoading = false;
 
-  /// Fetches detailed information about the grooming booking
-  Future<dynamic> getBookingDetails() async {
+  // Data from arguments
+  Map<String, dynamic>? _profile;
+  Map<String, dynamic>? _pet;
+  String? _application;
+  String? _booking;
+
+  // Store the future for booking details
+  late Future<Map<String, dynamic>?> _bookingDetailsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize animation controller
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
+    );
+
+    // Start animation after widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _animationController.forward();
+    });
+
+    _bookingDetailsFuture = getBookingDetails();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Get arguments only when dependencies change
     final Map<String, dynamic> arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final application = arguments['application'];
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ??
+        {};
 
-    // Show loading state
+    // Only recreate the future if needed data has changed
+    if (_application != arguments['application']) {
+      _application = arguments['application'];
+      _bookingDetailsFuture = getBookingDetails();
+    }
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  /// Fetch grooming booking details from API
+  Future<Map<String, dynamic>?> getBookingDetails() async {
+    final accessTokenProvider = Provider.of<AuthTokenProvider>(
+      context,
+      listen: false,
+    );
+    final String accessToken = accessTokenProvider.authToken?.accessToken ?? '';
+
+    if (accessToken.isEmpty || _application == null) {
+      return null;
+    }
+
     setState(() => _isLoading = true);
 
     try {
-      BookingApi bookingApi = BookingApi(_accessToken);
+      BookingApi bookingApi = BookingApi(accessToken);
       Response<dynamic> response = await bookingApi.getGroomingDetails(
-        application,
+        _application!,
       );
-      return response.data;
+
+      if (response.data == null) {
+        throw Exception('No booking data received');
+      }
+
+      return response.data as Map<String, dynamic>;
     } catch (e) {
-      // Handle any errors that occur during the API call
-      return Future.error('Failed to load booking details: ${e.toString()}');
+      if (context.mounted) {
+        showSnackBar(
+          context,
+          'Failed to load grooming details: ${e.toString()}',
+          color: AppColors.danger,
+          fontSize: 12.0,
+        );
+      }
+      return null;
     } finally {
-      // Hide loading state if widget is still mounted
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
-  /// Updates the booking status (confirmed/declined)
-  Future<void> updateBookingStatus(String status) async {
+  /// Determine the next state based on current status
+  String moveToNextState() {
     final Map<String, dynamic> arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    final booking = arguments['booking'];
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ??
+        {};
 
-    // Show loading state
+    final currentStatus = arguments['currentStatus'];
+
+    if (currentStatus == "confirmed") {
+      return 'done';
+    }
+
+    if (currentStatus == "declined") {
+      return 'declined';
+    }
+
+    if (currentStatus == "pending") {
+      return 'confirmed';
+    }
+
+    return 'pending';
+  }
+
+  /// Render different action buttons based on booking status
+  Widget actionsBasedOnCurrentStatus(Map booking) {
+    final Map<String, dynamic> arguments =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ??
+        {};
+
+    final currentStatus = arguments['currentStatus'];
+
+    if (currentStatus == "confirmed") {
+      return _buildAcceptedActionButtons(booking);
+    }
+
+    if (currentStatus == "declined") {
+      return const SizedBox();
+    }
+
+    if (currentStatus == "pending") {
+      return _buildActionButtons(booking);
+    }
+
+    return const SizedBox();
+  }
+
+  /// Update booking status (confirm, decline, or mark as done)
+  Future<void> updateBookingStatus(String status, String id) async {
+    final accessTokenProvider = Provider.of<AuthTokenProvider>(
+      context,
+      listen: false,
+    );
+    final String accessToken = accessTokenProvider.authToken?.accessToken ?? '';
+
     setState(() => _isLoading = true);
 
     try {
-      StaffApi staffApi = StaffApi(_accessToken);
+      StaffApi staffApi = StaffApi(accessToken);
       UpdateBookingStatusPayload payload = UpdateBookingStatusPayload(
-        status: status,
-        booking: booking,
+        status: status == 'declined' ? 'declined' : moveToNextState(),
+        booking: id,
       );
 
       await staffApi.updateBookingStatus(payload);
 
-      if (mounted) {
-        // Use animation to transition to success screen
+      if (context.mounted) {
+        // Success animation
         _animationController.reverse().then((_) {
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             PageRouteBuilder(
               pageBuilder:
@@ -90,331 +208,532 @@ class _PreviewGroomingState extends State<PreviewGrooming>
         });
       }
     } on DioException catch (e) {
-      // Handle API errors
-      final errorMessage =
-          e.response?.data != null
-              ? ErrorResponse.fromJson(e.response?.data).message
-              : "An unknown error occurred";
-
-      if (mounted) {
+      if (context.mounted) {
+        ErrorResponse errorResponse = ErrorResponse.fromJson(
+          e.response?.data ?? {'message': 'Unknown error occurred'},
+        );
         showSnackBar(
           context,
-          errorMessage,
+          errorResponse.message,
           color: AppColors.danger,
-          fontSize: 10.0,
+          fontSize: 12.0,
         );
       }
     } catch (e) {
-      // Handle unexpected errors
-      if (mounted) {
+      if (context.mounted) {
         showSnackBar(
           context,
-          "An unexpected error occurred",
+          'An unexpected error occurred',
           color: AppColors.danger,
-          fontSize: 10.0,
+          fontSize: 12.0,
         );
       }
     } finally {
-      // Hide loading state if widget is still mounted
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-
-    // Initialize animation controller
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
-
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
-    );
-
-    // Start the animation when the screen loads
-    _animationController.forward();
-
-    // Get the access token from provider
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final accessTokenProvider = Provider.of<AuthTokenProvider>(
-        context,
-        listen: false,
-      );
-
-      // Safely retrieve the access token
-      _accessToken = accessTokenProvider.authToken?.accessToken ?? '';
-    });
-  }
-
-  @override
-  void dispose() {
-    // Clean up animation controller
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  /// Shows a confirmation dialog before executing an action
-  void _showConfirmationDialog({
+  /// Confirmation dialog before updating booking status
+  void confirmAction({
     required String message,
-    required Function() onConfirm,
+    required VoidCallback onConfirm,
   }) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
+    execOnConfirm(message: message, method: onConfirm, context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Map<String, dynamic> arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+    final owner = Profile.fromJson(arguments['profile']);
+    final pet = Pet.infomrationJson(arguments['pet']);
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text(
+          "Grooming Preview",
+          style: GoogleFonts.urbanist(
+            color: AppColors.primary,
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
           ),
-          title: Text(
-            "Confirmation",
-            style: GoogleFonts.urbanist(
-              fontWeight: FontWeight.bold,
-              color: AppColors.primary,
-            ),
-          ),
-          content: Text(message, style: GoogleFonts.urbanist()),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(
-                "Cancel",
-                style: GoogleFonts.urbanist(color: Colors.grey),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                onConfirm();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: AppColors.primary, size: 20),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      backgroundColor: AppColors.secondary,
+      body:
+          _isLoading && _animationController.isDismissed
+              ? const Center(child: CircularProgressIndicator())
+              : SafeArea(
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0,
+                        vertical: 16.0,
+                      ),
+                      child: Column(
+                        children: [
+                          _buildOwnerInfoCard(owner),
+                          const SizedBox(height: 16.0),
+                          _buildPetInfoCard(pet),
+                          const SizedBox(height: 16.0),
+                          _buildGroomingDetailsCard(),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              child: Text(
-                "Confirm",
-                style: GoogleFonts.urbanist(color: Colors.white),
+    );
+  }
+
+  /// Owner information card widget
+  Widget _buildOwnerInfoCard(Profile basicInfo) {
+    return _AnimatedCard(
+      delay: 100,
+      child: CardContainer(
+        title: "Owner Information",
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _InfoField(
+                    label: "Name",
+                    value: basicInfo.basicInfo.fullName,
+                  ),
+                  const SizedBox(height: 8.0),
+                  _InfoField(
+                    label: "Gender",
+                    value: _profile?["gender"] ?? "Not specified",
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _InfoField(
+                    label: "Contact No.",
+                    value: basicInfo.contact.number,
+                  ),
+                ],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  /// Pet information card widget
+  Widget _buildPetInfoCard(Pet pet) {
+    return _AnimatedCard(
+      delay: 200,
+      child: CardContainer(
+        title: "Pet Information",
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _InfoField(label: "Name", value: pet.name),
+                      const SizedBox(height: 8.0),
+                      _InfoField(label: "Specie", value: pet.specie),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _InfoField(label: "Gender", value: pet.gender),
+                      const SizedBox(height: 8.0),
+                      _InfoField(
+                        label: "Identification",
+                        value: "Not specified",
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Grooming details card with actions widget
+  Widget _buildGroomingDetailsCard() {
+    return FutureBuilder<Map<String, dynamic>?>(
+      future: _bookingDetailsFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(32.0),
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return _AnimatedCard(
+            delay: 300,
+            child: CardContainer(
+              title: "Error",
+              child: Column(
+                children: [
+                  Icon(Icons.error_outline, color: AppColors.danger, size: 48),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Error loading grooming details',
+                    style: GoogleFonts.urbanist(
+                      color: AppColors.danger,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () => setState(() {}), // Refresh
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text('Retry', style: GoogleFonts.urbanist()),
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else if (!snapshot.hasData) {
+          return _AnimatedCard(
+            delay: 300,
+            child: CardContainer(
+              title: "Grooming",
+              child: Text(
+                'No grooming details available',
+                style: GoogleFonts.urbanist(color: Colors.grey),
+              ),
+            ),
+          );
+        }
+
+        // Extract grooming data safely
+        final data = snapshot.data!;
+
+        final scheduleTitle = data['schedule']?['title'] ?? 'Unknown Schedule';
+        final additionalNotes = data['additionalNotes'] ?? 'None';
+
+        return _AnimatedCard(
+          delay: 300,
+          child: CardContainer(
+            title: "Grooming",
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Grooming Request",
+                  style: GoogleFonts.urbanist(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                _GroomingDetailItem(
+                  icon: Icons.schedule,
+                  label: "Schedule Type",
+                  value: scheduleTitle,
+                ),
+                if (additionalNotes != null)
+                  _GroomingDetailItem(
+                    icon: Icons.notes_outlined,
+                    label: "Notes",
+                    value: additionalNotes,
+                  ),
+
+                const SizedBox(height: 24.0),
+
+                actionsBasedOnCurrentStatus(data),
+              ],
+            ),
+          ),
         );
       },
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // Extract arguments from route
-    final Map<String, dynamic> arguments =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ??
-        {};
-
-    final profile = arguments['profile'] ?? {};
-    final pet = arguments['pet'] ?? {};
-
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          title: Text(
-            "Preview",
-            style: GoogleFonts.urbanist(
-              color: AppColors.primary,
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
+  /// Action buttons for accepting/declining booking
+  Widget _buildActionButtons(Map booking) {
+    String bookingId = booking['_id'];
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed:
+              _isLoading
+                  ? null
+                  : () => confirmAction(
+                    message: "Are you sure you want to accept this booking?",
+                    onConfirm:
+                        () => updateBookingStatus('confirmed', bookingId),
+                  ),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.greenAccent,
+            disabledBackgroundColor: Colors.greenAccent.withOpacity(0.5),
+            elevation: 2,
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
             ),
           ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios, size: 18),
-            color: AppColors.primary,
-            onPressed: () => Navigator.pop(context),
+          child: SizedBox(
+            width: double.infinity,
+            child: Center(
+              child:
+                  _isLoading
+                      ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                      : GestureDetector(
+                        onTap:
+                            () => updateBookingStatus('confirmed', bookingId),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.check_circle_outline, size: 18),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Accept Booking',
+                              style: GoogleFonts.urbanist(
+                                color: AppColors.secondary,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+            ),
           ),
         ),
-        backgroundColor: AppColors.secondary,
-        body:
-            _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0,
-                    vertical: 20.0,
+        const SizedBox(height: 12.0),
+        OutlinedButton(
+          onPressed:
+              _isLoading
+                  ? null
+                  : () => confirmAction(
+                    message: "Are you sure you want to decline this booking?",
+                    onConfirm: () => updateBookingStatus('declined', bookingId),
                   ),
-                  child: Column(
-                    children: [
-                      // Owner Information Card
-                      _buildInfoCard(
-                        title: "Owner Information",
-                        child: Row(
-                          children: [
-                            _buildInfoColumn(
-                              label: "Name",
-                              value: "${profile["fullName"] ?? ""}",
-                            ),
-                            const SizedBox(width: 16.0),
-                            _buildInfoColumn(
-                              label: "Gender",
-                              value: profile["gender"] ?? "Not specified",
-                            ),
-                            const Spacer(),
-                            _buildInfoColumn(
-                              label: "Contact No.",
-                              value:
-                                  profile["contact"]?["number"] ??
-                                  "Not provided",
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 16.0),
-
-                      // Pet Information Card
-                      _buildInfoCard(
-                        title: "Pet Information",
-                        child: Row(
-                          children: [
-                            _buildInfoColumn(
-                              label: "Name",
-                              value: pet["name"] ?? "Not specified",
-                            ),
-                            const SizedBox(width: 16.0),
-                            _buildInfoColumn(
-                              label: "Species",
-                              value: pet["specie"] ?? "Not specified",
-                            ),
-                            const SizedBox(width: 16.0),
-                            _buildInfoColumn(
-                              label: "Gender",
-                              value: pet["gender"] ?? "Not specified",
-                            ),
-                            const Spacer(),
-                            _buildInfoColumn(
-                              label: "Identification",
-                              value: pet["identification"] ?? "Not provided",
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 16.0),
-
-                      // Booking Details Card with FutureBuilder
-                      FutureBuilder(
-                        future: getBookingDetails(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(32.0),
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          } else if (snapshot.hasError) {
-                            return _buildErrorCard(snapshot.error.toString());
-                          } else if (!snapshot.hasData) {
-                            return _buildErrorCard("No data available");
-                          }
-
-                          // Display grooming details
-                          final scheduleTitle =
-                              snapshot.data['schedule']?['title'] ??
-                              "No title available";
-
-                          return _buildInfoCard(
-                            title: "",
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // Grooming title with animation
-                                TweenAnimationBuilder(
-                                  tween: Tween<double>(begin: 0, end: 1),
-                                  duration: const Duration(milliseconds: 500),
-                                  builder: (context, value, child) {
-                                    return Opacity(
-                                      opacity: value,
-                                      child: Transform.translate(
-                                        offset: Offset(0, 20 * (1 - value)),
-                                        child: child,
-                                      ),
-                                    );
-                                  },
-                                  child: Text(
-                                    "Grooming",
-                                    style: GoogleFonts.urbanist(
-                                      fontSize: 32.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.primary,
-                                    ),
-                                  ),
-                                ),
-
-                                // Schedule title with animation
-                                TweenAnimationBuilder(
-                                  tween: Tween<double>(begin: 0, end: 1),
-                                  duration: const Duration(milliseconds: 700),
-                                  builder: (context, value, child) {
-                                    return Opacity(
-                                      opacity: value,
-                                      child: Transform.translate(
-                                        offset: Offset(0, 20 * (1 - value)),
-                                        child: child,
-                                      ),
-                                    );
-                                  },
-                                  child: Text(
-                                    scheduleTitle,
-                                    style: GoogleFonts.urbanist(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-
-                                const SizedBox(height: 40.0),
-
-                                // Action buttons
-                                _buildActionButtons(),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+          style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            side: BorderSide(
+              color: AppColors.danger.withOpacity(0.7),
+              width: 1.0,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+          ),
+          child: SizedBox(
+            width: double.infinity,
+            child: Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.cancel_outlined,
+                    size: 18,
+                    color: AppColors.danger,
                   ),
-                ),
-      ),
+                  const SizedBox(width: 8),
+                  Text(
+                    "Decline Booking",
+                    style: GoogleFonts.urbanist(
+                      color: AppColors.danger,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  /// Creates a reusable info card with consistent styling
-  Widget _buildInfoCard({required String title, required Widget child}) {
+  /// Action buttons for completed bookings
+  Widget _buildAcceptedActionButtons(Map booking) {
+    String bookingId = booking['_id'];
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed:
+              _isLoading
+                  ? null
+                  : () => confirmAction(
+                    message: "Are you sure you want to complete this booking?",
+                    onConfirm: () => updateBookingStatus('done', bookingId),
+                  ),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.greenAccent,
+            disabledBackgroundColor: Colors.greenAccent.withOpacity(0.5),
+            elevation: 2,
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+          ),
+          child: SizedBox(
+            width: double.infinity,
+            child: Center(
+              child:
+                  _isLoading
+                      ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                      : GestureDetector(
+                        onTap: () => updateBookingStatus('done', bookingId),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.check_circle_outline, size: 18),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Done',
+                              style: GoogleFonts.urbanist(
+                                color: AppColors.secondary,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Animated card with slide and fade transition
+class _AnimatedCard extends StatefulWidget {
+  final Widget child;
+  final int delay;
+
+  const _AnimatedCard({required this.child, this.delay = 0});
+
+  @override
+  State<_AnimatedCard> createState() => _AnimatedCardState();
+}
+
+class _AnimatedCardState extends State<_AnimatedCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<Offset> _slideAnimation;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+
+    Future.delayed(Duration(milliseconds: widget.delay), () {
+      if (mounted) _controller.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: SlideTransition(position: _slideAnimation, child: widget.child),
+    );
+  }
+}
+
+/// Container for information cards
+class CardContainer extends StatelessWidget {
+  final String title;
+  final Widget child;
+
+  const CardContainer({super.key, required this.title, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12.0),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
-            offset: const Offset(0, 5),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
-      padding: const EdgeInsets.all(20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (title.isNotEmpty) ...[
-            Text(
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 4),
+            child: Text(
               title,
               style: GoogleFonts.urbanist(
                 fontSize: 18.0,
@@ -422,16 +741,27 @@ class _PreviewGroomingState extends State<PreviewGrooming>
                 color: AppColors.primary,
               ),
             ),
-            const SizedBox(height: 16.0),
-          ],
-          child,
+          ),
+          const Divider(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
+            child: child,
+          ),
         ],
       ),
     );
   }
+}
 
-  /// Creates a column with label and value for information display
-  Widget _buildInfoColumn({required String label, required String value}) {
+/// Field label and value pair
+class _InfoField extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _InfoField({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -439,11 +769,10 @@ class _PreviewGroomingState extends State<PreviewGrooming>
           label,
           style: GoogleFonts.urbanist(
             fontSize: 10.0,
-            fontWeight: FontWeight.w400,
+            fontWeight: FontWeight.w500,
             color: Colors.black45,
           ),
         ),
-        const SizedBox(height: 4.0),
         Text(
           value,
           style: GoogleFonts.urbanist(
@@ -455,167 +784,51 @@ class _PreviewGroomingState extends State<PreviewGrooming>
       ],
     );
   }
+}
 
-  /// Creates an error card for displaying error messages
-  Widget _buildErrorCard(String message) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: AppColors.danger.withOpacity(0.3)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+/// Grooming detail item with icon
+class _GroomingDetailItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const _GroomingDetailItem({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
         children: [
-          const Icon(Icons.error_outline, color: AppColors.danger, size: 48),
-          const SizedBox(height: 16.0),
-          Text(
-            'Error',
-            style: GoogleFonts.urbanist(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              color: AppColors.danger,
-            ),
-          ),
-          const SizedBox(height: 8.0),
-          Text(
-            message,
-            textAlign: TextAlign.center,
-            style: GoogleFonts.urbanist(color: Colors.black87, fontSize: 14.0),
-          ),
-          const SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {}); // Refresh to try again
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+          Icon(icon, size: 18, color: AppColors.primary.withOpacity(0.7)),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: GoogleFonts.urbanist(
+                  fontSize: 10.0,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black45,
+                ),
               ),
-            ),
-            child: Text(
-              'Try Again',
-              style: GoogleFonts.urbanist(color: Colors.white),
-            ),
+              Text(
+                value,
+                style: GoogleFonts.urbanist(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.primary,
+                ),
+              ),
+            ],
           ),
         ],
       ),
-    );
-  }
-
-  /// Creates the action buttons for accepting or declining the booking
-  Widget _buildActionButtons() {
-    return Column(
-      children: [
-        // Accept button with animation
-        TweenAnimationBuilder(
-          tween: Tween<double>(begin: 0, end: 1),
-          duration: const Duration(milliseconds: 800),
-          builder: (context, value, child) {
-            return Opacity(
-              opacity: value,
-              child: Transform.translate(
-                offset: Offset(0, 20 * (1 - value)),
-                child: child,
-              ),
-            );
-          },
-          child: ElevatedButton(
-            onPressed:
-                _isLoading
-                    ? null
-                    : () => _showConfirmationDialog(
-                      message: "Are you sure you want to accept this booking?",
-                      onConfirm: () => updateBookingStatus('confirmed'),
-                    ),
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.greenAccent,
-              disabledBackgroundColor: Colors.greenAccent.withOpacity(0.6),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
-              elevation: 2,
-            ),
-            child: SizedBox(
-              width: double.infinity,
-              child: Center(
-                child:
-                    _isLoading
-                        ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2,
-                          ),
-                        )
-                        : Text(
-                          'Accept',
-                          style: GoogleFonts.urbanist(
-                            color: AppColors.secondary,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-              ),
-            ),
-          ),
-        ),
-
-        const SizedBox(height: 12.0),
-
-        // Decline button with animation
-        TweenAnimationBuilder(
-          tween: Tween<double>(begin: 0, end: 1),
-          duration: const Duration(milliseconds: 900),
-          builder: (context, value, child) {
-            return Opacity(
-              opacity: value,
-              child: Transform.translate(
-                offset: Offset(0, 20 * (1 - value)),
-                child: child,
-              ),
-            );
-          },
-          child: OutlinedButton(
-            onPressed:
-                _isLoading
-                    ? null
-                    : () => _showConfirmationDialog(
-                      message: "Are you sure you want to decline this booking?",
-                      onConfirm: () => updateBookingStatus('declined'),
-                    ),
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(
-                color: AppColors.danger.withOpacity(0.5),
-                width: 1.0,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 12.0),
-            ),
-            child: SizedBox(
-              width: double.infinity,
-              child: Center(
-                child: Text(
-                  "Decline",
-                  style: GoogleFonts.urbanist(
-                    color: AppColors.danger,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

@@ -129,7 +129,7 @@ class _StaffLoginState extends State<StaffLogin>
     _usernameFocus = FocusNode();
     _passwordFocus = FocusNode();
 
-    _usernameController.text = "Staff00120";
+    _usernameController.text = "Staff01";
     _passwordController.text = "Password@123";
 
     // Shake Animation Controller
