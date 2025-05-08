@@ -655,8 +655,8 @@ class _CustomerRegisterState extends State<CustomerRegister>
           child: Transform.scale(
             scale: _scaleAnimation.value,
             child: Text(
-              "FURCARE",
-              style: GoogleFonts.rubikMonoOne(
+              "FUR CARE",
+              style: GoogleFonts.titanOne(
                 color: _colorAnimation.value,
                 fontSize: 42.0,
                 fontWeight: FontWeight.bold,
