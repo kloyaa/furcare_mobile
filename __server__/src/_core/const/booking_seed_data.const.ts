@@ -28,3 +28,11 @@ export const seedGroomgServices = [
   { title: "Teath brushing", fee: 85.00 },
   { title: "Flea and tick treatment", fee: 200.00 },
 ]
+
+export const seedVaccinationServices = [
+  { title: "DHLPPI", fee: 320.00 },
+  { title: "Bronchicine", fee: 330.00 },
+  { title: "Heartworm", fee: 350.00 },
+  { title: "Rabies", fee: 360.00 },
+  { title: "Tricat", fee: 450.00 },
+]

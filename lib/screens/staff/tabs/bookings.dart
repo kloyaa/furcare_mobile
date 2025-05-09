@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:furcare_app/apis/staff_api.dart';
 import 'package:furcare_app/providers/authentication.dart';
-import 'package:furcare_app/utils/common.util.dart';
 import 'package:furcare_app/widgets/fade_transition.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ionicons/ionicons.dart';

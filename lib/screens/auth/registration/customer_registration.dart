@@ -12,13 +12,6 @@ import 'package:ionicons/ionicons.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-/// A polished customer registration screen with animated UI elements
-/// Features:
-/// - Two-stage registration process (username/email, then password)
-/// - Robust form validation
-/// - Smooth animations
-/// - Error handling with visual feedback
-/// - Responsive layout
 class CustomerRegister extends StatefulWidget {
   const CustomerRegister({super.key});
 

@@ -328,18 +328,11 @@ class _ScreenAdminLoginState extends State<ScreenAdminLogin>
                   hasError: _isLoginError,
                   obscureText: !_isPasswordVisible,
                   suffixIcon: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
+                    onTap: _togglePasswordVisibility,
                     child: Icon(
                       _isPasswordVisible
                           ? Ionicons.eye_outline
                           : Ionicons.eye_off_outline,
-                      size: 18.0,
-                      color:
-                          _isLoginError ? AppColors.danger : AppColors.primary,
                     ),
                   ),
                 ),
@@ -394,5 +387,11 @@ class _ScreenAdminLoginState extends State<ScreenAdminLogin>
         ],
       ),
     );
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _isPasswordVisible = !_isPasswordVisible;
+    });
   }
 }

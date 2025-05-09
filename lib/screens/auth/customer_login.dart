@@ -21,76 +21,24 @@ class CustomerLogin extends StatefulWidget {
 
 class _CustomerLoginState extends State<CustomerLogin>
     with SingleTickerProviderStateMixin {
+  // Controllers
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  // Focus Nodes
   late final FocusNode _usernameFocus;
   late final FocusNode _passwordFocus;
 
+  // Animation Controller
   late final ShakeAnimationController _shakeController;
 
-  // State
+  // State Variables
   bool _isPasswordVisible = false;
   bool _isLoginError = false;
   bool _isLoading = false;
   String _loginErrorMessage = "";
 
-  Future<void> _handleLogin() async {
-    setState(() => _isLoading = true);
-
-    final username = _usernameController.text.trim();
-    final password = _passwordController.text.trim();
-
-    if (username.isEmpty) {
-      _usernameFocus.requestFocus();
-      setState(() => _isLoading = false);
-      return;
-    }
-
-    if (password.isEmpty) {
-      _passwordFocus.requestFocus();
-      setState(() => _isLoading = false);
-      return;
-    }
-
-    // Use AuthService for login
-    final authService = AuthService(
-      context: context,
-      platform: "mobile",
-      allowedRole: AuthRole.customer,
-    );
-
-    final result = await authService.login(
-      username: username,
-      password: password,
-    );
-
-    setState(() {
-      _isLoading = false;
-      _isLoginError = result.result != AuthResult.success;
-      _loginErrorMessage = result.message;
-    });
-
-    if (result.result == AuthResult.success) {
-      if (context.mounted) {
-        Navigator.pushReplacementNamed(context, '/branches');
-      }
-    } else if (result.result == AuthResult.needsProfile) {
-      if (context.mounted) {
-        Navigator.pushReplacementNamed(context, '/c/create/profile/1');
-      }
-    } else {
-      _shakeController.shake(); // Trigger shake animation
-    }
-  }
-
-  Future<void> _requestPermission() async {
-    bool granted = await LocationPermissionHandler.requestLocationPermission(
-      context,
-    );
-    // Handle permission result if needed
-  }
-
+  // Lifecycle Methods
   @override
   void initState() {
     super.initState();
@@ -98,10 +46,9 @@ class _CustomerLoginState extends State<CustomerLogin>
     _usernameFocus = FocusNode();
     _passwordFocus = FocusNode();
 
-    // For development convenience
+    // Pre-fill username for development convenience
     _usernameController.text = "kolya";
     _passwordController.text = "Password@1234";
-
     // Initialize shake animation controller
     _shakeController = ShakeAnimationController(vsync: this);
 
@@ -114,6 +61,74 @@ class _CustomerLoginState extends State<CustomerLogin>
     _passwordFocus.dispose();
     _shakeController.dispose();
     super.dispose();
+  }
+
+  // Login Handler
+  Future<void> _handleLogin() async {
+    setState(() => _isLoading = true);
+
+    final username = _usernameController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (username.isEmpty) {
+      _focusAndStopLoading(_usernameFocus);
+      return;
+    }
+
+    if (password.isEmpty) {
+      _focusAndStopLoading(_passwordFocus);
+      return;
+    }
+
+    final authService = AuthService(
+      context: context,
+      platform: "mobile",
+      allowedRole: AuthRole.customer,
+    );
+
+    final result = await authService.login(
+      username: username,
+      password: password,
+    );
+
+    _handleLoginResult(result);
+  }
+
+  // Handle Login Result
+  void _handleLoginResult(result) {
+    setState(() {
+      _isLoading = false;
+      _isLoginError = result.result != AuthResult.success;
+      _loginErrorMessage = result.message;
+    });
+
+    if (result.result == AuthResult.success) {
+      _navigateTo('/branches');
+    } else if (result.result == AuthResult.needsProfile) {
+      _navigateTo('/c/create/profile/1');
+    } else {
+      _shakeController.shake(); // Trigger shake animation
+    }
+  }
+
+  // Request Location Permission
+  Future<void> _requestPermission() async {
+    bool granted = await LocationPermissionHandler.requestLocationPermission(
+      context,
+    );
+    // Handle permission result if needed
+  }
+
+  // Utility Methods
+  void _focusAndStopLoading(FocusNode focusNode) {
+    focusNode.requestFocus();
+    setState(() => _isLoading = false);
+  }
+
+  void _navigateTo(String route) {
+    if (context.mounted) {
+      Navigator.pushReplacementNamed(context, route);
+    }
   }
 
   @override

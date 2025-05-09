@@ -36,11 +36,11 @@ class ShakeAnimationBuilder extends StatelessWidget {
   final Axis direction;
 
   const ShakeAnimationBuilder({
-    Key? key,
+    super.key,
     required this.animation,
     required this.child,
     this.direction = Axis.horizontal,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

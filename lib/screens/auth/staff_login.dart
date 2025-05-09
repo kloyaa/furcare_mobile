@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:furcare_app/animations/shake_animation.dart';
+import 'package:furcare_app/services/auth_service.dart';
 import 'package:furcare_app/services/location_permission.dart';
 import 'package:furcare_app/utils/const/colors.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:furcare_app/widgets/auth_button.dart';
 import 'package:furcare_app/widgets/auth_error_message.dart';
 import 'package:furcare_app/widgets/auth_form_field.dart';
 import 'package:furcare_app/widgets/auth_terms_text.dart';
 import 'package:furcare_app/widgets/furcare_logo.dart';
-import 'package:furcare_app/services/auth_service.dart';
 
 class StaffLogin extends StatefulWidget {
   const StaffLogin({super.key});
@@ -19,19 +19,59 @@ class StaffLogin extends StatefulWidget {
 
 class _StaffLoginState extends State<StaffLogin>
     with SingleTickerProviderStateMixin {
+  // Controllers
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  // Focus Nodes
   late final FocusNode _usernameFocus;
   late final FocusNode _passwordFocus;
 
+  // Animation Controller
   late final ShakeAnimationController _shakeController;
 
-  // State
+  // State Variables
   bool _isPasswordVisible = false;
   bool _isLoginError = false;
   bool _isLoading = false;
   String _loginErrorMessage = "";
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize Focus Nodes
+    _usernameFocus = FocusNode();
+    _passwordFocus = FocusNode();
+
+    // Initialize Shake Animation Controller
+    _shakeController = ShakeAnimationController(vsync: this);
+
+    // Request Location Permission
+    _requestPermission();
+  }
+
+  @override
+  void dispose() {
+    _usernameFocus.dispose();
+    _passwordFocus.dispose();
+    _shakeController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  // Request Location Permission
+  Future<void> _requestPermission() async {
+    await LocationPermissionHandler.requestLocationPermission(context);
+  }
+
+  // Toggle Password Visibility
+  void _togglePasswordVisibility() {
+    setState(() {
+      _isPasswordVisible = !_isPasswordVisible;
+    });
+  }
 
   Future<void> _handleLogin() async {
     setState(() => _isLoading = true);
@@ -82,36 +122,6 @@ class _StaffLoginState extends State<StaffLogin>
     }
   }
 
-  Future<void> _requestPermission() async {
-    await LocationPermissionHandler.requestLocationPermission(context);
-    // No need to handle the permission result here as it's handled in the LocationPermissionHandler
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _usernameFocus = FocusNode();
-    _passwordFocus = FocusNode();
-
-    // For development convenience
-    _usernameController.text = "Staff01";
-    _passwordController.text = "Password@123";
-
-    // Initialize shake animation controller
-    _shakeController = ShakeAnimationController(vsync: this);
-
-    _requestPermission();
-  }
-
-  @override
-  void dispose() {
-    _usernameFocus.dispose();
-    _passwordFocus.dispose();
-    _shakeController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -157,11 +167,7 @@ class _StaffLoginState extends State<StaffLogin>
                     obscureText: !_isPasswordVisible,
                     hasError: _isLoginError,
                     suffixIcon: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _isPasswordVisible = !_isPasswordVisible;
-                        });
-                      },
+                      onTap: _togglePasswordVisibility,
                       child: Icon(
                         _isPasswordVisible
                             ? Ionicons.eye_outline

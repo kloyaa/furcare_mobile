@@ -13,3 +13,14 @@ export const isEmpty = (value: any) => {
 
   return false;
 };
+
+
+/**
+ * Returns a promise that resolves after a specified number of seconds.
+ *
+ * @param {number} seconds Number of seconds to wait.
+ * @return {Promise<void>} A promise that resolves after the specified amount of time.
+ */
+export const delay = (seconds: number) => {
+  return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+}

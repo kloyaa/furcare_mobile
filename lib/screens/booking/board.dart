@@ -7,6 +7,7 @@ import 'package:furcare_app/models/cage_info.dart';
 import 'package:furcare_app/providers/branch.dart';
 import 'package:furcare_app/utils/const/app_constants.dart';
 import 'package:furcare_app/widgets/dialog_confirm.dart';
+import 'package:furcare_app/widgets/textarea_styled.dart';
 import 'package:furcare_app/widgets/total_animated.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,9 @@ class BookBoarding extends StatefulWidget {
 
 class _BookBoardingState extends State<BookBoarding>
     with SingleTickerProviderStateMixin {
+  final TextEditingController _noteController = TextEditingController();
+  late FocusNode _noteFocus;
+
   // State variables
   late TimeOfDay _selectedTime;
   late int _selectedDay;
@@ -41,6 +45,7 @@ class _BookBoardingState extends State<BookBoarding>
   String _selectedPetId = "";
   late Branch _selectedBranch;
   double _payableAmount = 0;
+  bool _hasAntiRabbies = false; // Added state variable for anti-rabbies
 
   List _pets = [];
   List<Cage> _cages = [];
@@ -91,6 +96,9 @@ class _BookBoardingState extends State<BookBoarding>
 
     // Start the animation
     _animationController.forward();
+
+    // Initialize focus node
+    _noteFocus = FocusNode();
   }
 
   @override
@@ -169,6 +177,8 @@ class _BookBoardingState extends State<BookBoarding>
           pet: _selectedPetId,
           schedule: schedule.toUtc().toIso8601String(),
           daysOfStay: _selectedDay,
+          // hasAntiRabbies:
+          //     _hasAntiRabbies, // Include the anti-rabbies status in payload
         ),
       );
 
@@ -405,6 +415,93 @@ class _BookBoardingState extends State<BookBoarding>
                 ),
                 const SizedBox(height: 20.0),
 
+                // Anti-rabbies section
+                _buildSectionTitle("Anti-rabbies Vaccination"),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(
+                      AppConstants.defaultBorderRadius,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withAlpha(100),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 12.0,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Radio<bool>(
+                              value: false,
+                              groupValue: _hasAntiRabbies,
+                              activeColor: AppColors.primary,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  _hasAntiRabbies = value!;
+                                });
+                              },
+                            ),
+                            Text(
+                              'No',
+                              style: GoogleFonts.urbanist(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Radio<bool>(
+                              value: true,
+                              groupValue: _hasAntiRabbies,
+                              activeColor: AppColors.primary,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  _hasAntiRabbies = value!;
+                                });
+                              },
+                            ),
+                            Text(
+                              'Yes',
+                              style: GoogleFonts.urbanist(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+
+                StyledTextArea(
+                  controller: _noteController,
+                  focusNode: _noteFocus,
+                  label: 'Medical Instructions',
+                  icon: Icons.note_alt_outlined,
+                  minLines: 4,
+                  maxLines: 6,
+                  hintText: 'Enter additional notes here...',
+                  maxLength: 500,
+                ),
+
+                const SizedBox(height: 20.0),
+
                 // Cage Selection Section
                 _buildSectionTitle("Select Cage"),
                 GridView.builder(
@@ -498,7 +595,6 @@ class _BookBoardingState extends State<BookBoarding>
 
                 const SizedBox(height: 20.0),
 
-                // Submit Button
                 ElevatedButton(
                   onPressed: () {
                     showDialog(

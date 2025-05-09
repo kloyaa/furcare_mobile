@@ -6,7 +6,7 @@ import { closeDB, connectDB } from './db.util';
 import RoleName from '../../../models/role_name.schema';
 import UserRole from '../../../models/user_role.schema';
 import BookingSchedule from '../../../models/schedule.schema';
-import { seedCageSizes, seedGroomgServices, seedSchedules, seedServiceFees } from '../../const/booking_seed_data.const';
+import { seedCageSizes, seedGroomgServices, seedSchedules, seedServiceFees, seedVaccinationServices } from '../../const/booking_seed_data.const';
 import Cage from '../../../models/cage.schema';
 import ServiceFee from '../../../models/service_fee.schema';
 import Profile from '../../../models/profile.schema';
@@ -15,6 +15,7 @@ import Branch from '../../../models/branch.schema';
 import { seedBranches } from '../../const/branch_seed.data.const';
 import { IBranch } from '../../interfaces/branch.interface';
 import GroomingService from '../../../models/grooming_service.schema';
+import VaccinationService from '../../../models/vaccination_service';
 
 const registerAccounts = async (): Promise<any> => {
   try {
@@ -258,9 +259,20 @@ const createServiceFees = async (): Promise<any> => {
       }),
     );
 
+    const vaccinationServices = await Promise.all(
+      seedVaccinationServices.map(async (el: any) => {
+        console.log(` -> Creating fee for ${el.title}...`);
+        return {
+          title: el?.title,
+          fee: Number(el?.fee)
+        };
+      }),
+    );
+
     await Promise.all([
       ServiceFee.insertMany([...services]),
-      GroomingService.insertMany([...groomingServices])
+      GroomingService.insertMany([...groomingServices]),
+      VaccinationService.insertMany([...vaccinationServices]),
     ])
     return true;
   } catch (error) {

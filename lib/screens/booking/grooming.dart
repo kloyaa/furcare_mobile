@@ -40,13 +40,22 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
   // Map to track selected services
   final Map<String, bool> _selectedServices = {};
 
+  // Anti-rabbies radio button state
+  String _antiRabbiesValue = 'No'; // Default value is No
+
   late AnimationController _animationController;
   late List<dynamic> _availableSchedules = [];
   late List<dynamic> _pets = [];
   String _accessToken = '';
   late Branch _selectedBranch;
-  List<ServiceFee> _groomingServiceFee = [];
-  final double _baseAmount = 0;
+
+  // Renamed for clarity and consistency
+  List<ServiceFee> _groomingServices = [];
+  List<ServiceFee> _vaccinationServices = [];
+  final double _baseGroomingFee = 0;
+
+  // Scroll controller for the main content
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -60,7 +69,23 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
       _initializeProviders();
       _fetchSchedules();
       _fetchServiceFees();
-      _fetchGroomingServices();
+      _fetchAllServices();
+
+      if (DateTime.now().weekday == DateTime.sunday) {
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder:
+              (context) => ConfirmationDialog(
+                title: 'Grooming Unavailable',
+                message:
+                    'Grooming is unavailable on Sundays. Please select another day for your pet grooming appointment.',
+                onConfirm: () {
+                  // No additional action needed when user confirms
+                },
+              ),
+        );
+      }
     });
 
     _selectedBranch =
@@ -81,59 +106,98 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
   }
 
   Future<void> _fetchServiceFees() async {
-    // Create the API client
-    FeesApi appApi = FeesApi(_accessToken);
+    try {
+      // Create the API client
+      FeesApi appApi = FeesApi(_accessToken);
 
-    // Get the response from the API
-    Response<dynamic> response = await appApi.getServiceFees(
-      queryParameters: {'title': 'grooming'},
-    );
+      // Get the response from the API
+      Response<dynamic> response = await appApi.getServiceFees(
+        queryParameters: {'title': 'grooming'},
+      );
 
-    // Transform the response data into a list of ServiceFee objects
-    List<ServiceFee> serviceFees =
-        (response.data as List)
-            .map(
-              (cageJson) =>
-                  ServiceFee.fromJson(cageJson as Map<String, dynamic>),
-            )
-            .toList();
+      // Transform the response data into a list of ServiceFee objects
+      List<ServiceFee> serviceFees =
+          (response.data as List)
+              .map(
+                (feeJson) =>
+                    ServiceFee.fromJson(feeJson as Map<String, dynamic>),
+              )
+              .toList();
 
-    // _baseAmount = serviceFees.isNotEmpty ? serviceFees[0].fee : 0;
-    _updateTotalAmount();
+      // _baseGroomingFee = serviceFees.isNotEmpty ? serviceFees[0].fee : 0;
+      _updateTotalAmount();
+    } catch (e) {
+      _showErrorSnackbar('Failed to fetch service fees');
+    }
   }
 
-  Future<void> _fetchGroomingServices() async {
-    // Create the API client
-    FeesApi appApi = FeesApi(_accessToken);
+  Future<void> _fetchAllServices() async {
+    try {
+      // Create the API client
+      FeesApi appApi = FeesApi(_accessToken);
 
-    // Get the response from the API
-    Response<dynamic> response = await appApi.getGroomingServiceFees();
+      // Get responses from both APIs
+      final groomingFuture = appApi.getGroomingServiceFees();
+      final vaccinationFuture = appApi.getVaccinationServiceFees();
 
-    // Transform the response data into a list of ServiceFee objects
-    List<ServiceFee> serviceFees =
-        (response.data as List)
-            .map(
-              (cageJson) =>
-                  ServiceFee.fromJson(cageJson as Map<String, dynamic>),
-            )
-            .toList();
+      // Wait for both API calls to complete
+      final results = await Future.wait([groomingFuture, vaccinationFuture]);
 
-    setState(() {
-      _groomingServiceFee = serviceFees;
-      // Initialize all services as unselected
-      for (var service in _groomingServiceFee) {
-        _selectedServices[service.id] = false;
+      // Extract responses
+      final groomingResponse = results[0];
+      final vaccinationResponse = results[1];
+
+      // Transform the response data into lists of ServiceFee objects
+      List<ServiceFee> groomingFees =
+          (groomingResponse.data as List)
+              .map(
+                (feeJson) =>
+                    ServiceFee.fromJson(feeJson as Map<String, dynamic>),
+              )
+              .toList();
+
+      List<ServiceFee> vaccinationFees =
+          (vaccinationResponse.data as List)
+              .map(
+                (feeJson) =>
+                    ServiceFee.fromJson(feeJson as Map<String, dynamic>),
+              )
+              .toList();
+
+      if (mounted) {
+        setState(() {
+          _groomingServices = groomingFees;
+          _vaccinationServices = vaccinationFees;
+
+          // Initialize all services as unselected
+          for (var service in _groomingServices) {
+            _selectedServices[service.id] = false;
+          }
+
+          // Initialize all vaccination services as unselected
+          for (var service in _vaccinationServices) {
+            _selectedServices[service.id] = false;
+          }
+
+          // Update total after services are loaded
+          _updateTotalAmount();
+        });
       }
-    });
+    } catch (e) {
+      if (mounted) {
+        _showErrorSnackbar('Failed to fetch services');
+      }
+    }
   }
 
   void _updateTotalAmount() {
-    double total = _baseAmount;
+    double total = _baseGroomingFee;
 
-    // Add costs for selected additional services
+    // Add costs for selected grooming services
     _selectedServices.forEach((serviceId, isSelected) {
       if (isSelected) {
-        final service = _groomingServiceFee.firstWhere(
+        // First check if it's a grooming service
+        ServiceFee? service = _groomingServices.firstWhere(
           (s) => s.id == serviceId,
           orElse:
               () => ServiceFee(
@@ -145,7 +209,27 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
                 updatedAt: DateTime.now(),
               ),
         );
-        total += service.fee;
+
+        // If not found in grooming services, check vaccination services
+        if (service.id.isEmpty) {
+          service = _vaccinationServices.firstWhere(
+            (s) => s.id == serviceId,
+            orElse:
+                () => ServiceFee(
+                  id: '',
+                  title: '',
+                  fee: 0,
+                  version: 1,
+                  createdAt: DateTime.now(),
+                  updatedAt: DateTime.now(),
+                ),
+          );
+        }
+
+        // Add the fee to the total
+        if (service.id.isNotEmpty) {
+          total += service.fee;
+        }
       }
     });
 
@@ -161,14 +245,23 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
 
   Future<void> _fetchSchedules() async {
     try {
+      setState(() {
+        // Clear schedules and set loading state
+        _availableSchedules = [];
+      });
+
       final ClientApi clientApi = ClientApi(_accessToken);
       final Response<dynamic> response = await clientApi.getSchedules();
 
-      setState(() {
-        _availableSchedules = response.data;
-      });
+      if (mounted) {
+        setState(() {
+          _availableSchedules = response.data;
+        });
+      }
     } catch (e) {
-      _showErrorSnackbar('Failed to fetch schedules');
+      if (mounted) {
+        _showErrorSnackbar('Failed to fetch schedules');
+      }
     }
   }
 
@@ -195,8 +288,8 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
           pet: petId,
           schedule: scheduleId,
           branch: _selectedBranch.id ?? '',
-          services:
-              selectedServiceIds, // Add this field to your GroomingPayload class
+          services: selectedServiceIds,
+          // antiRabbies: _antiRabbiesValue, // Include the anti-rabbies value
         ),
       );
 
@@ -234,6 +327,8 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
         e.response?.data,
       );
       _showErrorSnackbar(errorResponse.message);
+    } catch (e) {
+      _showErrorSnackbar('An error occurred while booking. Please try again.');
     }
   }
 
@@ -243,6 +338,8 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -272,59 +369,185 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildSectionTitle('Select Schedule'),
-              const SizedBox(height: 10),
-              _buildScheduleList(),
-              const SizedBox(height: 20),
-              _buildSectionTitle('Select Pet'),
-              const SizedBox(height: 10),
-              PetDropdown(
-                pets: _pets,
-                onPetSelected: (petId) {
-                  _selectedPetNotifier.value = petId;
-                },
+        child: Column(
+          children: [
+            // Main scrollable content
+            Expanded(
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0,
+                    vertical: 15.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionTitle('Select Schedule'),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        height: screenHeight * 0.1, // 10% of screen height
+                        child: _buildScheduleList(),
+                      ),
+                      const SizedBox(height: 20),
+                      _buildSectionTitle('Select Pet'),
+                      const SizedBox(height: 10),
+                      _pets.isEmpty
+                          ? const Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 20.0),
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                          : PetDropdown(
+                            pets: _pets,
+                            onPetSelected: (petId) {
+                              _selectedPetNotifier.value = petId;
+                            },
+                          ),
+                      const SizedBox(height: 20),
+                      _buildSectionTitle('Anti-rabbies'),
+                      const SizedBox(height: 10),
+                      _buildAntiRabbiesRadioSection(),
+                      const SizedBox(height: 20),
+                      _buildSectionTitle('Select Grooming Services'),
+                      const SizedBox(height: 10),
+                      // Grooming services section
+                      SizedBox(
+                        height:
+                            screenHeight * 0.3, // Adjusted for better layout
+                        child: _buildGroomingServicesList(),
+                      ),
+                      const SizedBox(height: 20),
+                      _buildSectionTitle('Select Vaccination Services'),
+                      const SizedBox(height: 10),
+                      // Vaccination services section
+                      SizedBox(
+                        height:
+                            screenHeight * 0.3, // Adjusted for better layout
+                        child: _buildVaccinationServicesList(),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
               ),
-              const SizedBox(height: 20),
-              _buildSectionTitle('Select Grooming Services'),
-              const SizedBox(height: 10),
-              _buildGroomingServicesList(),
-              const Spacer(),
-              _buildSubmitButton(),
-            ],
-          ),
+            ),
+            // Fixed bottom button
+            Container(
+              padding: const EdgeInsets.all(20.0),
+              width: double.infinity,
+              child: _buildSubmitButton(),
+            ),
+          ],
+        ),
+      ),
+    ).animate().fadeIn(duration: 300.ms);
+  }
+
+  // New method to build the Anti-rabbies radio section
+  Widget _buildAntiRabbiesRadioSection() {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Anti-rabbies Vaccination',
+              style: GoogleFonts.urbanist(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: RadioListTile<String>(
+                    title: Text(
+                      'Yes',
+                      style: GoogleFonts.urbanist(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                      ),
+                    ),
+                    value: 'Yes',
+                    groupValue: _antiRabbiesValue,
+                    onChanged: (value) {
+                      setState(() {
+                        _antiRabbiesValue = value!;
+                      });
+                    },
+                    activeColor: AppColors.primary,
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  ),
+                ),
+                Expanded(
+                  child: RadioListTile<String>(
+                    title: Text(
+                      'No',
+                      style: GoogleFonts.urbanist(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                      ),
+                    ),
+                    value: 'No',
+                    groupValue: _antiRabbiesValue,
+                    onChanged: (value) {
+                      setState(() {
+                        _antiRabbiesValue = value!;
+                      });
+                    },
+                    activeColor: AppColors.primary,
+                    contentPadding: EdgeInsets.zero,
+                    dense: true,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     ).animate().fadeIn(duration: 300.ms);
   }
 
   Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: GoogleFonts.urbanist(
-        color: AppColors.primary.withAlpha(200),
-        fontWeight: FontWeight.w600,
-        fontSize: 14.0,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4.0),
+      child: Text(
+        title,
+        style: GoogleFonts.urbanist(
+          color: AppColors.primary.withAlpha(200),
+          fontWeight: FontWeight.w600,
+          fontSize: 14.0,
+        ),
       ),
     );
   }
 
   Widget _buildScheduleList() {
-    return Expanded(
-      flex: 3,
-      child: ListView.builder(
-        itemCount: _availableSchedules.length,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          final schedule = _availableSchedules[index];
-          return ValueListenableBuilder<String>(
-            valueListenable: _selectedScheduleNotifier,
-            builder: (context, selectedSchedule, child) {
-              return ScheduleCard(
+    if (_availableSchedules.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return ListView.builder(
+      itemCount: _availableSchedules.length,
+      scrollDirection: Axis.horizontal,
+      itemBuilder: (context, index) {
+        final schedule = _availableSchedules[index];
+        return ValueListenableBuilder<String>(
+          valueListenable: _selectedScheduleNotifier,
+          builder: (context, selectedSchedule, child) {
+            return Container(
+              width: 200, // Fixed width for horizontal schedule cards
+              margin: const EdgeInsets.only(right: 10),
+              child: ScheduleCard(
                 schedule: schedule,
                 isSelected: selectedSchedule == schedule['_id'],
                 onTap: () {
@@ -334,82 +557,134 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
                 begin: 0.5,
                 duration: 300.ms,
                 curve: Curves.easeOut,
-              );
-            },
-          );
-        },
-      ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
   Widget _buildGroomingServicesList() {
-    return Expanded(
-      flex: 3,
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Additional Services',
-                style: GoogleFonts.urbanist(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: AppColors.primary,
-                ),
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Additional Grooming Services',
+              style: GoogleFonts.urbanist(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: AppColors.primary,
               ),
-              const SizedBox(height: 5),
-              Text(
-                'Base grooming fee: PHP ${_baseAmount.toStringAsFixed(2)}',
-                style: GoogleFonts.urbanist(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              'Base grooming fee: PHP ${_baseGroomingFee.toStringAsFixed(2)}',
+              style: GoogleFonts.urbanist(
+                fontSize: 14,
+                color: Colors.grey[600],
               ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _groomingServiceFee.length,
-                  itemBuilder: (context, index) {
-                    final service = _groomingServiceFee[index];
-                    return ServiceCheckboxTile(
-                      service: service,
-                      isSelected: _selectedServices[service.id] ?? false,
-                      onChanged: (bool? value) {
-                        _toggleService(service.id, value ?? false);
-                      },
-                    ).animate().fadeIn(
-                      delay: Duration(milliseconds: 50 * index),
-                      duration: 300.ms,
-                    );
-                  },
-                ),
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child:
+                  _groomingServices.isEmpty
+                      ? const Center(child: CircularProgressIndicator())
+                      : ListView.builder(
+                        itemCount: _groomingServices.length,
+                        itemBuilder: (context, index) {
+                          final service = _groomingServices[index];
+                          return ServiceCheckboxTile(
+                            service: service,
+                            isSelected: _selectedServices[service.id] ?? false,
+                            onChanged: (bool? value) {
+                              _toggleService(service.id, value ?? false);
+                            },
+                          ).animate().fadeIn(
+                            delay: Duration(milliseconds: 50 * index),
+                            duration: 300.ms,
+                          );
+                        },
+                      ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVaccinationServicesList() {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Vaccination Services',
+              style: GoogleFonts.urbanist(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: AppColors.primary,
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child:
+                  _vaccinationServices.isEmpty
+                      ? const Center(child: CircularProgressIndicator())
+                      : ListView.builder(
+                        itemCount: _vaccinationServices.length,
+                        itemBuilder: (context, index) {
+                          final service = _vaccinationServices[index];
+                          return ServiceCheckboxTile(
+                            service: service,
+                            isSelected: _selectedServices[service.id] ?? false,
+                            onChanged: (bool? value) {
+                              _toggleService(service.id, value ?? false);
+                            },
+                          ).animate().fadeIn(
+                            delay: Duration(milliseconds: 50 * index),
+                            duration: 300.ms,
+                          );
+                        },
+                      ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildSubmitButton() {
+    // Check if today is Sunday
+    bool isSunday = DateTime.now().weekday == DateTime.sunday;
+
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder:
-                (context) => ConfirmationDialog(
-                  title: 'Confirm Booking',
-                  message: 'Proceed with pet grooming appointment?',
-                  onConfirm: _handleBookGrooming,
-                ),
-          );
-        },
+        // Disable button if it's Sunday
+        onPressed:
+            isSunday
+                ? null
+                : () {
+                  showDialog(
+                    context: context,
+                    builder:
+                        (context) => ConfirmationDialog(
+                          title: 'Confirm Booking',
+                          message: 'Proceed with pet grooming appointment?',
+                          onConfirm: _handleBookGrooming,
+                        ),
+                  );
+                },
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 15),
           shape: RoundedRectangleBorder(
@@ -417,7 +692,7 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
           ),
         ),
         child: Text(
-          'Book Grooming',
+          isSunday ? 'Closed' : 'Book Grooming',
           style: GoogleFonts.urbanist(
             fontWeight: FontWeight.bold,
             fontSize: 16,
@@ -433,11 +708,12 @@ class _BookGroomingScreenState extends State<BookGroomingScreen>
     _selectedScheduleNotifier.dispose();
     _selectedPetNotifier.dispose();
     _totalAmountNotifier.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 }
 
-// New widget for displaying service checkboxes
+// Widget for displaying service checkboxes
 class ServiceCheckboxTile extends StatelessWidget {
   final ServiceFee service;
   final bool isSelected;
@@ -483,5 +759,3 @@ class ServiceCheckboxTile extends StatelessWidget {
     );
   }
 }
-
-// You'll need to update your GroomingPayload class to include services

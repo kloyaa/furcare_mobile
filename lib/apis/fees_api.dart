@@ -36,4 +36,16 @@ class FeesApi {
       rethrow;
     }
   }
+
+  Future<Response> getVaccinationServiceFees({queryParameters}) async {
+    try {
+      Response response = await dio.get(
+        '/service/v1/vaccination/fees',
+        queryParameters: queryParameters,
+      );
+      return response;
+    } on DioException {
+      rethrow;
+    }
+  }
 }

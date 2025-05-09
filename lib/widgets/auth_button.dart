@@ -11,13 +11,13 @@ class AuthButton extends StatelessWidget {
   final double borderRadius;
 
   const AuthButton({
-    Key? key,
+    super.key,
     required this.label,
     required this.onPressed,
     this.isLoading = false,
     this.isOutlined = false,
     this.borderRadius = 15.0,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

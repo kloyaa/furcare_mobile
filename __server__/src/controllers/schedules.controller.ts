@@ -1,10 +1,14 @@
 import { TRequest, TResponse } from "../_core/interfaces/overrides.interface";
+import { delay } from "../_core/utils/utils";
 import Booking from "../models/booking.schema";
 import GroomingApplication from "../models/grooming_application.schema";
 import BookingSchedule from "../models/schedule.schema";
 
 export const getSchedules = async (req: TRequest, res: TResponse) => {
     try {
+
+        await delay(5);
+
         const groomingApplicationIds = await Booking
             .find({ status: { $in: ['confirmed'] } })
             .distinct('application');

@@ -26,7 +26,7 @@ class _TransactionsState extends State<Transactions>
 
   // For web-specific filtering and sorting
   String? _sortColumn;
-  bool _sortAscending = true;
+  final bool _sortAscending = true;
   String _searchQuery = "";
   final TextEditingController _searchController = TextEditingController();
 
@@ -804,7 +804,7 @@ class _TransactionTableState extends State<TransactionTable> {
             ),
             bottom: BorderSide(width: 0.5, color: Colors.grey.shade200),
           ),
-          headingRowColor: MaterialStateProperty.all(Colors.grey.shade50),
+          headingRowColor: WidgetStateProperty.all(Colors.grey.shade50),
           dataRowMinHeight: 56, // Taller rows for web
           dataRowMaxHeight: 72,
           columnSpacing: 24,

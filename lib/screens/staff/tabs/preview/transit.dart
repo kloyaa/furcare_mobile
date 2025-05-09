@@ -4,8 +4,6 @@ import 'package:furcare_app/apis/booking_api.dart';
 import 'package:furcare_app/apis/staff_api.dart';
 import 'package:furcare_app/models/booking_payload.dart';
 import 'package:furcare_app/models/login_response.dart';
-import 'package:furcare_app/models/pet_info.dart';
-import 'package:furcare_app/models/user_info.dart';
 import 'package:furcare_app/screens/others/success.dart';
 import 'package:furcare_app/utils/common.util.dart';
 import 'package:furcare_app/widgets/snackbar.dart';
