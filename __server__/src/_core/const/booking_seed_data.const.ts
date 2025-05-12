@@ -30,9 +30,9 @@ export const seedGroomgServices = [
 ]
 
 export const seedVaccinationServices = [
-  { title: "DHLPPI", fee: 320.00 },
-  { title: "Bronchicine", fee: 330.00 },
-  { title: "Heartworm", fee: 350.00 },
-  { title: "Rabies", fee: 360.00 },
-  { title: "Tricat", fee: 450.00 },
+  { title: "5 in 1", fee: 550.00 },
+  { title: "6 in 1", fee: 600.00 },
+  { title: "4 in 1 for Cat", fee: 1000.00 },
+  { title: "Anti Rabies", fee: 300.00 },
+  { title: "Kennel Cough", fee: 500.00 },
 ]
