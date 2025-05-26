@@ -144,28 +144,6 @@ class _PreviewInprogressTransitState extends State<PreviewInprogressTransit> {
                           ),
                         ],
                       ),
-                      const SizedBox(width: 10.0),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Gender",
-                            style: GoogleFonts.urbanist(
-                              fontSize: 8.0,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black45,
-                            ),
-                          ),
-                          Text(
-                            arguments['profile']["gender"] ?? "",
-                            style: GoogleFonts.urbanist(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ],
-                      ),
                       const Spacer(),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,28 +247,6 @@ class _PreviewInprogressTransitState extends State<PreviewInprogressTransit> {
                           ),
                           Text(
                             arguments['pet']["gender"] ?? "",
-                            style: GoogleFonts.urbanist(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Identification",
-                            style: GoogleFonts.urbanist(
-                              fontSize: 8.0,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black45,
-                            ),
-                          ),
-                          Text(
-                            arguments['pet']["identification"] ?? "",
                             style: GoogleFonts.urbanist(
                               fontSize: 12.0,
                               fontWeight: FontWeight.w500,

@@ -264,11 +264,6 @@ class _PreviewAcceptedBoardingState extends State<PreviewAcceptedBoarding>
                             ? "${_profile?["fullName"] ?? ''}"
                             : "Not available",
                   ),
-                  const SizedBox(height: 8.0),
-                  _InfoField(
-                    label: "Gender",
-                    value: _profile?["gender"] ?? "Not specified",
-                  ),
                 ],
               ),
             ),
@@ -323,11 +318,6 @@ class _PreviewAcceptedBoardingState extends State<PreviewAcceptedBoarding>
                       _InfoField(
                         label: "Gender",
                         value: _pet?["gender"] ?? "Not specified",
-                      ),
-                      const SizedBox(height: 8.0),
-                      _InfoField(
-                        label: "Identification",
-                        value: _pet?["identification"] ?? "Not available",
                       ),
                     ],
                   ),

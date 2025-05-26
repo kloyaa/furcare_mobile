@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:furcare_app/animations/shake_animation.dart';
@@ -46,6 +47,10 @@ class _StaffLoginState extends State<StaffLogin>
 
     // Initialize Shake Animation Controller
     _shakeController = ShakeAnimationController(vsync: this);
+
+    // Pre-fill username for development convenience
+    _usernameController.text = "Staff01"; // Example username
+    _passwordController.text = "Password@1234"; // Example password
 
     // Request Location Permission
     _requestPermission();
@@ -137,13 +142,18 @@ class _StaffLoginState extends State<StaffLogin>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _isLoginError
-                      ? FurcareLogo(
-                        hasError: true,
-                        fontSize: 80,
-                        taglineSize: 18,
-                      )
-                      : FurcareLogo(fontSize: 80, taglineSize: 18),
+                  FadeIn(
+                    duration: const Duration(milliseconds: 2000),
+                    onFinish: (direction) {
+                      // Automatically focus on the username field after the logo animation
+                      FocusScope.of(context).requestFocus(_usernameFocus);
+                    },
+                    child: Image.asset(
+                      "assets/furcare_logo.png",
+                      width: 320.0,
+                      height: 320.0,
+                    ),
+                  ),
 
                   const SizedBox(height: 20.0),
 

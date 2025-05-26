@@ -25,7 +25,6 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
     with SingleTickerProviderStateMixin {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _facebookController = TextEditingController();
-  final TextEditingController _messengerController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final _mobileNoController = MaskedTextController(mask: '0000-000-000');
 
@@ -53,7 +52,6 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
     final email = _emailController.text.trim();
     final number = _mobileNoController.text;
     final facebook = _facebookController.text;
-    final messenger = _messengerController.text;
 
     // Validation checks
     if (address.isEmpty) {
@@ -84,13 +82,6 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
       });
       return;
     }
-    if (messenger.isEmpty) {
-      _messengerFocus.requestFocus();
-      setState(() {
-        _isLoading = false;
-      });
-      return;
-    }
 
     final accessTokenProvider = Provider.of<AuthTokenProvider>(
       context,
@@ -107,7 +98,7 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
 
     Profile profile = Profile(
       facebook: facebook,
-      messenger: messenger,
+      messenger: "N/A",
       basicInfo: BasicInfo(fullName: fullName, birthdate: birthdate),
       address: address,
       isActive: true,
@@ -177,9 +168,6 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
     _facebookController.addListener(
       () => _validateField('facebook', _facebookController.text.isNotEmpty),
     );
-    _messengerController.addListener(
-      () => _validateField('messenger', _messengerController.text.isNotEmpty),
-    );
     _emailController.addListener(
       () => _validateField('email', _emailController.text.contains('@')),
     );
@@ -197,7 +185,6 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
   bool get _isFormValid {
     return _validStates['address'] == true &&
         _validStates['facebook'] == true &&
-        _validStates['messenger'] == true &&
         _validStates['email'] == true &&
         _validStates['mobile'] == true;
   }
@@ -248,7 +235,6 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
     // Clean up controllers and focus nodes
     _addressController.dispose();
     _facebookController.dispose();
-    _messengerController.dispose();
     _emailController.dispose();
     _mobileNoController.dispose();
 
@@ -536,17 +522,9 @@ class _CreateProfileStep2State extends State<CreateProfileStep2>
                         _buildInputField(
                           controller: _facebookController,
                           focusNode: _facebookFocus,
-                          label: "Facebook",
+                          label: "Facebook / Messenger",
                           icon: Icons.facebook_outlined,
                           index: 1,
-                        ),
-
-                        _buildInputField(
-                          controller: _messengerController,
-                          focusNode: _messengerFocus,
-                          label: "Messenger",
-                          icon: Icons.messenger_outline_outlined,
-                          index: 2,
                         ),
 
                         const SizedBox(height: 10.0),

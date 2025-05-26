@@ -310,10 +310,6 @@ class _PreviewTransitState extends State<PreviewTransit>
                                 value: "${profile["fullName"] ?? ""}",
                               ),
                               _buildInfoColumn(
-                                label: "Gender",
-                                value: profile["gender"] ?? "Not specified",
-                              ),
-                              _buildInfoColumn(
                                 label: "Contact No.",
                                 value:
                                     profile.containsKey("contact")

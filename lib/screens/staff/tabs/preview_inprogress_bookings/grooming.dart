@@ -278,28 +278,6 @@ class _PreviewInprogressGroomingState extends State<PreviewInprogressGrooming> {
                           ),
                         ],
                       ),
-                      const Spacer(),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Identification",
-                            style: GoogleFonts.urbanist(
-                              fontSize: 8.0,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.black45,
-                            ),
-                          ),
-                          Text(
-                            arguments['pet']["identification"] ?? "",
-                            style: GoogleFonts.urbanist(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ],
-                      ),
                     ],
                   ),
                 ],

@@ -146,20 +146,17 @@ class _CustomerLoginState extends State<CustomerLogin>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  FadeInDown(
-                    child:
-                        _isLoginError
-                            ? FurcareLogo(
-                              hasError: true,
-                              fontSize: 80,
-                              taglineSize: 18,
-                            )
-                            : Lottie.asset(
-                              'assets/lady_with_dog.json',
-                              width: 250,
-                              height: 250,
-                              fit: BoxFit.contain,
-                            ),
+                  FadeIn(
+                    duration: const Duration(milliseconds: 2000),
+                    onFinish: (direction) {
+                      // Automatically focus on the username field after the logo animation
+                      FocusScope.of(context).requestFocus(_usernameFocus);
+                    },
+                    child: Image.asset(
+                      "assets/furcare_logo.png",
+                      width: 320.0,
+                      height: 320.0,
+                    ),
                   ),
                   const SizedBox(height: 20.0),
 

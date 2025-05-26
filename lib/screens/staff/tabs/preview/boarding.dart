@@ -312,11 +312,6 @@ class _PreviewBoardingState extends State<PreviewBoarding>
                     label: "Name",
                     value: basicInfo.basicInfo.fullName,
                   ),
-                  const SizedBox(height: 8.0),
-                  _InfoField(
-                    label: "Gender",
-                    value: _profile?["gender"] ?? "Not specified",
-                  ),
                 ],
               ),
             ),
@@ -355,19 +350,6 @@ class _PreviewBoardingState extends State<PreviewBoarding>
                       _InfoField(label: "Name", value: pet.name),
                       const SizedBox(height: 8.0),
                       _InfoField(label: "Specie", value: pet.specie),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _InfoField(label: "Gender", value: pet.gender),
-                      const SizedBox(height: 8.0),
-                      _InfoField(
-                        label: "Identification",
-                        value: "Not specified",
-                      ),
                     ],
                   ),
                 ),

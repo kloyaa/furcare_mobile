@@ -242,7 +242,7 @@ class _CreatePetState extends State<CreatePet> {
                         keyboardType: TextInputType.text,
                         decoration: InputDecoration(
                           fillColor: AppColors.primary,
-                          labelText: "Breed",
+                          labelText: "Specie",
                           labelStyle: GoogleFonts.urbanist(
                             color:
                                 _isCreateError

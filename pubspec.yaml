@@ -94,6 +94,7 @@ flutter:
     - assets/img_3.jpg
     - assets/img_4.jpg
     - assets/image_placeholder.png
+    - assets/furcare_logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
