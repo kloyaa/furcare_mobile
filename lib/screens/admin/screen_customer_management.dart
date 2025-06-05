@@ -661,7 +661,7 @@ class _AdminCustomerManagementState extends State<AdminCustomerManagement>
                           if (pet['breed'] != null)
                             Expanded(
                               child: _buildInfoRow(
-                                label: "Breed",
+                                label: "Specie",
                                 value: pet['breed'],
                                 valueSize: 12.0,
                               ),

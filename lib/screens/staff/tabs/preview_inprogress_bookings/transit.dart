@@ -217,7 +217,7 @@ class _PreviewInprogressTransitState extends State<PreviewInprogressTransit> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Breed",
+                            "Specie",
                             style: GoogleFonts.urbanist(
                               fontSize: 11.0,
                               fontWeight: FontWeight.w400,

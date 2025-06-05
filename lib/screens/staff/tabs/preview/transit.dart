@@ -334,7 +334,7 @@ class _PreviewTransitState extends State<PreviewTransit>
                                 flex: 1,
                               ),
                               _buildInfoColumn(
-                                label: "Specie",
+                                label: "Breed",
                                 value: pet["breed"] ?? "Not specified",
                                 flex: 1,
                               ),

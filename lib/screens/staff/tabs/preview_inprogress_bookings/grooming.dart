@@ -240,7 +240,7 @@ class _PreviewInprogressGroomingState extends State<PreviewInprogressGrooming> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Breed",
+                            "Specie",
                             style: GoogleFonts.urbanist(
                               fontSize: 11.0,
                               fontWeight: FontWeight.w400,

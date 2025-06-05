@@ -369,7 +369,7 @@ class _AddNewPetState extends State<AddNewPet>
                     child: _buildAnimatedFormField(
                       controller: _identificationController,
                       focusNode: _identificationFocus,
-                      label: "Specie",
+                      label: "Breed",
                       icon: Icons.pets,
                       fieldKey: 'breed',
                       keyboardType: TextInputType.text,
