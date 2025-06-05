@@ -9,7 +9,6 @@ import 'package:furcare_app/widgets/auth_button.dart';
 import 'package:furcare_app/widgets/auth_error_message.dart';
 import 'package:furcare_app/widgets/auth_form_field.dart';
 import 'package:furcare_app/widgets/auth_terms_text.dart';
-import 'package:furcare_app/widgets/furcare_logo.dart';
 
 class StaffLogin extends StatefulWidget {
   const StaffLogin({super.key});

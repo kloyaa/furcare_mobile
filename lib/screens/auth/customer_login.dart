@@ -4,12 +4,10 @@ import 'package:furcare_app/animations/shake_animation.dart';
 import 'package:furcare_app/services/location_permission.dart';
 import 'package:furcare_app/utils/const/colors.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:lottie/lottie.dart';
 import 'package:furcare_app/widgets/auth_button.dart';
 import 'package:furcare_app/widgets/auth_error_message.dart';
 import 'package:furcare_app/widgets/auth_form_field.dart';
 import 'package:furcare_app/widgets/auth_terms_text.dart';
-import 'package:furcare_app/widgets/furcare_logo.dart';
 import 'package:furcare_app/services/auth_service.dart';
 
 class CustomerLogin extends StatefulWidget {

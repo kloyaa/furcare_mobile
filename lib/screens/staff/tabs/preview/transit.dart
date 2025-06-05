@@ -539,58 +539,169 @@ class _PreviewTransitState extends State<PreviewTransit>
   /// Action buttons for completed bookings
   Widget _buildAcceptedActionButtons(Map booking) {
     String bookingId = booking['_id'];
+    bool isPaid =
+        booking['isPaid'] ?? false; // Add this field to track payment status
+
     return Column(
       children: [
-        ElevatedButton(
-          onPressed:
-              _isLoading
-                  ? null
-                  : () => confirmAction(
-                    message: "Are you sure you want to complete this booking?",
-                    onConfirm: () => updateBookingStatus('done', bookingId),
-                  ),
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.greenAccent,
-            disabledBackgroundColor: Colors.greenAccent.withOpacity(0.5),
-            elevation: 2,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-            ),
-          ),
-          child: SizedBox(
-            width: double.infinity,
-            child: Center(
-              child:
-                  _isLoading
-                      ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
-                      )
-                      : Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.check_circle_outline, size: 18),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Done',
-                            style: GoogleFonts.urbanist(
-                              color: AppColors.secondary,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-            ),
-          ),
-        ),
+        // Show swipe button if not paid, show done button if paid
+        isPaid ? _buildDoneButton(bookingId) : _buildSwipeIfPaidButton(booking),
       ],
+    );
+  }
+
+  /// Swipe if paid button
+  Widget _buildSwipeIfPaidButton(Map booking) {
+    String bookingId = booking['_id'];
+
+    return Dismissible(
+      key: Key('swipe_$bookingId'),
+      direction: DismissDirection.horizontal,
+      dismissThresholds: const {
+        DismissDirection.startToEnd: 0.7,
+        DismissDirection.endToStart: 0.7,
+      },
+      confirmDismiss: (direction) async {
+        if (direction == DismissDirection.startToEnd) {
+          // Swipe right - Mark as paid and rebuild UI
+          setState(() {
+            booking['isPaid'] = true;
+          });
+          return false; // Don't actually dismiss, just trigger the action
+        } else if (direction == DismissDirection.endToStart) {
+          // Swipe left - Pop the screen
+          Navigator.of(context).pop();
+          return false; // Don't dismiss since we're popping the screen
+        }
+        return false;
+      },
+      background: Container(
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.only(left: 20),
+        decoration: BoxDecoration(
+          color: Colors.green,
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.arrow_forward, color: Colors.white, size: 24),
+            const SizedBox(width: 8),
+            Text(
+              'Mark as Paid',
+              style: GoogleFonts.urbanist(
+                color: Colors.white,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+      secondaryBackground: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              'Go Back',
+              style: GoogleFonts.urbanist(
+                color: Colors.white,
+                fontSize: 16.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 8),
+            const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+          ],
+        ),
+      ),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+        decoration: BoxDecoration(
+          color: Colors.orange.shade100,
+          borderRadius: BorderRadius.circular(15.0),
+          border: Border.all(color: Colors.orange.shade300),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.payment, color: Colors.orange.shade700, size: 20),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'Swipe right if paid →',
+                style: GoogleFonts.urbanist(
+                  color: Colors.orange.shade700,
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w600,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Icon(Icons.swipe, color: Colors.orange.shade700, size: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Done button (shown after payment is confirmed)
+  Widget _buildDoneButton(String bookingId) {
+    return ElevatedButton(
+      onPressed:
+          _isLoading
+              ? null
+              : () => confirmAction(
+                message: "Are you sure you want to complete this booking?",
+                onConfirm: () => updateBookingStatus('done', bookingId),
+              ),
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.greenAccent,
+        disabledBackgroundColor: Colors.greenAccent.withOpacity(0.5),
+        elevation: 2,
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+      ),
+      child: SizedBox(
+        width: double.infinity,
+        child: Center(
+          child:
+              _isLoading
+                  ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                  : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.check_circle_outline, size: 18),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Done',
+                        style: GoogleFonts.urbanist(
+                          color: AppColors.secondary,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+        ),
+      ),
     );
   }
 
