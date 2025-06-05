@@ -693,7 +693,7 @@ class _PreviewBoardingState extends State<PreviewBoarding>
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'Swipe right if paid → | ← Swipe left to go back',
+                'Swipe right if paid →',
                 style: GoogleFonts.urbanist(
                   color: Colors.orange.shade700,
                   fontSize: 14.0,

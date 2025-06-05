@@ -305,8 +305,8 @@ class _PreviewAcceptedBoardingState extends State<PreviewAcceptedBoarding>
                       ),
                       const SizedBox(height: 8.0),
                       _InfoField(
-                        label: "Specie",
-                        value: _pet?["specie"] ?? "Not specified",
+                        label: "Breed",
+                        value: _pet?["breed"] ?? "Not specified",
                       ),
                     ],
                   ),

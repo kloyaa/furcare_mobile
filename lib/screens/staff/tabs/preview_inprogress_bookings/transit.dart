@@ -129,13 +129,13 @@ class _PreviewInprogressTransitState extends State<PreviewInprogressTransit> {
                           Text(
                             "Name",
                             style: GoogleFonts.urbanist(
-                              fontSize: 8.0,
+                              fontSize: 11.0,
                               fontWeight: FontWeight.w400,
                               color: Colors.black45,
                             ),
                           ),
                           Text(
-                            "${arguments['profile']["firstName"]} ${arguments['profile']["lastName"]}",
+                            "${arguments['profile']["fullName"]}",
                             style: GoogleFonts.urbanist(
                               fontSize: 12.0,
                               fontWeight: FontWeight.w500,
@@ -151,7 +151,7 @@ class _PreviewInprogressTransitState extends State<PreviewInprogressTransit> {
                           Text(
                             "Contact No.",
                             style: GoogleFonts.urbanist(
-                              fontSize: 8.0,
+                              fontSize: 11.0,
                               fontWeight: FontWeight.w400,
                               color: Colors.black45,
                             ),
@@ -189,6 +189,7 @@ class _PreviewInprogressTransitState extends State<PreviewInprogressTransit> {
                   ),
                   const SizedBox(height: 10.0),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,7 +197,7 @@ class _PreviewInprogressTransitState extends State<PreviewInprogressTransit> {
                           Text(
                             "Name",
                             style: GoogleFonts.urbanist(
-                              fontSize: 8.0,
+                              fontSize: 11.0,
                               fontWeight: FontWeight.w400,
                               color: Colors.black45,
                             ),
@@ -216,15 +217,15 @@ class _PreviewInprogressTransitState extends State<PreviewInprogressTransit> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Specie",
+                            "Breed",
                             style: GoogleFonts.urbanist(
-                              fontSize: 8.0,
+                              fontSize: 11.0,
                               fontWeight: FontWeight.w400,
                               color: Colors.black45,
                             ),
                           ),
                           Text(
-                            arguments['pet']["specie"] ?? "",
+                            arguments['pet']["breed"] ?? "",
                             style: GoogleFonts.urbanist(
                               fontSize: 12.0,
                               fontWeight: FontWeight.w500,
@@ -240,7 +241,7 @@ class _PreviewInprogressTransitState extends State<PreviewInprogressTransit> {
                           Text(
                             "Gender",
                             style: GoogleFonts.urbanist(
-                              fontSize: 8.0,
+                              fontSize: 11.0,
                               fontWeight: FontWeight.w400,
                               color: Colors.black45,
                             ),
